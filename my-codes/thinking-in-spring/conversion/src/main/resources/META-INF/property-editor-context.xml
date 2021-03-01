@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean class="org.springframework.beans.factory.config.CustomEditorConfigurer">
+    <property name="propertyEditorRegistrars">
+      <list>
+        <bean
+          class="com.slydm.thinking.in.spring.conversion.CustomPropertiesPropertyEditorRegistrar"/>
+      </list>
+    </property>
+  </bean>
+
+
+  <bean class="com.slydm.thinking.in.spring.ioc.overview.domain.User" id="user">
+    <property name="id" value="1"/>
+    <property name="name" value="雪山飞狐"/>
+    <property name="context">
+      <value>
+        id=1
+        name=雪山飞狐
+      </value>
+    </property>
+  </bean>
+
+
+</beans>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns="http://www.springframework.org/schema/beans"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+        https://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean class="com.slydm.thinking.in.spring.ioc.overview.domain.User" id="user">
+    <property name="id" value="1"/>
+    <property name="name" value="wangcong"/>
+  </bean>
+
+  <bean class="com.slydm.thinking.in.spring.ioc.overview.domain.SuperUser" id="superUser"
+    parent="user" primary="true">
+    <property name="address" value="chongqing"/>
+  </bean>
+
+
+  <bean class="org.springframework.beans.factory.config.ObjectFactoryCreatingFactoryBean"
+    id="objectFactory">
+    <property name="targetBeanName" value="user"/>
+  </bean>
+
+</beans>
