@@ -11,6 +11,8 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -32,6 +34,8 @@ import slydm.geektimes.training.web.mvc.controller.RestController;
  */
 public class MyDispatcherServlet extends HttpServlet {
 
+  private Logger logger;
+
   /**
    * 请求路径和 Controller 的映射关系缓存
    */
@@ -46,6 +50,8 @@ public class MyDispatcherServlet extends HttpServlet {
   @Override
   public void init() throws ServletException {
     super.init();
+    logger = Logger.getLogger(MyDispatcherServlet.class.getName());
+    logger.setLevel(Level.FINEST);
     initDispatcher();
   }
 
@@ -69,10 +75,11 @@ public class MyDispatcherServlet extends HttpServlet {
           temPath = temPath.replaceAll("//", "/");
           handleMethodInfoMapping.put(temPath,
               new HandlerMethodInfo(temPath, method, supportedHttpMethods));
+          controllersMapping.put(temPath, controller);
+          logger.log(Level.INFO, "mapping " + temPath + " to " + controllerClass.getSimpleName());
         }
 
       }
-      controllersMapping.put(requestPath, controller);
     }
   }
 
