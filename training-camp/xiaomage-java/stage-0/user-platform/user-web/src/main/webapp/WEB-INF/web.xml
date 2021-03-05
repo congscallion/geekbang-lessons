@@ -32,7 +32,7 @@
 
   <servlet>
     <servlet-name>MyDispatcherServlet</servlet-name>
-    <servlet-class>slydm.geektimes.training.web.mvc.MyDispatcherServlet</servlet-class>
+    <servlet-class>slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet</servlet-class>
     <load-on-startup>1</load-on-startup>
   </servlet>
 

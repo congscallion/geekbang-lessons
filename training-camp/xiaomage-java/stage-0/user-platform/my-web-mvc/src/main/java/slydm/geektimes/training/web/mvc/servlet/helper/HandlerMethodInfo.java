@@ -1,4 +1,4 @@
-package slydm.geektimes.training.web.mvc;
+package slydm.geektimes.training.web.mvc.servlet.helper;
 
 import java.lang.reflect.Method;
 import java.util.Set;

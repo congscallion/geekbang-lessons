@@ -1,4 +1,4 @@
-package slydm.geektimes.training.web.mvc.engine;
+package slydm.geektimes.training.web.mvc;
 
 import java.io.File;
 import java.util.Collection;
@@ -18,8 +18,8 @@ import org.apache.tomcat.util.descriptor.web.JspConfigDescriptorImpl;
 import org.apache.tomcat.util.descriptor.web.JspPropertyGroup;
 import org.apache.tomcat.util.descriptor.web.JspPropertyGroupDescriptorImpl;
 import org.apache.tomcat.util.descriptor.web.ServletDef;
-import slydm.geektimes.training.web.mvc.MyDispatcherServlet;
 import slydm.geektimes.training.web.mvc.filter.DefaultCharsetEncodingFilter;
+import slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet;
 
 /**
  * My Web Mvc 启动器
@@ -31,7 +31,6 @@ public class ApplicationContext {
   private Logger logger = Logger.getLogger(ApplicationContext.class.getName());
 
   public void start() {
-
     Tomcat tomcat = new Tomcat();
     tomcat.setPort(8080);
     tomcat.setHostname("localhost");

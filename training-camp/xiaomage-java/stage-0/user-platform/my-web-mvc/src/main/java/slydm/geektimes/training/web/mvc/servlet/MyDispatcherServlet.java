@@ -1,4 +1,4 @@
-package slydm.geektimes.training.web.mvc;
+package slydm.geektimes.training.web.mvc.servlet;
 
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.substringAfter;
@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import org.apache.commons.lang.StringUtils;
+import slydm.geektimes.training.web.mvc.servlet.helper.HandlerMethodInfo;
 import slydm.geektimes.training.web.mvc.controller.Controller;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 import slydm.geektimes.training.web.mvc.controller.RestController;
