@@ -1,4 +1,4 @@
-package slydm.geektimes.training.web.mvc.engine.server;
+package slydm.geektimes.training.projects.user.web;
 
 import java.io.File;
 import java.util.logging.Level;
