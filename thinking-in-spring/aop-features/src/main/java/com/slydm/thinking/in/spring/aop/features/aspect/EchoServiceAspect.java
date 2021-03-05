@@ -1,4 +1,4 @@
-package com.slydm.thinking.in.spring.aop.features;
+package com.slydm.thinking.in.spring.aop.features.aspect;
 
 import com.slydm.thinking.in.spring.aop.overview.cglib.helper.EchoService;
 import org.aspectj.lang.annotation.Aspect;
