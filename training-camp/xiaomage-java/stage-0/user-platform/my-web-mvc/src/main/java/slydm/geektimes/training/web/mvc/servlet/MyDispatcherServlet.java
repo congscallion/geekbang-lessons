@@ -1,18 +1,11 @@
 package slydm.geektimes.training.web.mvc.servlet;
 
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.StringUtils.substringAfter;
+import org.apache.commons.lang.StringUtils;
+import slydm.geektimes.training.web.mvc.controller.Controller;
+import slydm.geektimes.training.web.mvc.controller.PageController;
+import slydm.geektimes.training.web.mvc.controller.RestController;
+import slydm.geektimes.training.web.mvc.servlet.helper.HandlerMethodInfo;
 
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.HashMap;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.ServiceLoader;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -21,11 +14,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
-import org.apache.commons.lang.StringUtils;
-import slydm.geektimes.training.web.mvc.servlet.helper.HandlerMethodInfo;
-import slydm.geektimes.training.web.mvc.controller.Controller;
-import slydm.geektimes.training.web.mvc.controller.PageController;
-import slydm.geektimes.training.web.mvc.controller.RestController;
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.StringUtils.substringAfter;
 
 /**
  * my web mvc 框架默认分发器
@@ -158,6 +155,11 @@ public class MyDispatcherServlet extends HttpServlet {
         }
       }
 
+    } else {
+
+      ServletContext servletContext = request.getServletContext();
+      RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher("/index.jsp");
+      requestDispatcher.forward(request, response);
     }
 
   }

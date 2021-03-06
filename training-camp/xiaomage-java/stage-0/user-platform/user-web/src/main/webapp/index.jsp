@@ -1,11 +1,11 @@
-<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8" %>
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
-    <title>单体项目示例</title>
-</head>
-<body>
-<h1>小马哥Java训练营第一阶段:单体项目!</h1>
-</body>
-</html>
+<jsp:include page="/WEB-INF/templates/includes/header.jsp">
+	<jsp:param value="Home" name="pageName"/>
+</jsp:include>
+		<div class="jumbotron jumbotron-fluid">
+			<div class="container">
+		    	<h1 class="display-4">Java Web Application with Embedded Tomcat</h1>
+		    	<p class="lead">This is a web application in Java which runs on embedded Apache Tomcat in the form of executable JAR (not WAR), called uber/fat JAR. Other dependencies, if any, are also included.</p>
+		    	<a type="button" class="btn btn-primary btn-lg" href="${pageContext.request.contextPath}/books" alt="Books">Books</a>
+		  	</div>
+		</div>		
+<%@ include file="/WEB-INF/templates/includes/footer.jsp"%>
