@@ -12,8 +12,7 @@ import slydm.geektimes.training.web.mvc.controller.PageController;
 public class HelloWorldController implements PageController {
 
   @Path("/world")
-  @Override
   public String execute(HttpServletRequest request, HttpServletResponse response) throws Throwable {
-    return "index.jsp";
+    return "index";
   }
 }

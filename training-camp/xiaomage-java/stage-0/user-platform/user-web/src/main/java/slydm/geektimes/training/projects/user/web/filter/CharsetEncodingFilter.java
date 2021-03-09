@@ -8,6 +8,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebFilter;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -16,6 +18,9 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author wangcymy@gmail.com(wangcong) 3/4/21 10:49 PM
  */
+@WebFilter(filterName = "encodingFilter", urlPatterns = "/*", initParams = {
+    @WebInitParam(name = "encoding", value = "utf-8")
+})
 public class CharsetEncodingFilter implements Filter {
 
   private String encoding = null;
@@ -36,7 +41,7 @@ public class CharsetEncodingFilter implements Filter {
       HttpServletResponse httpResponse = (HttpServletResponse) response;
       httpRequest.setCharacterEncoding(encoding);
       httpResponse.setCharacterEncoding(encoding);
-      servletContext.log("当前编码已设置为：" + encoding);
+      servletContext.log(((HttpServletRequest) request).getRequestURI() + "当前编码已设置为：" + encoding);
     }
 
     chain.doFilter(request, response);
