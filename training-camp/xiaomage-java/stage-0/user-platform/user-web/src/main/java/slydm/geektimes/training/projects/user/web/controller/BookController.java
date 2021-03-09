@@ -10,6 +10,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class BookController implements PageController {
     this.bookService = new BookServiceImpl(new BookRepositoryImpl());
   }
 
+  @GET
   @Path("")
   public String index(HttpServletRequest request, HttpServletResponse response) {
     try {
@@ -49,6 +51,7 @@ public class BookController implements PageController {
   }
 
 
+  @GET
   @Path("list")
   public String list(HttpServletRequest request, HttpServletResponse response) {
     try {
