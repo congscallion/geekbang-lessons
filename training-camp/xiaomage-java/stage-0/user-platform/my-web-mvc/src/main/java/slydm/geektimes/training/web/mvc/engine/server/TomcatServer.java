@@ -1,5 +1,8 @@
 package slydm.geektimes.training.web.mvc.engine.server;
 
+import java.io.File;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.catalina.Context;
 import org.apache.catalina.LifecycleException;
 import org.apache.catalina.WebResourceRoot;
@@ -8,15 +11,7 @@ import org.apache.catalina.servlets.DefaultServlet;
 import org.apache.catalina.startup.Tomcat;
 import org.apache.catalina.webresources.DirResourceSet;
 import org.apache.catalina.webresources.StandardRoot;
-import org.apache.tomcat.util.descriptor.web.FilterDef;
-import org.apache.tomcat.util.descriptor.web.FilterMap;
-import slydm.geektimes.training.web.mvc.filter.DefaultCharsetEncodingFilter;
 import slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet;
-
-import javax.servlet.DispatcherType;
-import java.io.File;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * 创建 Tomcat容器实例 的服务
@@ -34,6 +29,7 @@ public class TomcatServer implements Server {
     private static final String WEB_APP_MOUNT = "/WEB-INF/classes";
     private static final String ADDITION_WEB_INF_CLASSES = "target/classes";
     private static final String INTERNAL_PATH = "/";
+    private static final String WEB_APP_LOCATION = "src/main/webapp/";
 
 
     @Override
@@ -74,14 +70,16 @@ public class TomcatServer implements Server {
      * @param tomcat tomcat 容器实例
      */
     private Context context(Tomcat tomcat) {
-        Context context = tomcat.addWebapp(DEFAULT_CONTEXT_PATH, DOC_BASE);
+
+        Context context = tomcat.addWebapp(DEFAULT_CONTEXT_PATH, new File(WEB_APP_LOCATION).getAbsolutePath());
+        logger.info("configuring app with basedir: " + new File("./" + WEB_APP_LOCATION).getAbsolutePath());
         File classes = new File(ADDITION_WEB_INF_CLASSES);
         String base = classes.getAbsolutePath();
         WebResourceRoot resources = new StandardRoot(context);
         resources.addPreResources(new DirResourceSet(resources, WEB_APP_MOUNT, base, INTERNAL_PATH));
         context.setResources(resources);
 
-//        configDefault(context);
+        configDefault(context);
 
         return context;
     }
@@ -94,43 +92,46 @@ public class TomcatServer implements Server {
      */
     private void configDefault(Context context) {
 
-        Class defaultServletClass = DefaultServlet.class;
-        Wrapper wrapper = Tomcat.addServlet(
-                context, defaultServletClass.getSimpleName(), defaultServletClass.getName());
-        wrapper.setLoadOnStartup(1);
-        wrapper.addInitParameter("debug", "0");
-        wrapper.addInitParameter("listings", "false");
-        context.addServletMappingDecoded("*.css", defaultServletClass.getSimpleName());
-        context.addServletMappingDecoded("*.js", defaultServletClass.getSimpleName());
+//        Class defaultServletClass = DefaultServlet.class;
+//        Wrapper defaultServlet = context.createWrapper();
+//        defaultServlet.setName("default");
+//        defaultServlet.setServletClass(defaultServletClass.getName());
+//        defaultServlet.addInitParameter("debug", "0");
+//        defaultServlet.addInitParameter("listings", "false");
+//        defaultServlet.setLoadOnStartup(1);
+//        context.addChild(defaultServlet);
+//        context.addServletMappingDecoded("*.css", "default");
+//        context.addServletMappingDecoded("*.js", "default");
 
+//        Class myDispatcherServletClass = MyDispatcherServlet.class;
+//        Wrapper dispatcherServlet = context.createWrapper();
+//        dispatcherServlet.setName(myDispatcherServletClass.getSimpleName());
+//        dispatcherServlet.setServletClass(myDispatcherServletClass.getName());
+//        dispatcherServlet.setLoadOnStartup(1);
+//        context.addChild(dispatcherServlet);
+//        context.addServletMappingDecoded("/", myDispatcherServletClass.getSimpleName());
 
-        Class dispatcherServletClass = MyDispatcherServlet.class;
-        Tomcat.addServlet(
-                context, dispatcherServletClass.getSimpleName(), dispatcherServletClass.getName())
-                .setLoadOnStartup(1);
-        context.addServletMappingDecoded("/*", dispatcherServletClass.getSimpleName());
+//        Class encodingFilterClass = DefaultCharsetEncodingFilter.class;
+//        FilterDef myFilterDef = new FilterDef();
+//        myFilterDef.setFilterClass(encodingFilterClass.getName());
+//        myFilterDef.setFilterName(encodingFilterClass.getSimpleName());
+//        myFilterDef.addInitParameter("encoding", "UTF-8");
+//        context.addFilterDef(myFilterDef);
+//
+//        FilterMap myFilterMap = new FilterMap();
+//        myFilterMap.setFilterName(encodingFilterClass.getSimpleName());
+//        myFilterMap.addURLPattern("/*");
+//        myFilterMap.setDispatcher(DispatcherType.REQUEST.name());
+//        myFilterMap.setDispatcher(DispatcherType.FORWARD.name());
+//        myFilterMap.setDispatcher(DispatcherType.INCLUDE.name());
+//        myFilterMap.setDispatcher(DispatcherType.ERROR.name());
+//        context.addFilterMap(myFilterMap);
 
-        Class encodingFilterClass = DefaultCharsetEncodingFilter.class;
-        FilterDef myFilterDef = new FilterDef();
-        myFilterDef.setFilterClass(encodingFilterClass.getName());
-        myFilterDef.setFilterName(encodingFilterClass.getSimpleName());
-        myFilterDef.addInitParameter("encoding", "UTF-8");
-        context.addFilterDef(myFilterDef);
-
-        FilterMap myFilterMap = new FilterMap();
-        myFilterMap.setFilterName(encodingFilterClass.getSimpleName());
-        myFilterMap.addURLPattern("/*");
-        myFilterMap.setDispatcher(DispatcherType.REQUEST.name());
-        myFilterMap.setDispatcher(DispatcherType.FORWARD.name());
-        myFilterMap.setDispatcher(DispatcherType.INCLUDE.name());
-        myFilterMap.setDispatcher(DispatcherType.ERROR.name());
-        context.addFilterMap(myFilterMap);
-
-    /*<welcome-file-list>
-        <welcome-file>/</welcome-file>
-        <welcome-file>/index</welcome-file>
-        <welcome-file>/index.jsp</welcome-file>
-    </welcome-file-list>*/
+        /*<welcome-file-list>
+            <welcome-file>/</welcome-file>
+            <welcome-file>/index</welcome-file>
+            <welcome-file>/index.jsp</welcome-file>
+        </welcome-file-list>*/
         context.addWelcomeFile("/");
         context.addWelcomeFile("/index");
         context.addWelcomeFile("/index.jsp");

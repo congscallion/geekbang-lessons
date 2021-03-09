@@ -1,28 +1,29 @@
 package slydm.geektimes.training.web.mvc.servlet;
 
+import static java.util.Arrays.asList;
+import static org.apache.commons.lang.StringUtils.substringAfter;
+
+import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.LinkedHashSet;
+import java.util.Map;
+import java.util.ServiceLoader;
+import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.Path;
 import org.apache.commons.lang.StringUtils;
 import slydm.geektimes.training.web.mvc.controller.Controller;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 import slydm.geektimes.training.web.mvc.controller.RestController;
 import slydm.geektimes.training.web.mvc.servlet.helper.HandlerMethodInfo;
-
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.HttpMethod;
-import javax.ws.rs.Path;
-import java.io.IOException;
-import java.lang.annotation.Annotation;
-import java.lang.reflect.Method;
-import java.util.*;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import static java.util.Arrays.asList;
-import static org.apache.commons.lang.StringUtils.substringAfter;
 
 /**
  * my web mvc 框架默认分发器
@@ -30,7 +31,8 @@ import static org.apache.commons.lang.StringUtils.substringAfter;
  * @author wangcymy@gmail.com(wangcong) 3/4/21 10:04 PM
  * @see 1.0
  */
-public class MyDispatcherServlet extends HttpServlet {
+//@WebServlet(name = "myDispatcherServlet", urlPatterns = "/", loadOnStartup = 1)
+public class MyDispatcherServlet extends BaseServlet {
 
   private Logger logger;
 
@@ -69,8 +71,12 @@ public class MyDispatcherServlet extends HttpServlet {
         Set<String> supportedHttpMethods = findSupportedHttpMethods(method);
         Path pathFromMethod = method.getAnnotation(Path.class);
         if (pathFromMethod != null) {
-          String temPath = requestPath + "/" + pathFromMethod.value();
-          temPath = temPath.replaceAll("//", "/");
+          String temPath = requestPath + ROOT + pathFromMethod.value();
+          temPath = temPath.replaceAll(ROOT2, ROOT);
+          if (temPath.endsWith(ROOT)) {
+            temPath = temPath.substring(0, temPath.length() - 1);
+          }
+
           handleMethodInfoMapping.put(temPath,
               new HandlerMethodInfo(temPath, method, supportedHttpMethods));
           controllersMapping.put(temPath, controller);
@@ -113,7 +119,7 @@ public class MyDispatcherServlet extends HttpServlet {
 
     // 映射路径（子路径）
     String requestMappingPath = substringAfter(requestURI,
-        StringUtils.replace(prefixPath, "//", "/"));
+        StringUtils.replace(prefixPath, ROOT2, ROOT));
     // 映射到 Controller
     Controller controller = controllersMapping.get(requestMappingPath);
 
@@ -131,17 +137,14 @@ public class MyDispatcherServlet extends HttpServlet {
         }
 
         if (controller instanceof PageController) {
-
           PageController pageController = PageController.class.cast(controller);
-          String viewPath = pageController.execute(request, response);
-          ServletContext servletContext = request.getServletContext();
-          if (!viewPath.startsWith("/")) {
-            viewPath = "/" + viewPath;
-          }
-          // ServletContext -> RequestDispatcher 必须以 "/" 开头
-          RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher(viewPath);
-          requestDispatcher.forward(request, response);
 
+          Object viewPath = handlerMethodInfo.getHandlerMethod()
+              .invoke(pageController, new Object[]{request, response});
+
+          if (null != viewPath) {
+            render(request, response, viewPath.toString());
+          }
         } else if (controller instanceof RestController) {
           // TODO
         }
@@ -156,10 +159,7 @@ public class MyDispatcherServlet extends HttpServlet {
       }
 
     } else {
-
-      ServletContext servletContext = request.getServletContext();
-      RequestDispatcher requestDispatcher = servletContext.getRequestDispatcher("/index.jsp");
-      requestDispatcher.forward(request, response);
+      render(request, response, "error/404");
     }
 
   }
