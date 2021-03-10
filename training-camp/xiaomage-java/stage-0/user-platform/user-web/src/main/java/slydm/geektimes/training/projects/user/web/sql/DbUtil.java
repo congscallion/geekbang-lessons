@@ -28,8 +28,6 @@ public class DbUtil {
 
   private static final Logger logger = LoggerFactory.getLogger(DbUtil.class.getName());
 
-  private static Driver driver;
-
   private static Driver initDriver() throws Exception {
     Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
     Driver driver = DriverManager.getDriver("jdbc:derby:/db/user-platform;create=true");
@@ -39,18 +37,11 @@ public class DbUtil {
 
   public static Connection getConnection() {
 
-    if (driver == null) {
-      try {
-        initDriver();
-      } catch (Exception e) {
-        throw new RuntimeException(e);
-      }
-    }
-
     try {
+      Driver driver = initDriver();
       Connection connection = driver.connect("jdbc:derby:/db/user-platform;create=true", new Properties());
       return connection;
-    } catch (SQLException ex) {
+    } catch (Exception ex) {
       throw new RuntimeException(ex);
     }
   }
@@ -73,32 +64,16 @@ public class DbUtil {
    */
   public static <T> T executeQuery(String sql, ThrowableFunction<ResultSet, T> function,
       Consumer<Throwable> exceptionHandler, Object... args) {
-    Connection connection = getConnection();
     try {
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-      for (int i = 0; i < args.length; i++) {
-        Object arg = args[i];
-        Class argType = arg.getClass();
-
-        Class wrapperType = wrapperToPrimitive(argType);
-
-        if (wrapperType == null) {
-          wrapperType = argType;
-        }
-
-        // Boolean -> boolean
-        String methodName = preparedStatementMethodMappings.get(argType);
-        Method method = PreparedStatement.class.getMethod(methodName, wrapperType);
-        method.invoke(preparedStatement, i + 1, args);
-      }
-      ResultSet resultSet = preparedStatement.executeQuery();
+      PreparedStatement statement = createStatement(sql, args);
+      ResultSet resultSet = statement.executeQuery();
       // 返回一个 POJO List -> ResultSet -> POJO List
       // ResultSet -> T
       return function.apply(resultSet);
     } catch (Throwable e) {
       exceptionHandler.accept(e);
+      return null;
     }
-    return null;
   }
 
 
@@ -109,27 +84,33 @@ public class DbUtil {
   public static int executeUpdate(String sql, Consumer<Throwable> exceptionHandler, Object... args) {
     Connection connection = getConnection();
     try {
-      PreparedStatement preparedStatement = connection.prepareStatement(sql);
-      for (int i = 0; i < args.length; i++) {
-        Object arg = args[i];
-        Class argType = arg.getClass();
-
-        Class wrapperType = wrapperToPrimitive(argType);
-
-        if (wrapperType == null) {
-          wrapperType = argType;
-        }
-
-        // Boolean -> boolean
-        String methodName = preparedStatementMethodMappings.get(argType);
-        Method method = PreparedStatement.class.getMethod(methodName, wrapperType);
-        method.invoke(preparedStatement, i + 1, args);
-      }
-      return preparedStatement.executeUpdate();
+      PreparedStatement statement = createStatement(sql, args);
+      return statement.executeUpdate();
     } catch (Throwable e) {
       exceptionHandler.accept(e);
       return 0;
     }
+  }
+
+  private static PreparedStatement createStatement(String sql, Object... args) throws Exception {
+    Connection connection = getConnection();
+    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+    for (int i = 0; i < args.length; i++) {
+      Object arg = args[i];
+      Class argType = arg.getClass();
+
+      Class wrapperType = wrapperToPrimitive(argType);
+
+      if (wrapperType == null) {
+        wrapperType = argType;
+      }
+
+      // Boolean -> boolean
+      String methodName = preparedStatementMethodMappings.get(argType);
+      Method method = PreparedStatement.class.getMethod(methodName, int.class, wrapperType);
+      method.invoke(preparedStatement, i + 1, args[0]);
+    }
+    return preparedStatement;
   }
 
 
@@ -182,7 +163,11 @@ public class DbUtil {
 
     Statement statement = connection.createStatement();
     // 删除 users 表
-    System.out.println(statement.execute(DROP_USERS_TABLE_DDL_SQL)); // false
+    try {
+      System.out.println(statement.execute(DROP_USERS_TABLE_DDL_SQL)); // false
+    } catch (Exception ex) {
+      // 避免表不存在时报错
+    }
     // 创建 users 表
     System.out.println(statement.execute(CREATE_USERS_TABLE_DDL_SQL)); // false
     System.out.println(statement.executeUpdate(INSERT_USER_DML_SQL));  // 5

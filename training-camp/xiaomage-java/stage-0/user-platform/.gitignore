@@ -17,6 +17,12 @@ target/
 
 logs
 
+.flattened-pom.xml
+
+tomcat.*
+
+*.log
+
 ### NetBeans ###
 nbproject/private/
 build/

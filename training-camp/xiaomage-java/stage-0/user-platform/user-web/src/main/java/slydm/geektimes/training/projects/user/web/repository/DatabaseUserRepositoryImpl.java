@@ -1,10 +1,12 @@
 package slydm.geektimes.training.projects.user.web.repository;
 
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
 import slydm.geektimes.training.projects.user.web.domin.User;
+import slydm.geektimes.training.projects.user.web.function.ThrowableFunction;
 import slydm.geektimes.training.projects.user.web.sql.DbUtil;
 
 /**
@@ -22,7 +24,32 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
   public static final String UPDATE_USER_DML_SQL = "update users set name=?,password=?,email=?,phoneNumber=? where id=?";
   public static final String SELECT_USER_BY_ID_SQL = "select * from users where id=?";
   public static final String SELECT_USER_BY_NAME_AND_PWD_SQL = "select * from users where name=? and password=?";
-  public static final String SELECT_ALL_SQL = "select * from users where name=? and password=?";
+  public static final String SELECT_ALL_SQL = "select * from users";
+
+  public static final ThrowableFunction<ResultSet, User> TO_USER = result -> {
+    result.next();
+    User user = new User();
+    user.setId(result.getLong("id"));
+    user.setName(result.getString("name"));
+    user.setPassword(result.getString("password"));
+    user.setEmail(result.getString("email"));
+    user.setPhoneNumber(result.getString("phoneNumber"));
+    return user;
+  };
+
+  public static final ThrowableFunction<ResultSet, List<User>> TO_USER_LIST = result -> {
+    List<User> list = new ArrayList<>();
+    while (result.next()) {
+      User user = new User();
+      user.setId(result.getLong("id"));
+      user.setName(result.getString("name"));
+      user.setPassword(result.getString("password"));
+      user.setEmail(result.getString("email"));
+      user.setPhoneNumber(result.getString("phoneNumber"));
+      list.add(user);
+    }
+    return list;
+  };
 
 
   @Override
@@ -61,15 +88,7 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
 
     User re = DbUtil.executeQuery(
         SELECT_USER_BY_ID_SQL,
-        result -> {
-          User user = new User();
-          user.setId(result.getLong("id"));
-          user.setEmail(result.getString("name"));
-          user.setEmail(result.getString("password"));
-          user.setEmail(result.getString("email"));
-          user.setEmail(result.getString("phoneNumber"));
-          return user;
-        },
+        TO_USER,
         DbUtil.COMMON_EXCEPTION_HANDLER,
         userId);
     return Optional.of(re);
@@ -80,15 +99,7 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
 
     User re = DbUtil.executeQuery(
         SELECT_USER_BY_NAME_AND_PWD_SQL,
-        result -> {
-          User user = new User();
-          user.setId(result.getLong("id"));
-          user.setEmail(result.getString("name"));
-          user.setEmail(result.getString("password"));
-          user.setEmail(result.getString("email"));
-          user.setEmail(result.getString("phoneNumber"));
-          return user;
-        },
+        TO_USER,
         DbUtil.COMMON_EXCEPTION_HANDLER,
         userName, password);
     return Optional.of(re);
@@ -99,21 +110,8 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
 
     List<User> users = DbUtil.executeQuery(
         SELECT_ALL_SQL,
-        result -> {
-          List<User> tempList = new ArrayList<>();
-          while (result.next()) {
-            User user = new User();
-            user.setId(result.getLong("id"));
-            user.setEmail(result.getString("name"));
-            user.setEmail(result.getString("password"));
-            user.setEmail(result.getString("email"));
-            user.setEmail(result.getString("phoneNumber"));
-            tempList.add(user);
-          }
-          return tempList;
-        },
+        TO_USER_LIST,
         DbUtil.COMMON_EXCEPTION_HANDLER);
-
     return users;
   }
 }

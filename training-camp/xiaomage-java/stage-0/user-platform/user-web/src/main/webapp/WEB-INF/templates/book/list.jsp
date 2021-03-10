@@ -26,17 +26,18 @@
 							      	<td>${book.edition}</td>
 							      	<td>
 							      		<div class="btn-group" role="group" aria-label="Basic example">
-											<button type="button" class="btn btn-info" data-toggle="modal" data-target="#bookModal" data-book-action="viewBook" data-book-id="${book.id}">View</button>
+											<button type="button" class="btn btn-info" data-toggle="modal" data-target="#commonModal" data-book-action="viewBook" data-book-id="${book.id}">View</button>
 										</div>
 							      	</td>
 							    </tr>
-							    </c:forEach>
-						  	</tbody>
+								</c:forEach>
+							</tbody>
 						</table>
 					</div>
 				</div>
 			</div>
-		</main>	
-		<%@ include file="/WEB-INF/templates/components/bookModal.jsp"%>		
-		<%@ include file="/WEB-INF/templates/components/viewBookTable.jsp"%>
-<%@ include file="/WEB-INF/templates/includes/footer.jsp"%>
+		</main>
+<%@ include file="/WEB-INF/templates/components/commonModal.jsp" %>
+<%@ include file="/WEB-INF/templates/components/viewBookTable.jsp" %>
+<%@ include file="/WEB-INF/templates/includes/footer.jsp" %>
+<script src="${pageContext.request.contextPath}/assets/js/book/book.js"></script>
