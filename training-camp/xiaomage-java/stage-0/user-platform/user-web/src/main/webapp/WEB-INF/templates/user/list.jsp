@@ -1,9 +1,8 @@
 <%@ include file="/WEB-INF/templates/includes/header.jsp" %>
 <div class="jumbotron jumbotron-fluid">
     <div class="container">
-        <h1 class="display-4">Java Web Application with Embedded Tomcat</h1>
-        <p class="lead">This is a web application in Java which runs on embedded Apache Tomcat in the form of executable
-            JAR (not WAR), called uber/fat JAR. Other dependencies, if any, are also included.</p>
+        <h1 class="display-4">「小马哥的 Java 项目实战营」第 0 期</h1>
+        <p class="lead">第一阶段单体项目</p>
     </div>
 </div>
 <main>
@@ -47,3 +46,4 @@
 <%@ include file="/WEB-INF/templates/components/viewUserTable.jsp" %>
 <%@ include file="/WEB-INF/templates/includes/footer.jsp" %>
 <script src="${pageContext.request.contextPath}/assets/js/user/user.js"></script>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
