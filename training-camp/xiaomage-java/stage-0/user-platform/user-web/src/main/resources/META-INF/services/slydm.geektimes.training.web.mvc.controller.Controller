@@ -1,2 +1,3 @@
 slydm.geektimes.training.projects.user.web.controller.BookController
 slydm.geektimes.training.projects.user.web.controller.UserController
+slydm.geektimes.training.projects.user.web.controller.JndiDatasourceTestController

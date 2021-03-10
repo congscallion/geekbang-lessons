@@ -6,8 +6,10 @@ import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.Produces;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import slydm.geektimes.training.projects.user.web.domin.User;
@@ -49,8 +51,10 @@ public class UserController implements PageController {
   }
 
 
-  @GET
+  @GET()
   @Path("list")
+  @Consumes
+  @Produces
   public String list(HttpServletRequest request, HttpServletResponse response) {
     try {
       Iterable<User> users = this.userService.userList();

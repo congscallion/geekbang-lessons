@@ -23,6 +23,8 @@ tomcat.*
 
 *.log
 
+.extract
+
 ### NetBeans ###
 nbproject/private/
 build/
