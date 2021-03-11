@@ -14,12 +14,6 @@
   <name>My Web-MVC Framework ${revision}</name>
   <packaging>jar</packaging>
 
-  <properties>
-    <tomcat.version>8.5.51</tomcat.version>
-    <slf4j.version>1.7.30</slf4j.version>
-  </properties>
-
-
   <dependencies>
     <!-- Servlet API -->
     <dependency>
@@ -39,16 +33,5 @@
       <artifactId>commons-lang</artifactId>
     </dependency>
 
-    <!-- Apache Tomcat API -->
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-core</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.tomcat.embed</groupId>
-      <artifactId>tomcat-embed-jasper</artifactId>
-      <version>${tomcat.version}</version>
-    </dependency>
   </dependencies>
 </project>

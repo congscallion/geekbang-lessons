@@ -14,7 +14,6 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
@@ -31,7 +30,6 @@ import slydm.geektimes.training.web.mvc.servlet.helper.HandlerMethodInfo;
  * @author wangcymy@gmail.com(wangcong) 3/4/21 10:04 PM
  * @see 1.0
  */
-//@WebServlet(name = "myDispatcherServlet", urlPatterns = "/", loadOnStartup = 1)
 public class MyDispatcherServlet extends BaseServlet {
 
   private Logger logger;

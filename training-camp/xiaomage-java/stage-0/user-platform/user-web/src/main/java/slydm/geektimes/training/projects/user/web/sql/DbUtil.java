@@ -8,7 +8,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,13 +19,19 @@ import slydm.geektimes.training.projects.user.web.domin.User;
 import slydm.geektimes.training.projects.user.web.function.ThrowableFunction;
 
 /**
- * 数据库连接管理器
+ * 数据库工具类，该类负责数据库连接管理并且提供基础的数据库操作能力
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:58
  */
 public class DbUtil {
 
   private static final Logger logger = LoggerFactory.getLogger(DbUtil.class.getName());
+
+  /**
+   * 通用处理方式
+   */
+  public static Consumer<Throwable> COMMON_EXCEPTION_HANDLER = e -> logger.error(e.getMessage());
+
 
   private static Driver initDriver() throws Exception {
     Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
@@ -47,16 +52,6 @@ public class DbUtil {
   }
 
 
-  public static void close(Connection conn) {
-    if (null != conn) {
-      try {
-        conn.close();
-      } catch (SQLException ex) {
-      }
-    }
-
-  }
-
   /**
    * @param sql      sql 语句
    * @param function 数据转换函数
@@ -64,9 +59,10 @@ public class DbUtil {
    */
   public static <T> T executeQuery(String sql, ThrowableFunction<ResultSet, T> function,
       Consumer<Throwable> exceptionHandler, Object... args) {
-    try {
-      PreparedStatement statement = createStatement(sql, args);
-      ResultSet resultSet = statement.executeQuery();
+    try (Connection conn = getConnection();
+        PreparedStatement statement = createStatement(conn, sql, args);
+        ResultSet resultSet = statement.executeQuery()) {
+
       // 返回一个 POJO List -> ResultSet -> POJO List
       // ResultSet -> T
       return function.apply(resultSet);
@@ -82,9 +78,9 @@ public class DbUtil {
    * @return 数据转换后的对象
    */
   public static int executeUpdate(String sql, Consumer<Throwable> exceptionHandler, Object... args) {
-    Connection connection = getConnection();
-    try {
-      PreparedStatement statement = createStatement(sql, args);
+    try (Connection conn = getConnection();
+        PreparedStatement statement = createStatement(conn, sql, args)) {
+
       return statement.executeUpdate();
     } catch (Throwable e) {
       exceptionHandler.accept(e);
@@ -92,9 +88,8 @@ public class DbUtil {
     }
   }
 
-  private static PreparedStatement createStatement(String sql, Object... args) throws Exception {
-    Connection connection = getConnection();
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+  private static PreparedStatement createStatement(Connection conn, String sql, Object... args) throws Exception {
+    PreparedStatement preparedStatement = conn.prepareStatement(sql);
     for (int i = 0; i < args.length; i++) {
       Object arg = args[i];
       Class argType = arg.getClass();
@@ -115,12 +110,6 @@ public class DbUtil {
 
 
   /**
-   * 通用处理方式
-   */
-  public static Consumer<Throwable> COMMON_EXCEPTION_HANDLER = e -> logger.error(e.getMessage());
-
-
-  /**
    * 数据类型与 ResultSet 方法名映射
    */
   static Map<Class, String> resultSetMethodMappings = new HashMap<>();
@@ -131,8 +120,8 @@ public class DbUtil {
     resultSetMethodMappings.put(Long.class, "getLong");
     resultSetMethodMappings.put(String.class, "getString");
 
-    preparedStatementMethodMappings.put(Long.class, "setLong"); // long
-    preparedStatementMethodMappings.put(String.class, "setString"); //
+    preparedStatementMethodMappings.put(Long.class, "setLong");
+    preparedStatementMethodMappings.put(String.class, "setString");
 
 
   }
@@ -164,13 +153,13 @@ public class DbUtil {
     Statement statement = connection.createStatement();
     // 删除 users 表
     try {
-      System.out.println(statement.execute(DROP_USERS_TABLE_DDL_SQL)); // false
+      System.out.println(statement.execute(DROP_USERS_TABLE_DDL_SQL));
     } catch (Exception ex) {
       // 避免表不存在时报错
     }
     // 创建 users 表
-    System.out.println(statement.execute(CREATE_USERS_TABLE_DDL_SQL)); // false
-    System.out.println(statement.executeUpdate(INSERT_USER_DML_SQL));  // 5
+    System.out.println(statement.execute(CREATE_USERS_TABLE_DDL_SQL));
+    System.out.println(statement.executeUpdate(INSERT_USER_DML_SQL));
 
     // 执行查询语句（DML）
     ResultSet resultSet = statement.executeQuery("SELECT id,name,password,email,phoneNumber FROM users");

@@ -2,15 +2,12 @@ package slydm.geektimes.training.projects.user.web.listener;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Set;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
-import javax.servlet.ServletContainerInitializer;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
 import javax.sql.DataSource;
 
 /**
@@ -26,6 +23,7 @@ public class DBConnectionInitializerListener implements ServletContextListener {
     servletContext = servletContextEvent.getServletContext();
 
     Connection connection = getConnection();
+    System.out.println("connection: " + connection);
 
   }
 

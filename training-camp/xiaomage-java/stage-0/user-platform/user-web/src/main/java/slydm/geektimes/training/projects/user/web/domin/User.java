@@ -1,7 +1,6 @@
 package slydm.geektimes.training.projects.user.web.domin;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:48
@@ -59,24 +58,6 @@ public class User implements Serializable {
   }
 
   @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    User user = (User) o;
-    return Objects.equals(id, user.id) && Objects.equals(name, user.name) && Objects.equals(password, user.password)
-        && Objects.equals(email, user.email) && Objects.equals(phoneNumber, user.phoneNumber);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, name, password, email, phoneNumber);
-  }
-
-  @Override
   public String toString() {
     return "User{" +
         "id=" + id +
@@ -86,6 +67,4 @@ public class User implements Serializable {
         ", phoneNumber='" + phoneNumber + '\'' +
         '}';
   }
-
-
 }

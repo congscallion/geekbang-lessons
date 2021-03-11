@@ -1,13 +1,7 @@
 package slydm.geektimes.training.projects.user.web.controller;
 
-import java.sql.Connection;
-import java.util.Properties;
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.sql.DataSource;
 import javax.ws.rs.Path;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 
