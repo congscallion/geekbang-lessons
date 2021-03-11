@@ -8,7 +8,6 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
@@ -46,17 +45,6 @@ public class DbUtil {
     }
   }
 
-
-  public static void close(Connection conn) {
-    if (null != conn) {
-      try {
-        conn.close();
-      } catch (SQLException ex) {
-      }
-    }
-
-  }
-
   /**
    * @param sql sql 语句
    * @param function 数据转换函数
@@ -64,9 +52,10 @@ public class DbUtil {
    */
   public static <T> T executeQuery(String sql, ThrowableFunction<ResultSet, T> function,
       Consumer<Throwable> exceptionHandler, Object... args) {
-    try {
-      PreparedStatement statement = createStatement(sql, args);
-      ResultSet resultSet = statement.executeQuery();
+    try (Connection conn = getConnection();
+        PreparedStatement statement = createStatement(conn, sql, args);
+        ResultSet resultSet = statement.executeQuery()) {
+
       // 返回一个 POJO List -> ResultSet -> POJO List
       // ResultSet -> T
       return function.apply(resultSet);
@@ -82,9 +71,9 @@ public class DbUtil {
    * @return 数据转换后的对象
    */
   public static int executeUpdate(String sql, Consumer<Throwable> exceptionHandler, Object... args) {
-    Connection connection = getConnection();
-    try {
-      PreparedStatement statement = createStatement(sql, args);
+    try (Connection conn = getConnection();
+        PreparedStatement statement = createStatement(conn, sql, args)) {
+
       return statement.executeUpdate();
     } catch (Throwable e) {
       exceptionHandler.accept(e);
@@ -92,9 +81,8 @@ public class DbUtil {
     }
   }
 
-  private static PreparedStatement createStatement(String sql, Object... args) throws Exception {
-    Connection connection = getConnection();
-    PreparedStatement preparedStatement = connection.prepareStatement(sql);
+  private static PreparedStatement createStatement(Connection conn, String sql, Object... args) throws Exception {
+    PreparedStatement preparedStatement = conn.prepareStatement(sql);
     for (int i = 0; i < args.length; i++) {
       Object arg = args[i];
       Class argType = arg.getClass();
