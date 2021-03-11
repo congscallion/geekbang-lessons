@@ -1,9 +1,8 @@
 package slydm.geektimes.training.projects.user.web.service;
 
+import java.util.Optional;
 import slydm.geektimes.training.projects.user.web.domin.Book;
 import slydm.geektimes.training.projects.user.web.repository.BookRepository;
-
-import java.util.Optional;
 
 public class BookServiceImpl implements BookService {
 

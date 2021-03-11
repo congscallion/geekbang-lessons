@@ -1,8 +1,7 @@
 package slydm.geektimes.training.projects.user.web.service;
 
-import slydm.geektimes.training.projects.user.web.domin.Book;
-
 import java.util.Optional;
+import slydm.geektimes.training.projects.user.web.domin.Book;
 
 public interface BookService {
 

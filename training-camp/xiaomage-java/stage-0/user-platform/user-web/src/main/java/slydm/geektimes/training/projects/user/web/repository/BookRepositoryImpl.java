@@ -1,11 +1,10 @@
 package slydm.geektimes.training.projects.user.web.repository;
 
-import slydm.geektimes.training.projects.user.web.domin.Book;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import slydm.geektimes.training.projects.user.web.domin.Book;
 
 public class BookRepositoryImpl implements BookRepository {
 

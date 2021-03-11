@@ -37,7 +37,6 @@ public interface UserService {
    * 更新用户信息
    *
    * @param user 用户对象
-   * @return
    */
   boolean update(User user);
 

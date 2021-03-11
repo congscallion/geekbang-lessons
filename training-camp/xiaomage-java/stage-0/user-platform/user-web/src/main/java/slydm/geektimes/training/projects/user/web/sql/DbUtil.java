@@ -58,7 +58,7 @@ public class DbUtil {
   }
 
   /**
-   * @param sql      sql 语句
+   * @param sql sql 语句
    * @param function 数据转换函数
    * @return 数据转换后的对象
    */
