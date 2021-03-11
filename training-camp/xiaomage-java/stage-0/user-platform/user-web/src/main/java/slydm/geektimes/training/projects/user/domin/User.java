@@ -1,20 +1,35 @@
 package slydm.geektimes.training.projects.user.domin;
 
+import static javax.persistence.GenerationType.AUTO;
+
 import java.io.Serializable;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:48
  */
+@Entity
+@Table(name = "users")
 public class User implements Serializable {
 
+  @Id
+  @GeneratedValue(strategy = AUTO)
   private Long id;
 
+  @Column
   private String name;
 
+  @Column
   private String password;
 
+  @Column
   private String email;
 
+  @Column
   private String phoneNumber;
 
   public Long getId() {
