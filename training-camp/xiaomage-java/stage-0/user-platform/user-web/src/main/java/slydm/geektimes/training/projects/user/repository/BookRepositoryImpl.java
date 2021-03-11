@@ -1,14 +1,21 @@
-package slydm.geektimes.training.projects.user.web.repository;
+package slydm.geektimes.training.projects.user.repository;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import slydm.geektimes.training.projects.user.web.domin.Book;
+import slydm.geektimes.training.projects.user.domin.Book;
 
+/**
+ * 书籍数据源服务实例
+ *
+ * <p>
+ * 本实现在内存中完成
+ *
+ * @author wangcymy@gmail.com(wangcong) 2021/3/10 15:59
+ */
 public class BookRepositoryImpl implements BookRepository {
 
-  private static List<Book> bookList = new ArrayList<>();
+  private static List<Book> bookList;
 
   static {
     Book book1 = new Book();

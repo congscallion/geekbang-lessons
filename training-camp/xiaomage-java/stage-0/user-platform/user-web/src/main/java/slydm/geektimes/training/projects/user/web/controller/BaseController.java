@@ -2,15 +2,13 @@ package slydm.geektimes.training.projects.user.web.controller;
 
 import com.google.gson.Gson;
 import java.io.PrintWriter;
-import java.time.ZonedDateTime;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import slydm.geektimes.training.projects.user.web.util.Error;
-import slydm.geektimes.training.projects.user.web.util.ErrorResponse;
+import slydm.geektimes.training.projects.user.web.Result;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 
 /**
- * @author wangcymy@gmail.com(wangcong) 2021/3/11 10:36
+ * @author 72089101@vivo.com(wangcong) 2021/3/11 10:36
  */
 public class BaseController implements PageController {
 
@@ -23,12 +21,7 @@ public class BaseController implements PageController {
       bookJson = gson.toJson(data);
     } else {
       response.setStatus(404);
-      ErrorResponse errorResponse = new ErrorResponse();
-      Error error = new Error();
-      error.setMessage("data was not found.");
-      error.setCreatedAt(ZonedDateTime.now());
-      errorResponse.setError(error);
-      bookJson = gson.toJson(error);
+      bookJson = gson.toJson(Result.error("data was not found."));
     }
 
     response.setContentType("application/json");

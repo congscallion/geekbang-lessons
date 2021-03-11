@@ -1,4 +1,4 @@
-package slydm.geektimes.training.projects.user.web.function;
+package slydm.geektimes.training.projects.user.function;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/10 0:23

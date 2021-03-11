@@ -14,12 +14,6 @@
   <name>My Web-MVC Framework ${revision}</name>
   <packaging>jar</packaging>
 
-  <properties>
-    <tomcat.version>8.5.51</tomcat.version>
-    <slf4j.version>1.7.30</slf4j.version>
-  </properties>
-
-
   <dependencies>
     <!-- Servlet API -->
     <dependency>

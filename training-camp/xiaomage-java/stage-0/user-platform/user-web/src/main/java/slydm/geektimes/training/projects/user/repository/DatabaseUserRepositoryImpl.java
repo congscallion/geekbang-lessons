@@ -1,16 +1,22 @@
-package slydm.geektimes.training.projects.user.web.repository;
+package slydm.geektimes.training.projects.user.repository;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import slydm.geektimes.training.projects.user.web.domin.User;
-import slydm.geektimes.training.projects.user.web.function.ThrowableFunction;
-import slydm.geektimes.training.projects.user.web.sql.DbUtil;
+import slydm.geektimes.training.projects.user.domin.User;
+import slydm.geektimes.training.projects.user.function.ThrowableFunction;
+import slydm.geektimes.training.projects.user.util.DbUtil;
 
 /**
+ * 用户数据仓库服务实现
+ * <p>
+ * 本实现在数据库中完成
+ * 数据库能力依赖于 {@link }
+ *
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:52
+ * @see
  */
 public class DatabaseUserRepositoryImpl implements UserRepository {
 
@@ -26,6 +32,9 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
   public static final String SELECT_USER_BY_NAME_AND_PWD_SQL = "select * from users where name=? and password=?";
   public static final String SELECT_ALL_SQL = "select * from users";
 
+  /**
+   * 通用的将数据库结果集转换为单个用户
+   */
   public static final ThrowableFunction<ResultSet, User> TO_USER = result -> {
     result.next();
     User user = new User();
@@ -37,6 +46,9 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
     return user;
   };
 
+  /**
+   * 通用的将数据库结果集转换为用户列表
+   */
   public static final ThrowableFunction<ResultSet, List<User>> TO_USER_LIST = result -> {
     List<User> list = new ArrayList<>();
     while (result.next()) {
@@ -75,7 +87,6 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
 
   @Override
   public boolean update(User user) {
-
     int i = DbUtil.executeUpdate(
         UPDATE_USER_DML_SQL,
         DbUtil.COMMON_EXCEPTION_HANDLER,

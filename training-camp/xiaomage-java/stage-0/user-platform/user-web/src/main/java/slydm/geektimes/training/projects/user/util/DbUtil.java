@@ -1,4 +1,4 @@
-package slydm.geektimes.training.projects.user.web.sql;
+package slydm.geektimes.training.projects.user.util;
 
 import static org.apache.commons.lang.ClassUtils.wrapperToPrimitive;
 
@@ -8,24 +8,28 @@ import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slydm.geektimes.training.projects.user.web.domin.User;
-import slydm.geektimes.training.projects.user.web.function.ThrowableFunction;
+import slydm.geektimes.training.projects.context.ComponentContext;
+import slydm.geektimes.training.projects.user.function.ThrowableFunction;
 
 /**
- * 数据库连接管理器
+ * 数据库工具类，该类负责数据库连接管理并且提供基础的数据库操作能力
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:58
  */
 public class DbUtil {
 
   private static final Logger logger = LoggerFactory.getLogger(DbUtil.class.getName());
+
+  /**
+   * 通用处理方式
+   */
+  public static Consumer<Throwable> COMMON_EXCEPTION_HANDLER = e -> logger.error(e.getMessage());
+
 
   private static Driver initDriver() throws Exception {
     Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
@@ -35,18 +39,12 @@ public class DbUtil {
 
 
   public static Connection getConnection() {
-
-    try {
-      Driver driver = initDriver();
-      Connection connection = driver.connect("jdbc:derby:/db/user-platform;create=true", new Properties());
-      return connection;
-    } catch (Exception ex) {
-      throw new RuntimeException(ex);
-    }
+    return ComponentContext.getInstance().getConnection();
   }
 
+
   /**
-   * @param sql sql 语句
+   * @param sql      sql 语句
    * @param function 数据转换函数
    * @return 数据转换后的对象
    */
@@ -103,12 +101,6 @@ public class DbUtil {
 
 
   /**
-   * 通用处理方式
-   */
-  public static Consumer<Throwable> COMMON_EXCEPTION_HANDLER = e -> logger.error(e.getMessage());
-
-
-  /**
    * 数据类型与 ResultSet 方法名映射
    */
   static Map<Class, String> resultSetMethodMappings = new HashMap<>();
@@ -119,8 +111,8 @@ public class DbUtil {
     resultSetMethodMappings.put(Long.class, "getLong");
     resultSetMethodMappings.put(String.class, "getString");
 
-    preparedStatementMethodMappings.put(Long.class, "setLong"); // long
-    preparedStatementMethodMappings.put(String.class, "setString"); //
+    preparedStatementMethodMappings.put(Long.class, "setLong");
+    preparedStatementMethodMappings.put(String.class, "setString");
 
 
   }
@@ -141,39 +133,38 @@ public class DbUtil {
       "('C','******','c@gmail.com','3') , " +
       "('D','******','d@gmail.com','4') , " +
       "('E','******','e@gmail.com','5')";
-
-
-  public static void main(String[] args) throws Exception {
-
-    Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
-    Driver driver = DriverManager.getDriver("jdbc:derby:/db/user-platform;create=true");
-    Connection connection = driver.connect("jdbc:derby:/db/user-platform;create=true", new Properties());
-
-    Statement statement = connection.createStatement();
-    // 删除 users 表
-    try {
-      System.out.println(statement.execute(DROP_USERS_TABLE_DDL_SQL)); // false
-    } catch (Exception ex) {
-      // 避免表不存在时报错
-    }
-    // 创建 users 表
-    System.out.println(statement.execute(CREATE_USERS_TABLE_DDL_SQL)); // false
-    System.out.println(statement.executeUpdate(INSERT_USER_DML_SQL));  // 5
-
-    // 执行查询语句（DML）
-    ResultSet resultSet = statement.executeQuery("SELECT id,name,password,email,phoneNumber FROM users");
-    while (resultSet.next()) {
-
-      User user = new User();
-      user.setId(resultSet.getLong("id"));
-      user.setName(resultSet.getString("name"));
-      user.setPassword(resultSet.getString("password"));
-      user.setEmail(resultSet.getString("email"));
-      user.setPhoneNumber(resultSet.getString("phoneNumber"));
-
-      System.out.println(user);
-    }
-
-  }
+//
+//  public static void main(String[] args) throws Exception {
+//
+//    Class.forName("org.apache.derby.jdbc.EmbeddedDriver");
+//    Driver driver = DriverManager.getDriver("jdbc:derby:/db/user-platform;create=true");
+//    Connection connection = driver.connect("jdbc:derby:/db/user-platform;create=true", new Properties());
+//
+//    Statement statement = connection.createStatement();
+//    // 删除 users 表
+//    try {
+//      System.out.println(statement.execute(DROP_USERS_TABLE_DDL_SQL));
+//    } catch (Exception ex) {
+//      // 避免表不存在时报错
+//    }
+//    // 创建 users 表
+//    System.out.println(statement.execute(CREATE_USERS_TABLE_DDL_SQL));
+//    System.out.println(statement.executeUpdate(INSERT_USER_DML_SQL));
+//
+//    // 执行查询语句（DML）
+//    ResultSet resultSet = statement.executeQuery("SELECT id,name,password,email,phoneNumber FROM users");
+//    while (resultSet.next()) {
+//
+//      User user = new User();
+//      user.setId(resultSet.getLong("id"));
+//      user.setName(resultSet.getString("name"));
+//      user.setPassword(resultSet.getString("password"));
+//      user.setEmail(resultSet.getString("email"));
+//      user.setPhoneNumber(resultSet.getString("phoneNumber"));
+//
+//      System.out.println(user);
+//    }
+//
+//  }
 
 }

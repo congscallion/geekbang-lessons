@@ -1,6 +1,6 @@
-package slydm.geektimes.training.projects.user.web.service;
+package slydm.geektimes.training.projects.user.service;
 
-import slydm.geektimes.training.projects.user.web.domin.User;
+import slydm.geektimes.training.projects.user.domin.User;
 
 /**
  * 用户服务
@@ -40,8 +40,21 @@ public interface UserService {
    */
   boolean update(User user);
 
+  /**
+   * 根据用户ID查询用户
+   *
+   * @param id 用户id
+   * @return 与ID关联的用户
+   */
   User queryUserById(Long id);
 
+  /**
+   * 根据用户名和密码查询用户信息
+   *
+   * @param name 用户名
+   * @param password 密码
+   * @return 匹配的单个用户
+   */
   User queryUserByNameAndPassword(String name, String password);
 
 }
