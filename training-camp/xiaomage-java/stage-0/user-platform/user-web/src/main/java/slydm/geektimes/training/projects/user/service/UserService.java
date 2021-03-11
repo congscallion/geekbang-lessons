@@ -1,6 +1,6 @@
-package slydm.geektimes.training.projects.user.web.service;
+package slydm.geektimes.training.projects.user.service;
 
-import slydm.geektimes.training.projects.user.web.domin.User;
+import slydm.geektimes.training.projects.user.domin.User;
 
 /**
  * 用户服务

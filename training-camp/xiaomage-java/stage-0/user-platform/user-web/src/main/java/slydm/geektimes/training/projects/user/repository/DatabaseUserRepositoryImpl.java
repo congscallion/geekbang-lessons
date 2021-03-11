@@ -1,22 +1,22 @@
-package slydm.geektimes.training.projects.user.web.repository;
+package slydm.geektimes.training.projects.user.repository;
 
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.logging.Logger;
-import slydm.geektimes.training.projects.user.web.domin.User;
-import slydm.geektimes.training.projects.user.web.function.ThrowableFunction;
-import slydm.geektimes.training.projects.user.web.sql.DbUtil;
+import slydm.geektimes.training.projects.user.domin.User;
+import slydm.geektimes.training.projects.user.function.ThrowableFunction;
+import slydm.geektimes.training.projects.user.util.DbUtil;
 
 /**
  * 用户数据仓库服务实现
  * <p>
  * 本实现在数据库中完成
- * 数据库能力依赖于 {@link DbUtil}
+ * 数据库能力依赖于 {@link }
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:52
- * @see DbUtil
+ * @see
  */
 public class DatabaseUserRepositoryImpl implements UserRepository {
 

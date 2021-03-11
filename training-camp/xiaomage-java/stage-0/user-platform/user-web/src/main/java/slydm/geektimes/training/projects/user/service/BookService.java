@@ -1,7 +1,7 @@
-package slydm.geektimes.training.projects.user.web.service;
+package slydm.geektimes.training.projects.user.service;
 
 import java.util.Optional;
-import slydm.geektimes.training.projects.user.web.domin.Book;
+import slydm.geektimes.training.projects.user.domin.Book;
 
 /**
  * 书籍服务

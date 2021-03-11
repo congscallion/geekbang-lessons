@@ -1,4 +1,4 @@
-package slydm.geektimes.training.projects.user.web.enums;
+package slydm.geektimes.training.projects.user.enums;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:50

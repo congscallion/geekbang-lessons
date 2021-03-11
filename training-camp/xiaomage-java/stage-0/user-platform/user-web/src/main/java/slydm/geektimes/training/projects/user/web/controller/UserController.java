@@ -6,10 +6,10 @@ import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import slydm.geektimes.training.projects.user.web.domin.User;
-import slydm.geektimes.training.projects.user.web.repository.DatabaseUserRepositoryImpl;
-import slydm.geektimes.training.projects.user.web.service.UserService;
-import slydm.geektimes.training.projects.user.web.service.UserServiceImpl;
+import slydm.geektimes.training.projects.user.domin.User;
+import slydm.geektimes.training.projects.user.repository.DatabaseUserRepositoryImpl;
+import slydm.geektimes.training.projects.user.service.UserService;
+import slydm.geektimes.training.projects.user.service.UserServiceImpl;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 
 /**

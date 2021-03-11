@@ -1,7 +1,7 @@
-package slydm.geektimes.training.projects.user.web.repository;
+package slydm.geektimes.training.projects.user.repository;
 
 import java.util.Optional;
-import slydm.geektimes.training.projects.user.web.domin.User;
+import slydm.geektimes.training.projects.user.domin.User;
 
 /**
  * 用户数据仓库服务

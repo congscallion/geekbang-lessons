@@ -1,7 +1,7 @@
-package slydm.geektimes.training.projects.user.web.service;
+package slydm.geektimes.training.projects.user.service;
 
-import slydm.geektimes.training.projects.user.web.domin.User;
-import slydm.geektimes.training.projects.user.web.repository.UserRepository;
+import slydm.geektimes.training.projects.user.domin.User;
+import slydm.geektimes.training.projects.user.repository.UserRepository;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/10 0:52

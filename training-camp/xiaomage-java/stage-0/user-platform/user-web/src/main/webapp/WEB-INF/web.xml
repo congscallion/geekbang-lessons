@@ -7,7 +7,7 @@
 
 
   <listener>
-    <listener-class>slydm.geektimes.training.projects.user.web.listener.DBConnectionInitializerListener</listener-class>
+    <listener-class>slydm.geektimes.training.projects.user.web.listener.ComponentContextInitializerListener</listener-class>
   </listener>
 
     <servlet>

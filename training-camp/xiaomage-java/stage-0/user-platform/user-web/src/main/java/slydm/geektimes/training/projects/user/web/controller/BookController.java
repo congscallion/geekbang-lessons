@@ -5,10 +5,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import slydm.geektimes.training.projects.user.web.domin.Book;
-import slydm.geektimes.training.projects.user.web.repository.BookRepositoryImpl;
-import slydm.geektimes.training.projects.user.web.service.BookService;
-import slydm.geektimes.training.projects.user.web.service.BookServiceImpl;
+import slydm.geektimes.training.projects.user.domin.Book;
+import slydm.geektimes.training.projects.user.repository.BookRepositoryImpl;
+import slydm.geektimes.training.projects.user.service.BookService;
+import slydm.geektimes.training.projects.user.service.BookServiceImpl;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 
 

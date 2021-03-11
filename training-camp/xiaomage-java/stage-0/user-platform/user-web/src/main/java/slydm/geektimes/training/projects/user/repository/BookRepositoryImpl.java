@@ -1,9 +1,9 @@
-package slydm.geektimes.training.projects.user.web.repository;
+package slydm.geektimes.training.projects.user.repository;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import slydm.geektimes.training.projects.user.web.domin.Book;
+import slydm.geektimes.training.projects.user.domin.Book;
 
 /**
  * 书籍数据源服务实例

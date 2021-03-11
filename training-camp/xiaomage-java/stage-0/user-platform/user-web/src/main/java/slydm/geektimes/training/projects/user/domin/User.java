@@ -1,4 +1,4 @@
-package slydm.geektimes.training.projects.user.web.domin;
+package slydm.geektimes.training.projects.user.domin;
 
 import java.io.Serializable;
 
