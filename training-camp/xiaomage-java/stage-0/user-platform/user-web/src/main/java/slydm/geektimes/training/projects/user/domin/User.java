@@ -14,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "users")
+//@UserValid(idRange = 5)
 public class User implements Serializable {
 
   @Id

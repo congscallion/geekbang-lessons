@@ -30,6 +30,13 @@ public class BaseServlet extends HttpServlet {
     getServletContext().getRequestDispatcher(viewPath).forward(request, response);
   }
 
+
+  protected void renderFromRoot(HttpServletRequest request, HttpServletResponse response, String template)
+      throws ServletException, IOException {
+    getServletContext().getRequestDispatcher(template).forward(request, response);
+  }
+
+
   public void redirect(HttpServletResponse response, String path) throws IOException {
     response.sendRedirect(path);
   }

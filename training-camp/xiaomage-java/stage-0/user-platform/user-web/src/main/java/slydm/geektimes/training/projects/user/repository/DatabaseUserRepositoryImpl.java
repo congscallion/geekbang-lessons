@@ -36,14 +36,16 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
    * 通用的将数据库结果集转换为单个用户
    */
   public static final ThrowableFunction<ResultSet, User> TO_USER = result -> {
-    result.next();
-    User user = new User();
-    user.setId(result.getLong("id"));
-    user.setName(result.getString("name"));
-    user.setPassword(result.getString("password"));
-    user.setEmail(result.getString("email"));
-    user.setPhoneNumber(result.getString("phoneNumber"));
-    return user;
+    if (result.next()) {
+      User user = new User();
+      user.setId(result.getLong("id"));
+      user.setName(result.getString("name"));
+      user.setPassword(result.getString("password"));
+      user.setEmail(result.getString("email"));
+      user.setPhoneNumber(result.getString("phoneNumber"));
+      return user;
+    }
+    return null;
   };
 
   /**
@@ -102,7 +104,7 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
         TO_USER,
         DbUtil.COMMON_EXCEPTION_HANDLER,
         userId);
-    return Optional.of(re);
+    return re == null ? Optional.empty() : Optional.of(re);
   }
 
   @Override
@@ -113,7 +115,7 @@ public class DatabaseUserRepositoryImpl implements UserRepository {
         TO_USER,
         DbUtil.COMMON_EXCEPTION_HANDLER,
         userName, password);
-    return Optional.of(re);
+    return re == null ? Optional.empty() : Optional.of(re);
   }
 
   @Override

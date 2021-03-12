@@ -1,5 +1,6 @@
 package slydm.geektimes.training.projects.user.service;
 
+import javax.annotation.Resource;
 import slydm.geektimes.training.projects.user.domin.User;
 import slydm.geektimes.training.projects.user.repository.UserRepository;
 
@@ -8,9 +9,10 @@ import slydm.geektimes.training.projects.user.repository.UserRepository;
  */
 public class UserServiceImpl implements UserService {
 
+  @Resource(name = "bean/UserRepository")
   private UserRepository userRepository;
 
-  public UserServiceImpl(UserRepository userRepository) {
+  public void setUserRepository(UserRepository userRepository) {
     this.userRepository = userRepository;
   }
 
@@ -25,8 +27,8 @@ public class UserServiceImpl implements UserService {
   }
 
   @Override
-  public boolean deregister(User user) {
-    return userRepository.deleteById(user.getId());
+  public boolean delete(Long userId) {
+    return userRepository.deleteById(userId);
   }
 
   @Override
@@ -41,7 +43,6 @@ public class UserServiceImpl implements UserService {
 
   @Override
   public User queryUserByNameAndPassword(String name, String password) {
-    return userRepository.getByNameAndPassword(name, password)
-        .orElseThrow(() -> new RuntimeException("用户:" + name + "," + password + "不存在."));
+    return userRepository.getByNameAndPassword(name, password).orElse(null);
   }
 }

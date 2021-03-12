@@ -140,8 +140,10 @@ public class MyDispatcherServlet extends BaseServlet {
           Object viewPath = handlerMethodInfo.getHandlerMethod()
               .invoke(pageController, new Object[]{request, response});
 
-          if (null != viewPath) {
+          if (null != viewPath && !viewPath.toString().startsWith("/")) {
             render(request, response, viewPath.toString());
+          } else if (null != viewPath && viewPath.toString().startsWith("/")) {
+            renderFromRoot(request, response, viewPath.toString());
           }
         } else if (controller instanceof RestController) {
           // TODO
