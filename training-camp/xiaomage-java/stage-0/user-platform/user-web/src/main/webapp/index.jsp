@@ -92,7 +92,8 @@
 
 <script type="text/javascript">
   $(document).ready(() => {
-    $('.alert').hide();
+    $('.alert-success').hide();
+    $('.alert-danger').hide();
     $("#login-div #btn-login").click(function () {
       let name = $("#login-div input[name='name']").val();
       let password = $("#login-div input[name='password']").val();
@@ -112,6 +113,7 @@
             if (value.status == 500) {
               alertError(value.message);
             } else {
+              window.location.href="/main"
               // TODO go to main page
             }
           });

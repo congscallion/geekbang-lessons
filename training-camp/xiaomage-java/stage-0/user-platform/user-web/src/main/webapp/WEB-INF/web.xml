@@ -72,7 +72,7 @@
     <init-param>
       <!-- Filter ÅäÖÃ = FilterConfig -->
       <param-name>excludes</param-name>
-      <param-value>/,/register,/login</param-value>
+      <param-value>/,/users/register,/users/login</param-value>
     </init-param>
   </filter>
 

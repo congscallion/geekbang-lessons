@@ -18,9 +18,6 @@ import org.apache.commons.lang.ArrayUtils;
  *
  * @author wangcymy@gmail.com(wangcong) 3/4/21 10:49 PM
  */
-@WebFilter(filterName = "loginFilter", urlPatterns = "/*", initParams = {
-    @WebInitParam(name = "excludes", value = "/,/register,/login")
-})
 public class LoginFilter implements Filter {
 
   private String[] excludes;
@@ -38,11 +35,13 @@ public class LoginFilter implements Filter {
       HttpServletRequest httpRequest = (HttpServletRequest) request;
 
       String requestURI = httpRequest.getRequestURI();
-      if (!ArrayUtils.contains(excludes, requestURI)) {
+      if (!ArrayUtils.contains(excludes, requestURI)
+        && !requestURI.startsWith("/assets/")) {
         String requestedSessionId = httpRequest.getRequestedSessionId();
         Object user = httpRequest.getSession().getAttribute(requestedSessionId);
         if (null == user) {
           ((HttpServletResponse) response).sendRedirect("/");
+          return;
         }
       }
     }

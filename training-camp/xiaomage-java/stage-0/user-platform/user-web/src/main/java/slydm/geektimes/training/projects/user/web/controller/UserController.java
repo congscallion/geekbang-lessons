@@ -34,9 +34,6 @@ public class UserController extends BaseController implements PageController {
   @Path("")
   public String index(HttpServletRequest request, HttpServletResponse response) {
 
-    String requestedSessionId = request.getRequestedSessionId();
-    System.out.println(requestedSessionId);
-
     Iterable<User> users = this.userService.userList();
     request.setAttribute("pageName", "Users");
     request.setAttribute("users", users);

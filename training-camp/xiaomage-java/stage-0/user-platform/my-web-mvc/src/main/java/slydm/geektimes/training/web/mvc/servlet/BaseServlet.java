@@ -33,7 +33,7 @@ public class BaseServlet extends HttpServlet {
 
   protected void renderFromRoot(HttpServletRequest request, HttpServletResponse response, String template)
       throws ServletException, IOException {
-    getServletContext().getRequestDispatcher(template).forward(request, response);
+    getServletContext().getRequestDispatcher(template + VIEW_SUFFIX).forward(request, response);
   }
 
 
