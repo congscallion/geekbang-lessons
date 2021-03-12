@@ -113,7 +113,7 @@
             if (value.status == 500) {
               alertError(value.message);
             } else {
-              window.location.href="/main"
+              window.location.href = "/main"
               // TODO go to main page
             }
           });

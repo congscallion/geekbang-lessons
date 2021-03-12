@@ -1,7 +1,10 @@
 package slydm.geektimes.training.projects.user.web.controller;
 
+import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validator;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -23,11 +26,11 @@ import slydm.geektimes.training.web.mvc.controller.PageController;
 public class UserController extends BaseController implements PageController {
 
   private final UserService userService;
-//  private final Validator validator;
+  private final Validator validator;
 
   public UserController() {
     userService = ComponentContext.getInstance().getComponent("bean/UserService");
-//    validator = ComponentContext.getInstance().getComponent("bean/Validator");
+    validator = ComponentContext.getInstance().getComponent("bean/Validator");
   }
 
   @GET
@@ -66,11 +69,11 @@ public class UserController extends BaseController implements PageController {
   public void register(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     User user = getUserFromRequest(request);
-//    String err = validUser(user);
-//    if (!err.isEmpty()) {
-//      responseJson(request, response, Result.error(err));
-//      return;
-//    }
+    String err = validUser(user);
+    if (!err.isEmpty()) {
+      responseJson(request, response, Result.error(err));
+      return;
+    }
     userService.register(user);
     responseJson(request, response, Result.success());
   }
@@ -83,11 +86,11 @@ public class UserController extends BaseController implements PageController {
     User user = getUserFromRequest(request);
     Long userId = Long.parseLong(request.getParameter("id"));
     user.setId(userId);
-//    String err = validUser(user);
-//    if (!err.isEmpty()) {
-//      responseJson(request, response, Result.error(err));
-//      return;
-//    }
+    String err = validUser(user);
+    if (!err.isEmpty()) {
+      responseJson(request, response, Result.error(err));
+      return;
+    }
     userService.update(user);
     responseJson(request, response, Result.success());
   }
@@ -133,16 +136,16 @@ public class UserController extends BaseController implements PageController {
     return user;
   }
 
-//  private String validUser(User user) {
-//    Set<ConstraintViolation<User>> errs = validator.validate(user);
-//    StringBuilder sb = new StringBuilder();
-//    for (ConstraintViolation<User> err : errs) {
-//      sb.append(err.getMessage() + ",");
-//    }
-//    if (sb.length() > 1) {
-//      sb.deleteCharAt(sb.length() - 1);
-//    }
-//    return sb.toString();
-//  }
+  private String validUser(User user) {
+    Set<ConstraintViolation<User>> errs = validator.validate(user);
+    StringBuilder sb = new StringBuilder();
+    for (ConstraintViolation<User> err : errs) {
+      sb.append(err.getMessage() + ",");
+    }
+    if (sb.length() > 1) {
+      sb.deleteCharAt(sb.length() - 1);
+    }
+    return sb.toString();
+  }
 
 }

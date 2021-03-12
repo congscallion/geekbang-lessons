@@ -7,8 +7,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.ArrayUtils;
@@ -36,7 +34,7 @@ public class LoginFilter implements Filter {
 
       String requestURI = httpRequest.getRequestURI();
       if (!ArrayUtils.contains(excludes, requestURI)
-        && !requestURI.startsWith("/assets/")) {
+          && !requestURI.startsWith("/assets/")) {
         String requestedSessionId = httpRequest.getRequestedSessionId();
         Object user = httpRequest.getSession().getAttribute(requestedSessionId);
         if (null == user) {

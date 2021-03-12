@@ -8,13 +8,14 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import slydm.geektimes.training.projects.user.validator.bean.validation.UserValid;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:48
  */
 @Entity
 @Table(name = "users")
-//@UserValid(idRange = 5)
+@UserValid(idRange = 5)
 public class User implements Serializable {
 
   @Id

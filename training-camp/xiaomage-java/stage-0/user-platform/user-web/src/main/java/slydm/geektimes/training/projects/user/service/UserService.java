@@ -51,7 +51,7 @@ public interface UserService {
   /**
    * 根据用户名和密码查询用户信息
    *
-   * @param name 用户名
+   * @param name     用户名
    * @param password 密码
    * @return 匹配的单个用户
    */

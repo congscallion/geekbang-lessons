@@ -12,8 +12,7 @@ import slydm.geektimes.training.projects.user.util.DbUtil;
 /**
  * 用户数据仓库服务实现
  * <p>
- * 本实现在数据库中完成
- * 数据库能力依赖于 {@link }
+ * 本实现在数据库中完成 数据库能力依赖于 {@link }
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:52
  * @see
