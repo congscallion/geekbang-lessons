@@ -14,11 +14,12 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class BaseServlet extends HttpServlet {
 
-  private static final long serialVersionUID = 632349127293785744L;
+  protected static final long serialVersionUID = 632349127293785744L;
   protected static final String ROOT = "/";
   protected static final String ROOT2 = "//";
-  private static final String VIEW_PREFIX = "/WEB-INF/templates/";
-  private static final String VIEW_SUFFIX = ".jsp";
+  protected static final String VIEW_PREFIX = "/WEB-INF/templates/";
+  protected static final String VIEW_SUFFIX = ".jsp";
+  protected static final String REDIRECT_PREFIX = "redirect:";
 
   protected void render(HttpServletRequest request, HttpServletResponse response, String template)
       throws ServletException, IOException {

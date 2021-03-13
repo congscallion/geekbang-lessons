@@ -121,6 +121,15 @@ public class UserController extends BaseController implements PageController {
     }
   }
 
+  @GET
+  @Path("/loginOut")
+  public String loginOut(HttpServletRequest request, HttpServletResponse response) throws Exception {
+    String sessionId = request.getRequestedSessionId();
+    request.getSession().removeAttribute(sessionId);
+    return "redirect:/";
+  }
+
+
   private User getUserFromRequest(HttpServletRequest request) {
 
     String name = request.getParameter("name");
