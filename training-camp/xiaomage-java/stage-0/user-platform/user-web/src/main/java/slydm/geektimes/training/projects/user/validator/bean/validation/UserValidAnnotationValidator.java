@@ -5,7 +5,7 @@ import javax.validation.ConstraintValidatorContext;
 import slydm.geektimes.training.projects.user.domin.User;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/12 10:59
+ * @author wangcymy@gmail.com(wangcong) 2021/3/12 10:59
  */
 public class UserValidAnnotationValidator implements ConstraintValidator<UserValid, User> {
 

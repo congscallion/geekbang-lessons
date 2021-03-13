@@ -1,7 +1,7 @@
 package slydm.geektimes.training.projects.user.exception;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/12 15:21
+ * @author wangcymy@gmail.com(wangcong) 2021/3/12 15:21
  */
 public enum WebError implements ErrorCode {
 

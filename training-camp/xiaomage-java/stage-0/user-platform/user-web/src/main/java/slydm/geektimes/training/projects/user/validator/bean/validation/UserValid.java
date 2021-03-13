@@ -8,7 +8,7 @@ import javax.validation.Constraint;
 import javax.validation.Payload;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/12 10:56
+ * @author wangcymy@gmail.com(wangcong) 2021/3/12 10:56
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

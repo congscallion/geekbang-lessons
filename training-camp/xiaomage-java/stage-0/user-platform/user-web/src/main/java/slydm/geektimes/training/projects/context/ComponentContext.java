@@ -27,7 +27,7 @@ import slydm.geektimes.training.projects.user.function.ThrowableFunction;
 /**
  * 全局组件 容器,基于 JNDI 实现
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/11 16:20
+ * @author wangcymy@gmail.com(wangcong) 2021/3/11 16:20
  */
 public class ComponentContext {
 

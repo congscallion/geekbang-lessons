@@ -12,7 +12,7 @@ import javax.validation.metadata.BeanDescriptor;
 /**
  * 静态代理 {@link Validator} 实现
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/12 11:48
+ * @author wangcymy@gmail.com(wangcong) 2021/3/12 11:48
  */
 public class DelegatingValidator implements Validator {
 
