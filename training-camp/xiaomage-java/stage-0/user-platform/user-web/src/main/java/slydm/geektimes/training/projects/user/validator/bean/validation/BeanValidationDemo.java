@@ -15,11 +15,11 @@ public class BeanValidationDemo {
 
   public static void main(String[] args) {
 //    basic();
-//    group1();
+    group1();
 //    group2();
 //    group3();
 
-    groupOrder();
+//    groupOrder();
 
 
   }
@@ -69,6 +69,7 @@ public class BeanValidationDemo {
     RegistrationForm form = buildRegistrationFormWithBasicInfo();
     form.setFirstName(" ");
     form.setPhone(" ");
+    form.setEmail("abcs@myEmail.xyz");
 
     Set<ConstraintViolation<RegistrationForm>> violations = validator.validate(form, BasicInfo.class);
 

@@ -15,6 +15,9 @@ import slydm.geektimes.training.projects.user.domin.User;
 import slydm.geektimes.training.projects.user.exception.WebError;
 import slydm.geektimes.training.projects.user.service.UserService;
 import slydm.geektimes.training.projects.user.web.Result;
+import slydm.geektimes.training.projects.user.web.controller.validator.groups.user.LoginGroup;
+import slydm.geektimes.training.projects.user.web.controller.validator.groups.user.RegisterGroup;
+import slydm.geektimes.training.projects.user.web.controller.validator.groups.user.UpdateGroup;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 
 /**
@@ -69,7 +72,7 @@ public class UserController extends BaseController implements PageController {
   public void register(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
     User user = getUserFromRequest(request);
-    String err = validUser(user);
+    String err = validUser(user, RegisterGroup.class);
     if (!err.isEmpty()) {
       responseJson(request, response, Result.error(err));
       return;
@@ -86,7 +89,7 @@ public class UserController extends BaseController implements PageController {
     User user = getUserFromRequest(request);
     Long userId = Long.parseLong(request.getParameter("id"));
     user.setId(userId);
-    String err = validUser(user);
+    String err = validUser(user, UpdateGroup.class);
     if (!err.isEmpty()) {
       responseJson(request, response, Result.error(err));
       return;
@@ -111,7 +114,17 @@ public class UserController extends BaseController implements PageController {
 
     String name = request.getParameter("name");
     String password = request.getParameter("password");
-    User user = userService.queryUserByNameAndPassword(name, password);
+
+    User user = new User();
+    user.setName(name);
+    user.setPassword(password);
+    String err = validUser(user, LoginGroup.class);
+    if (null != err && !err.isEmpty()) {
+      responseJson(request, response, Result.error(err));
+      return;
+    }
+
+    user = userService.queryUserByNameAndPassword(name, password);
     if (null != user) {
       String sessionId = request.getRequestedSessionId();
       request.getSession().setAttribute(sessionId, user);
@@ -145,11 +158,14 @@ public class UserController extends BaseController implements PageController {
     return user;
   }
 
-  private String validUser(User user) {
-    Set<ConstraintViolation<User>> errs = validator.validate(user);
+  private String validUser(User user, Class groupClass) {
+    Set<ConstraintViolation<User>> errs = validator.validate(user, groupClass);
     StringBuilder sb = new StringBuilder();
     for (ConstraintViolation<User> err : errs) {
-      sb.append(err.getMessage() + ",");
+      sb.append(err.getPropertyPath());
+      sb.append(":");
+      sb.append(err.getMessage());
+      sb.append(",");
     }
     if (sb.length() > 1) {
       sb.deleteCharAt(sb.length() - 1);

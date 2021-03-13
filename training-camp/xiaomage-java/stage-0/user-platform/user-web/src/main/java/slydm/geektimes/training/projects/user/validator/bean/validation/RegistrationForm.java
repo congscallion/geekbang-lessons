@@ -1,6 +1,5 @@
 package slydm.geektimes.training.projects.user.validator.bean.validation;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotEmpty;
 
@@ -16,7 +15,7 @@ public class RegistrationForm {
   private String firstName;
   @NotBlank(groups = BasicInfo.class)
   private String lastName;
-  @Email(groups = BasicInfo.class)
+  @MyEmail(groups = BasicInfo.class)
   private String email;
   @NotEmpty(groups = BasicInfo.class)
   private String phone;
