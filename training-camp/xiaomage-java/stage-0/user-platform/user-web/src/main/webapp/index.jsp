@@ -22,67 +22,67 @@
         </button>
     </nav>
 </header>
-<div class="jumbotron jumbotron-fluid">
+<div class="jumbotron">
     <div class="container">
         <h1 class="display-4">「小马哥的 Java 项目实战营」第 0 期</h1>
         <p class="lead">第一阶段单体项目</p>
     </div>
 </div>
 
-<div class="container">
+<div class="m-auto h-auto" style="display: block; width: 500px;">
+    <nav>
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-link active" id="nav-home-tab" data-toggle="tab" href="#login-div" role="tab"
+               aria-controls="nav-home" aria-selected="true">登录</a>
+            <a class="nav-link" id="nav-profile-tab" data-toggle="tab" href="#register-div" role="tab"
+               aria-controls="nav-profile" aria-selected="false">注册</a>
+        </div>
+    </nav>
+    <div class="tab-content" id="nav-tabContent">
 
-    <div class="alert alert-danger" role="alert"></div>
-    <div class="alert alert-success" role="alert"></div>
-    <div class="form row jumbotron align-content-center " id="login-div">
-        <div class="align-content-center">
+        <!-- login from -->
+        <div class="tab-pane fade show active" id="login-div" role="tabpanel" aria-labelledby="nav-home-tab">
             <div class="form-group">
-                <h3 class="form-title">Login to your account</h3>
+                <label for="loginUserNameInput">User Name</label>
+                <input id="loginUserNameInput" class="form-control required" type="text" name="name"
+                       autofocus="autofocus" maxlength="20">
             </div>
             <div class="form-group">
-                <i class="fa fa-user fa-lg"></i>
-                <input class="form-control required" type="text" placeholder="Username" name="name"
-                       autofocus="autofocus" maxlength="20"/>
-            </div>
-            <div class="form-group">
-                <i class="fa fa-lock fa-lg"></i>
-                <input class="form-control required" type="password" placeholder="Password" name="password"
+                <label for="loginPasswordInput">Password</label>
+                <input id="loginPasswordInput" class="form-control required" type="password" name="password"
                        maxlength="8"/>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary" id="btn-login">Login</button>
+            <div class="alert alert-warning alert-dismissible" id="login-message">
+                This alert box could indicate a successful or positive action.
             </div>
+            <button type="submit" class="btn btn-primary" id="btn-login">Login</button>
         </div>
-    </div>
 
-
-    <div class="form row jumbotron align-content-center" id="register-div">
-        <div class="align-content-center">
+        <!-- register from -->
+        <div class="tab-pane fade" id="register-div" role="tabpanel" aria-labelledby="nav-profile-tab">
             <div class="form-group">
-                <h3 class="form-title">Create your account</h3>
-            </div>
-            <div class="form-group">
-                <i class="fa fa-user fa-lg"></i>
-                <input class="form-control required" type="text" placeholder="Username" name="name"
+                <label for="registerName">User Name</label>
+                <input id="registerName" class="form-control required" type="text" name="name"
                        autofocus="autofocus" maxlength="20"/>
             </div>
             <div class="form-group">
-                <i class="fa fa-lock fa-lg"></i>
-                <input class="form-control required" type="password" placeholder="Password" name="password"
+                <label for="registerPassword">Password</label>
+                <input id="registerPassword" class="form-control required" type="password" name="password"
                        maxlength="20"/>
             </div>
             <div class="form-group">
-                <i class="fa fa-lock fa-lg"></i>
-                <input class="form-control required" type="email" placeholder="Email" name="email"
+                <label for="registerEmail">Email</label>
+                <input id="registerEmail" class="form-control required" type="email" name="email"
                        maxlength="30"/>
             </div>
             <div class="form-group">
-                <i class="fa fa-lock fa-lg"></i>
-                <input class="form-control required" type="text" placeholder="Phone Number" name="phoneNumber"
+                <label for="registerPhone">Phone Number</label>
+                <input id="registerPhone" class="form-control required" type="text" name="phoneNumber"
                        maxlength="11"/>
             </div>
-            <div class="form-group">
-                <button type="submit" class="btn btn-primary" id="btn-register">Register</button>
+            <div class="alert alert-warning alert-dismissible" id="register-message">
             </div>
+            <button type="submit" class="btn btn-primary" id="btn-register">Register</button>
         </div>
     </div>
 </div>
@@ -92,8 +92,9 @@
 
 <script type="text/javascript">
   $(document).ready(() => {
-    $('.alert-success').hide();
-    $('.alert-danger').hide();
+
+    $("#login-message").hide();
+    $("#register-message").hide();
     $("#login-div #btn-login").click(function () {
       let name = $("#login-div input[name='name']").val();
       let password = $("#login-div input[name='password']").val();
@@ -111,10 +112,9 @@
         if (response.status == 200) {
           response.data.then(value => {
             if (value.status == 500) {
-              alertError(value.message);
+              alertError(value);
             } else {
               window.location.href = "/main"
-              // TODO go to main page
             }
           });
         } else if (response.status == 404) {
@@ -129,9 +129,7 @@
         console.log('Request failed', error);
         alertError("An unknown error occurred. Please contact Administrator.")
       });
-
       return;
-
     });
 
     $("#btn-register").click(function () {
@@ -156,14 +154,14 @@
         if (response.status == 200) {
           response.data.then(value => {
             if (value.status == 500) {
-              alertError(value.message);
+              alertError(value);
             } else {
               alertSuccess()
             }
           });
         } else if (response.status == 404) {
           response.data.then(value => {
-            alertError(value)
+            alertError(value);
           });
         } else {
           alertError("An unknown error occurred. Please contact Administrator.")
@@ -181,24 +179,20 @@
   });
 
   function alertError(error) {
-    $('.alert-success').hide();
-    $('.alert-success').text("");
+    let aa = $("a.active").attr('href');
+    if ('#login-div' === aa) {
+      $("#login-message").text(error.message);
+      $("#login-message").show();
+    } else {
+      $("#register-message").text(error.message);
+      $("#register-message").show();
+    }
 
-    $('.alert-danger').show();
-    $('.alert-danger').text(error);
   }
 
   function alertSuccess(message) {
-    $('.alert-danger').hide();
-    $('.alert-danger').text("");
 
-    $('.alert-success').show();
-    $('.alert-success').text(message || "执行成功!");
   }
 
-  function formatData(data) {
-    const result = Object.entries(data).map(([key, value]) => `${key}=${value}`).join('&');
-    return result;
-  }
 
 </script>

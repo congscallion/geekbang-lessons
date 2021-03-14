@@ -12,6 +12,20 @@
   </listener>
 
   <servlet>
+    <servlet-name>jolokia-agent</servlet-name>
+    <servlet-class>org.jolokia.http.AgentServlet</servlet-class>
+    <init-param>
+      <description>
+        Class names (comma separated) of RequestDispatcher used in addition
+        to the LocalRequestDispatcher
+      </description>
+      <param-name>dispatcherClasses</param-name>
+      <param-value>org.jolokia.jsr160.Jsr160RequestDispatcher</param-value>
+    </init-param>
+  </servlet>
+
+
+  <servlet>
     <servlet-name>default</servlet-name>
     <servlet-class>org.apache.catalina.servlets.DefaultServlet</servlet-class>
     <init-param>
@@ -36,16 +50,16 @@
     <url-pattern>*.js</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>MyDispatcherServlet</servlet-name>
-    <servlet-class>slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
+<!--  <servlet>-->
+<!--    <servlet-name>MyDispatcherServlet</servlet-name>-->
+<!--    <servlet-class>slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet</servlet-class>-->
+<!--    <load-on-startup>1</load-on-startup>-->
+<!--  </servlet>-->
 
-  <servlet-mapping>
-    <servlet-name>MyDispatcherServlet</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
+<!--  <servlet-mapping>-->
+<!--    <servlet-name>MyDispatcherServlet</servlet-name>-->
+<!--    <url-pattern>/</url-pattern>-->
+<!--  </servlet-mapping>-->
 
   <!--  <filter>-->
   <!--    <filter-name>CharsetEncodingFilter</filter-name>-->
