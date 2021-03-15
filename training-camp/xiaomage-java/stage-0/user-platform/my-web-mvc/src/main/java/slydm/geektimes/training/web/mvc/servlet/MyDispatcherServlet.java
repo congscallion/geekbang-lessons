@@ -140,13 +140,13 @@ public class MyDispatcherServlet extends BaseServlet {
           Object viewPath = handlerMethodInfo.getHandlerMethod()
               .invoke(pageController, new Object[]{request, response});
 
-          if (null != viewPath) {
-            render(request, response, viewPath.toString());
+          if (null != viewPath && !viewPath.toString().isEmpty()) {
+            goToNext(viewPath.toString(), request, response);
           }
+
         } else if (controller instanceof RestController) {
           // TODO
         }
-
 
       } catch (Throwable throwable) {
         if (throwable.getCause() instanceof IOException) {
@@ -160,5 +160,26 @@ public class MyDispatcherServlet extends BaseServlet {
       render(request, response, "error/404");
     }
 
+  }
+
+
+  /**
+   * 跳转到目标 jsp
+   *
+   * @param viewPath jsp 路径
+   */
+  private void goToNext(String viewPath, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+    if (viewPath.startsWith(REDIRECT_PREFIX)) {
+      String redirectPth = viewPath.substring(REDIRECT_PREFIX.length());
+      redirect(response, redirectPth);
+      return;
+    }
+
+    if (null != viewPath && !viewPath.startsWith("/")) {
+      render(request, response, viewPath);
+    } else if (null != viewPath && viewPath.startsWith("/")) {
+      renderFromRoot(request, response, viewPath);
+    }
   }
 }

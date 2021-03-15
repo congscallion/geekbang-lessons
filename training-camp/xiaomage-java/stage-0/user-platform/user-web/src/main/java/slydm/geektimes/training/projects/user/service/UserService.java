@@ -28,10 +28,10 @@ public interface UserService {
   /**
    * 注销用户
    *
-   * @param user 用户对象
+   * @param userId 用户ID
    * @return 成功返回<code>true</code>
    */
-  boolean deregister(User user);
+  boolean delete(Long userId);
 
   /**
    * 更新用户信息
@@ -51,7 +51,7 @@ public interface UserService {
   /**
    * 根据用户名和密码查询用户信息
    *
-   * @param name 用户名
+   * @param name     用户名
    * @param password 密码
    * @return 匹配的单个用户
    */

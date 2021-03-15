@@ -26,7 +26,9 @@
         <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
             <div class="navbar-nav">
                 <a class="nav-item nav-link<c:if test="${pageName == 'Home'}"> active</c:if>"
-                   href="${pageContext.request.contextPath}/" alt="Home">Home <span class="sr-only">(current)</span></a>
+                   href="${pageContext.request.contextPath}/main" alt="Home">Home <span class="sr-only">(current)</span></a>
+                <a class="nav-item nav-link<c:if test="${pageName == 'Books'}"> active</c:if>"
+                   href="${pageContext.request.contextPath}/users/loginOut" alt="Books">LoginOut</a>
                 <a class="nav-item nav-link<c:if test="${pageName == 'Books'}"> active</c:if>"
                    href="${pageContext.request.contextPath}/books" alt="Books">Books</a>
                 <a class="nav-item nav-link<c:if test="${pageName == 'Users'}"> active</c:if>"

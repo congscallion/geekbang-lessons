@@ -3,7 +3,7 @@ package slydm.geektimes.training.projects.user.web;
 import java.io.Serializable;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/11 16:50
+ * @author wangcymy@gmail.com(wangcong) 2021/3/11 16:50
  */
 public class Result<T> implements Serializable {
 

@@ -5,6 +5,7 @@ import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import slydm.geektimes.training.projects.context.ComponentContext;
 
+
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/10 21:52
  */
@@ -19,7 +20,6 @@ public class ComponentContextInitializerListener implements ServletContextListen
     ComponentContext context = new ComponentContext();
     context.init(servletContext);
   }
-
 
   @Override
   public void contextDestroyed(ServletContextEvent servletContextEvent) {

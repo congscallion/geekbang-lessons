@@ -94,7 +94,7 @@ public class DbUtil {
       // Boolean -> boolean
       String methodName = preparedStatementMethodMappings.get(argType);
       Method method = PreparedStatement.class.getMethod(methodName, int.class, wrapperType);
-      method.invoke(preparedStatement, i + 1, args[0]);
+      method.invoke(preparedStatement, i + 1, args[i]);
     }
     return preparedStatement;
   }

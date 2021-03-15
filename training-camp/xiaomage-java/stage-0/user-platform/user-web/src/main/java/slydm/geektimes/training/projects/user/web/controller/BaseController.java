@@ -8,7 +8,7 @@ import slydm.geektimes.training.projects.user.web.Result;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/11 10:36
+ * @author wangcymy@gmail.com(wangcong) 2021/3/11 10:36
  */
 public class BaseController implements PageController {
 
