@@ -82,6 +82,8 @@
             </div>
             <div class="alert alert-warning alert-dismissible" id="register-message">
             </div>
+            <div class="alert alert-success alert-dismissible" id="re-success-message">
+            </div>
             <button type="submit" class="btn btn-primary" id="btn-register">Register</button>
         </div>
     </div>
@@ -95,6 +97,7 @@
 
     $("#login-message").hide();
     $("#register-message").hide();
+    $("#re-success-message").hide();
     $("#login-div #btn-login").click(function () {
       let name = $("#login-div input[name='name']").val();
       let password = $("#login-div input[name='password']").val();
@@ -184,6 +187,9 @@
       $("#login-message").text(error.message);
       $("#login-message").show();
     } else {
+
+      $("#re-success-message").text("");
+      $("#re-success-message").hide();
       $("#register-message").text(error.message);
       $("#register-message").show();
     }
@@ -191,7 +197,10 @@
   }
 
   function alertSuccess(message) {
-
+    $("#register-message").text("")
+    $("#register-message").hide();
+    $("#re-success-message").text("注册成功，你可以使用该账户登录了!");
+    $("#re-success-message").show();
   }
 
 

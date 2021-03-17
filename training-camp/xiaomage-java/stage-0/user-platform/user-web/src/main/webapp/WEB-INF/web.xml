@@ -56,25 +56,24 @@
     <url-pattern>/</url-pattern>
   </servlet-mapping>
 
-  <!--  <filter>-->
-  <!--    <filter-name>CharsetEncodingFilter</filter-name>-->
-  <!--    <filter-class>slydm.geektimes.training.web.mvc.filter.DefaultCharsetEncodingFilter</filter-class>-->
-  <!--    <init-param>-->
-  <!--      &lt;!&ndash; Filter ÅäÖÃ = FilterConfig &ndash;&gt;-->
-  <!--      <param-name>encoding</param-name>-->
-  <!--      <param-value>UTF-8</param-value>-->
-  <!--    </init-param>-->
-  <!--  </filter>-->
+  <filter>
+    <filter-name>CharsetEncodingFilter</filter-name>
+    <filter-class>slydm.geektimes.training.web.mvc.filter.DefaultCharsetEncodingFilter</filter-class>
+    <init-param>
+      <!-- Filter ÅäÖÃ = FilterConfig -->
+      <param-name>encoding</param-name>
+      <param-value>UTF-8</param-value>
+    </init-param>
+  </filter>
 
-  <!--  <filter-mapping>-->
-  <!--    <filter-name>CharsetEncodingFilter</filter-name>-->
-  <!--    <url-pattern>/*</url-pattern>-->
-  <!--    <dispatcher>REQUEST</dispatcher>-->
-  <!--    <dispatcher>FORWARD</dispatcher>-->
-  <!--    <dispatcher>INCLUDE</dispatcher>-->
-  <!--    <dispatcher>ERROR</dispatcher>-->
-  <!--  </filter-mapping>-->
-
+  <filter-mapping>
+    <filter-name>CharsetEncodingFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+  </filter-mapping>
 
   <filter>
     <filter-name>LoginFilter</filter-name>
@@ -94,6 +93,18 @@
     <dispatcher>INCLUDE</dispatcher>
     <dispatcher>ERROR</dispatcher>
   </filter-mapping>
+
+
+  <filter>
+    <filter-name>EntityManagerClearFilter</filter-name>
+    <filter-class>slydm.geektimes.training.projects.user.web.filter.EntityManagerClearFilter</filter-class>
+  </filter>
+
+  <filter-mapping>
+    <filter-name>EntityManagerClearFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
 
   <welcome-file-list>
     <welcome-file>/</welcome-file>
