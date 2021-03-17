@@ -7,7 +7,7 @@ package slydm.geektimes.training.projects.jmx;
  */
 public interface ApplicationNameMBean {
 
-  void applicationName(String name);
+  void setApplicationName(String name);
 
   String getApplicationName();
 

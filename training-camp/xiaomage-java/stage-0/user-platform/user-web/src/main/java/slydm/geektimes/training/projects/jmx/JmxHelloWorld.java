@@ -18,9 +18,9 @@ public class JmxHelloWorld {
 
 
   public static void main(String[] args) {
-    Hello hello = new Hello();
+    ApplicationName hello = new ApplicationName();
     try {
-      ObjectName objectName = new ObjectName("slydm.geektimes.training.projects.jmx:aa=bb");
+      ObjectName objectName = new ObjectName("slydm.geektimes.training.projects.jmx.ApplicationName:aa=bb");
       MBeanServer server = ManagementFactory.getPlatformMBeanServer();
 
       server.registerMBean(hello, objectName);
@@ -33,7 +33,7 @@ public class JmxHelloWorld {
 
       try {
         TimeUnit.SECONDS.sleep(2);
-        System.out.println(hello.getHello() +":"+ hello.getYear());
+        System.out.println("application.name=" + hello.getApplicationName());
       } catch (InterruptedException e) {
         e.printStackTrace();
       }

@@ -13,8 +13,8 @@ public class ApplicationName implements ApplicationNameMBean {
 
 
   @Override
-  public void applicationName(String name) {
-    this.applicationName = applicationName;
+  public void setApplicationName(String name) {
+    this.applicationName = name;
 
   }
 
