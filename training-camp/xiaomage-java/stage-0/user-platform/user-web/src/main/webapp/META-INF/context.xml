@@ -28,8 +28,12 @@
     type="slydm.geektimes.training.projects.user.service.UserServiceImpl"
     factory="org.apache.naming.factory.BeanFactory"/>
 
+  <!--  <Resource name="bean/UserRepository" auth="Container"-->
+  <!--    type="slydm.geektimes.training.projects.user.repository.DatabaseUserRepositoryImpl"-->
+  <!--    factory="org.apache.naming.factory.BeanFactory"/>-->
+
   <Resource name="bean/UserRepository" auth="Container"
-    type="slydm.geektimes.training.projects.user.repository.DatabaseUserRepositoryImpl"
+    type="slydm.geektimes.training.projects.user.repository.JpaUserRepositoryImpl"
     factory="org.apache.naming.factory.BeanFactory"/>
 
   <Resource name="bean/Validator" auth="Container"

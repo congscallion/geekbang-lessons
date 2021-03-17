@@ -80,13 +80,14 @@ public class JpaUserRepositoryImpl implements UserRepository {
   @Override
   public Iterable<User> getAll() {
 
-    List<User> users = entityManager.createQuery("from user", User.class).getResultList();
+    List<User> users = entityManager.createQuery("from User", User.class).getResultList();
     return users;
   }
 
   private void executeInTransaction(User user, Consumer<User> consumer) {
     EntityTransaction transaction = entityManager.getTransaction();
     try {
+      transaction.begin();
       consumer.accept(user);
       transaction.commit();
     } catch (Throwable e) {
