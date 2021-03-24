@@ -1,6 +1,5 @@
 package slydm.geektimes.training.ioc;
 
-import io.github.classgraph.ClassInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -79,7 +78,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
       Object bean = entry.getValue();
 
       BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-      beanDefinition.getClassInfo().getMethodInfo()
+      beanDefinition.getAnnotationMethodList()
           .stream()
           .filter(methodInfo -> methodInfo.hasAnnotation(PostConstruct.class.getName()))
           .forEach(methodInfo -> {
@@ -107,7 +106,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
       Object bean = entry.getValue();
 
       BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-      beanDefinition.getClassInfo().getMethodInfo()
+      beanDefinition.getAnnotationMethodList()
           .stream()
           .filter(methodInfo -> methodInfo.hasAnnotation(PreDestroy.class.getName()))
           .forEach(methodInfo -> {
@@ -131,11 +130,9 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
 
   private void createBean(String beanName) {
     BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-    ClassInfo classInfo = beanDefinition.getClassInfo();
-
     Class<?> clz;
     try {
-      clz = getClassloader().loadClass(classInfo.getName());
+      clz = getClassloader().loadClass(beanDefinition.getBeanClass().toString());
     } catch (ClassNotFoundException e) {
       throw new BeansException(e.getMessage());
     }
@@ -162,9 +159,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
       Object bean = entry.getValue();
 
       BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-      ClassInfo classInfo = beanDefinition.getClassInfo();
-
-      classInfo.getFieldInfo().stream()
+      beanDefinition.getAnnotationFieldList().stream()
           .filter(fieldInfo -> fieldInfo.hasAnnotation(Resource.class.getName()))
           .forEach(field -> {
 
@@ -172,7 +167,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
                 .toString();
             Object dependencyBean = lookupBean(dependencyBeanName);
             try {
-              Field dependencyField = bean.getClass().getField(field.getName());
+              Field dependencyField = bean.getClass().getDeclaredField(field.getName());
               dependencyField.setAccessible(true);
               dependencyField.set(bean, dependencyBean);
             } catch (Exception e) {
@@ -194,22 +189,21 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
 
   @Override
   public Object getBean(String name) throws BeansException {
-    return doGetBean(name, null);
+    return doGetBean(name);
   }
 
   @Override
   public <T> T getBean(String name, Class<T> requiredType) throws BeansException {
-    return doGetBean(name, requiredType);
+    return requiredType.cast(doGetBean(name));
   }
 
-  protected <T> T doGetBean(final String name, final Class<T> requiredType) throws BeansException {
+  protected Object doGetBean(final String name) throws BeansException {
 
     if (singletonObjects.containsKey(name)) {
-      return requiredType.cast(singletonObjects.get(name));
+      return singletonObjects.get(name);
     } else {
       throw new BeansException(name + " not found.");
     }
-
   }
 
   protected ClassLoader getClassloader() {

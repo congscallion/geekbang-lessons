@@ -10,6 +10,9 @@ import slydm.geektimes.training.context.annotation.Component;
 @Component("bBean")
 public class B {
 
+  public B() {
+  }
+
   public void say() {
     System.out.println("b say...");
   }

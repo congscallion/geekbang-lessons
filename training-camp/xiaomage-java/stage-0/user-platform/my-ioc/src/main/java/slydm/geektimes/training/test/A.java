@@ -15,6 +15,11 @@ public class A {
   private String email;
   private Long age;
 
+  public A() {
+
+  }
+
+
   public A(String name) {
     this.name = name;
   }

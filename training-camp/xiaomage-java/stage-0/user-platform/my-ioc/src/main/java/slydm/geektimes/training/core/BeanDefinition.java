@@ -1,6 +1,9 @@
 package slydm.geektimes.training.core;
 
-import io.github.classgraph.ClassInfo;
+import io.github.classgraph.AnnotationInfoList;
+import io.github.classgraph.FieldInfo;
+import io.github.classgraph.MethodInfo;
+import java.util.List;
 
 /**
  * IOC 容器中Bean的描述信息
@@ -15,9 +18,31 @@ public interface BeanDefinition {
   String getBeanName();
 
   /**
-   * 获取类元信息
+   * 获取 bean class full name
+   *
+   * @return
    */
-  ClassInfo getClassInfo();
+  Object getBeanClass();
+
+
+  /**
+   * 类注解列表
+   */
+  AnnotationInfoList getClassAnnotationList();
+
+  /**
+   * 带有注解的字段列表
+   *
+   * @return
+   */
+  List<FieldInfo> getAnnotationFieldList();
+
+  /**
+   * 带有注解的方法列表
+   *
+   * @return
+   */
+  List<MethodInfo> getAnnotationMethodList();
 
 
 }

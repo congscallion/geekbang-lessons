@@ -1,8 +1,12 @@
 package slydm.geektimes.training.context.annotation;
 
 import io.github.classgraph.ClassGraph;
+import io.github.classgraph.FieldInfo;
+import io.github.classgraph.MethodInfo;
 import io.github.classgraph.ScanResult;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import slydm.geektimes.training.core.BeanDefinition;
@@ -46,7 +50,25 @@ public class ClassPathComponentWithClassGraphScanner {
       Set<BeanDefinition> beanDefinitionSet = result
           .getClassesWithAnnotation(Component.class.getName())
           .stream()
-          .map(ci -> new ClassPathScannedBeanDefinition(ci))
+          .map(ci -> {
+
+            ClassPathScannedBeanDefinition beanDefinition = new ClassPathScannedBeanDefinition(ci.getName());
+
+            List<FieldInfo> annotationFieldList = ci.getDeclaredFieldInfo()
+                .filter(fieldInfo -> notEmpty(fieldInfo.getAnnotationInfo()))
+                .stream().collect(Collectors.toList());
+
+            List<MethodInfo> annotationMethodList = ci.getMethodInfo()
+                .filter(methodInfo -> notEmpty(methodInfo.getAnnotationInfo()))
+                .stream().collect(Collectors.toList());
+
+            beanDefinition.setAnnotationFieldList(annotationFieldList);
+            beanDefinition.setAnnotationMethodList(annotationMethodList);
+            beanDefinition.setClassAnnotationList(ci.getAnnotationInfo());
+            beanDefinition.setBeanName(ci.getSimpleName());
+
+            return beanDefinition;
+          })
           .collect(Collectors.toSet());
 
       return beanDefinitionSet;
@@ -96,6 +118,10 @@ public class ClassPathComponentWithClassGraphScanner {
 //      }
     }
 
+  }
+
+  private boolean notEmpty(Collection collection) {
+    return collection != null && !collection.isEmpty();
   }
 
   public static void main(String[] args) {

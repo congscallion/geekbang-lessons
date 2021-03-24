@@ -22,13 +22,15 @@ public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 
   protected String determineBeanNameFromAnnotation(BeanDefinition definition) {
 
-    AnnotationInfo annotationInfo = definition.getClassInfo().getAnnotationInfo(Component.class.getName());
+    AnnotationInfo annotationInfo = definition.getClassAnnotationList()
+        .filter(annotation -> annotation.getName().equals(Component.class.getName()))
+        .get(0);
     Object value = annotationInfo.getParameterValues().getValue("value");
     return null == value ? "" : value.toString();
   }
 
   protected String buildDefaultBeanName(BeanDefinition definition) {
-    String beanClassName = definition.getClassInfo().getSimpleName();
+    String beanClassName = definition.getBeanName();
     return Introspector.decapitalize(beanClassName);
   }
 }
