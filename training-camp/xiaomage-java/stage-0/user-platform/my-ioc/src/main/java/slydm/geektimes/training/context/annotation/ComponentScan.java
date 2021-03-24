@@ -23,4 +23,11 @@ public @interface ComponentScan {
    */
   String basePackage() default ".";
 
+
+  /**
+   * 排除不需要扫描的路径
+   */
+  String[] excludePackages() default {};
+
+
 }

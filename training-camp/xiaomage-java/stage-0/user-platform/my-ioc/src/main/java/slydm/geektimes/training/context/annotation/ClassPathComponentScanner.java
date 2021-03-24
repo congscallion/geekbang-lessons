@@ -10,20 +10,20 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import slydm.geektimes.training.core.AntPathMatcher;
+import slydm.geektimes.training.util.AntPathMatcher;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.core.PathMatcher;
 import slydm.geektimes.training.util.ClassUtils;
 import slydm.geektimes.training.util.StringUtils;
 
 /**
- * 从 classpath 路径下扫描 .class 文件并加载到JVM
+ * 扫描类路径下的
  *
  * @author 72089101@vivo.com(wangcong) 2021/3/19 17:06
  */
-public class ClassPathClassScanner {
+public class ClassPathComponentScanner {
 
-  private static final Log logger = LogFactory.getLog(ClassPathClassScanner.class);
+  private static final Log logger = LogFactory.getLog(ClassPathComponentScanner.class);
 
   static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
@@ -34,8 +34,14 @@ public class ClassPathClassScanner {
    */
   private String basePackage;
 
-  public ClassPathClassScanner(String basePackage) {
+  /**
+   * 不需要扫描的路径
+   */
+  private String[] excludePackages;
+
+  public ClassPathComponentScanner(String basePackage, String[] excludePackages) {
     this.basePackage = basePackage;
+    this.excludePackages = excludePackages;
   }
 
 
@@ -147,7 +153,7 @@ public class ClassPathClassScanner {
 
     String pageName = "slydm.geektimes.training";
 
-    ClassPathClassScanner scanner = new ClassPathClassScanner(pageName);
+    ClassPathComponentScanner scanner = new ClassPathComponentScanner(pageName, new String[]{});
 
     Set<Class> scan = scanner.scan();
 

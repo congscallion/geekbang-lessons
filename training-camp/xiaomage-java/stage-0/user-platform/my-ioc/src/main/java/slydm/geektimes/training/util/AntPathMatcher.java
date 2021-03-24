@@ -1,4 +1,4 @@
-package slydm.geektimes.training.core;
+package slydm.geektimes.training.util;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import slydm.geektimes.training.core.PathMatcher;
 import slydm.geektimes.training.util.Assert;
 import slydm.geektimes.training.util.StringUtils;
 
