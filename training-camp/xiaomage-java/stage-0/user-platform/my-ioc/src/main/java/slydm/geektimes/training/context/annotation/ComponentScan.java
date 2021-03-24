@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 /**
  * 组件扫描注解
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/19 16:58
+ * @author wangcymy@gmail.com(wangcong) 2021/3/19 16:58
  * @since 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)

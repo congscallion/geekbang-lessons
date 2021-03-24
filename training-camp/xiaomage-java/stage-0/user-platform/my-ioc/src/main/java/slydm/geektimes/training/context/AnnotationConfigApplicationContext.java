@@ -7,7 +7,7 @@ import slydm.geektimes.training.exception.BeansException;
 import slydm.geektimes.training.ioc.DefaultListableBeanFactory;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/24 16:27
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 16:27
  */
 public class AnnotationConfigApplicationContext implements ApplicationContext {
 

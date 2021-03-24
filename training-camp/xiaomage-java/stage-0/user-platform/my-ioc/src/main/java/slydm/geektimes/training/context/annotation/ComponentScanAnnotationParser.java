@@ -10,7 +10,7 @@ import slydm.geektimes.training.ioc.BeanNameGenerator;
 /**
  * {@link ComponentScan} 组件扫描器解析类
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/19 17:01
+ * @author wangcymy@gmail.com(wangcong) 2021/3/19 17:01
  */
 public class ComponentScanAnnotationParser {
 

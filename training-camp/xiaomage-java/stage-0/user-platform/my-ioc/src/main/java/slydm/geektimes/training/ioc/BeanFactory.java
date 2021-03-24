@@ -5,7 +5,7 @@ import slydm.geektimes.training.exception.BeansException;
 /**
  * ioc 容器接口，负责 bean的获取
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/24 16:07
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 16:07
  */
 public interface BeanFactory {
 

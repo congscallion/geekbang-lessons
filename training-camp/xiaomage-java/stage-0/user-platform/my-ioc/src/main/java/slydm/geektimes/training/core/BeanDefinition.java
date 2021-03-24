@@ -5,7 +5,7 @@ import io.github.classgraph.ClassInfo;
 /**
  * IOC 容器中Bean的描述信息
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/19 17:13
+ * @author wangcymy@gmail.com(wangcong) 2021/3/19 17:13
  */
 public interface BeanDefinition {
 

@@ -1,7 +1,7 @@
 package slydm.geektimes.training.core;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/19 17:11
+ * @author wangcymy@gmail.com(wangcong) 2021/3/19 17:11
  */
 public interface BeanDefinitionRegistry {
 

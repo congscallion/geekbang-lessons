@@ -20,7 +20,7 @@ import slydm.geektimes.training.exception.BeansException;
 /**
  * 默认的IOC容器实现
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/24 16:18
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 16:18
  */
 public class DefaultListableBeanFactory implements ConfigurableListableBeanFactory, BeanDefinitionRegistry {
 

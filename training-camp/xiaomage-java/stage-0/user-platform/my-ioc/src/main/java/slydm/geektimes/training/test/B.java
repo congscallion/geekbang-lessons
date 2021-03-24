@@ -5,7 +5,7 @@ import javax.annotation.PreDestroy;
 import slydm.geektimes.training.context.annotation.Component;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/24 10:09
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 10:09
  */
 @Component("bBean")
 public class B {

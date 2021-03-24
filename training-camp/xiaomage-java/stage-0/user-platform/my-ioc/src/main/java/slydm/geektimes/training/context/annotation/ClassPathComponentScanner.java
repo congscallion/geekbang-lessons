@@ -19,7 +19,7 @@ import slydm.geektimes.training.util.StringUtils;
 /**
  * 扫描类路径下的
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/19 17:06
+ * @author wangcymy@gmail.com(wangcong) 2021/3/19 17:06
  */
 public class ClassPathComponentScanner {
 

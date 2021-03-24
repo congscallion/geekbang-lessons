@@ -1,7 +1,7 @@
 package slydm.geektimes.training.util;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/19 17:26
+ * @author wangcymy@gmail.com(wangcong) 2021/3/19 17:26
  */
 public abstract class Assert {
 

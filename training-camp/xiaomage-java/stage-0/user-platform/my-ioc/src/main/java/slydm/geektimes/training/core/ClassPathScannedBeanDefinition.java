@@ -3,7 +3,7 @@ package slydm.geektimes.training.core;
 import io.github.classgraph.ClassInfo;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/24 15:58
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 15:58
  */
 public class ClassPathScannedBeanDefinition implements BeanDefinition {
 

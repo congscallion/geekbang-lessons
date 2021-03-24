@@ -12,7 +12,7 @@ import slydm.geektimes.training.helper.ListLoadedClassesAgent;
 /**
  * 使用 {@link ClassGraph} 实现的类路径组件扫描器
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/24 9:56
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 9:56
  */
 public class ClassPathComponentWithClassGraphScanner {
 

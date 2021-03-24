@@ -6,7 +6,7 @@ import slydm.geektimes.training.context.annotation.Component;
 import slydm.geektimes.training.core.BeanDefinition;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/24 18:27
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 18:27
  */
 public class AnnotationBeanNameGenerator implements BeanNameGenerator {
 

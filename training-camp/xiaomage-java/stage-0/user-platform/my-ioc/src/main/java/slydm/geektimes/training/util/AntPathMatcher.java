@@ -13,7 +13,7 @@ import slydm.geektimes.training.util.Assert;
 import slydm.geektimes.training.util.StringUtils;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/19 18:09
+ * @author wangcymy@gmail.com(wangcong) 2021/3/19 18:09
  */
 public class AntPathMatcher implements PathMatcher {
 

@@ -3,7 +3,7 @@ package slydm.geektimes.training.context.annotation.support;
 import slydm.geektimes.training.context.annotation.ComponentScan;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/24 16:35
+ * @author wangcymy@gmail.com(wangcong) 2021/3/24 16:35
  * @see ComponentScan
  */
 public class ComponentScanAttr {
