@@ -1,6 +1,7 @@
 package slydm.geektimes.training.core;
 
-import io.github.classgraph.AnnotationInfoList;
+import io.github.classgraph.AnnotationInfo;
+import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import io.github.classgraph.MethodInfo;
 import java.util.List;
@@ -13,11 +14,6 @@ import java.util.List;
 public interface BeanDefinition {
 
   /**
-   * 获取 Bean 名称
-   */
-  String getBeanName();
-
-  /**
    * 获取 bean class full name
    *
    * @return
@@ -28,7 +24,7 @@ public interface BeanDefinition {
   /**
    * 类注解列表
    */
-  AnnotationInfoList getClassAnnotationList();
+  List<AnnotationInfo> getClassAnnotationList();
 
   /**
    * 带有注解的字段列表
@@ -39,10 +35,18 @@ public interface BeanDefinition {
 
   /**
    * 带有注解的方法列表
-   *
-   * @return
    */
   List<MethodInfo> getAnnotationMethodList();
+
+  /**
+   * 获取 bean 实现的接口列表
+   */
+  List<ClassInfo> getAllInterfaces();
+
+  /**
+   * 获取 bean 直接或间接父类列表
+   */
+  public List<ClassInfo> getAllSuperClasses();
 
 
 }

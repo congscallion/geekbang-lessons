@@ -12,11 +12,17 @@ public class ComponentScanAttr {
    * 扫描基础包路径
    */
   private String basePackage;
-  
+
   /**
    * 排除不需要扫描的路径
    */
   private String[] excludePackages;
+
+
+  public ComponentScanAttr(String basePackage, String[] excludePackages) {
+    this.basePackage = basePackage;
+    this.excludePackages = excludePackages;
+  }
 
   public String getBasePackage() {
     return basePackage;

@@ -1,16 +1,21 @@
 package slydm.geektimes.training;
 
 import slydm.geektimes.training.context.AnnotationConfigApplicationContext;
+import slydm.geektimes.training.context.annotation.ComponentScan;
 import slydm.geektimes.training.test.A;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/24 18:37
  */
+@ComponentScan(basePackage = "slydm.geektimes.training")
 public class Main {
 
   public static void main(String[] args) {
 
     AnnotationConfigApplicationContext applicationContext = new AnnotationConfigApplicationContext();
+    applicationContext.register(Main.class);
+    applicationContext.refresh();
+
     applicationContext.start();
 
     Object bBean = applicationContext.getBean("bBean");
@@ -20,8 +25,7 @@ public class Main {
 
     a.getB().say();
 
-    applicationContext.close();
-
+    applicationContext.destroyBeans();
 
   }
 

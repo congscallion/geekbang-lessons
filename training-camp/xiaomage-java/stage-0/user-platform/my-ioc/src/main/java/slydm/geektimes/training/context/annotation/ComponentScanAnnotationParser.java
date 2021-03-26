@@ -25,7 +25,7 @@ public class ComponentScanAnnotationParser {
 
   public Set<BeanDefinition> parse(ComponentScanAttr componentScan) {
 
-    ClassPathComponentWithClassGraphScanner scanner = new ClassPathComponentWithClassGraphScanner(
+    ClassGraphBeanDefinitionScanner scanner = new ClassGraphBeanDefinitionScanner(
         componentScan.getBasePackage(),
         componentScan.getExcludePackages());
     Set<BeanDefinition> beanDefinitionSet = scanner.scan();

@@ -1,5 +1,6 @@
 package slydm.geektimes.training.context.annotation;
 
+import io.github.classgraph.ClassGraph;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -10,20 +11,22 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import slydm.geektimes.training.util.AntPathMatcher;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.core.PathMatcher;
+import slydm.geektimes.training.util.AntPathMatcher;
 import slydm.geektimes.training.util.ClassUtils;
 import slydm.geektimes.training.util.StringUtils;
 
 /**
- * 扫描类路径下的
+ * 扫描类路径下的, 这是spring 中扫描类路径的方式，本工程中使用 {@link ClassGraph} 扫描类
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/19 17:06
+ * @see ClassGraphBeanDefinitionScanner
  */
-public class ClassPathComponentScanner {
+@Deprecated
+public class ClassPathBeanDefinitionScanner {
 
-  private static final Log logger = LogFactory.getLog(ClassPathComponentScanner.class);
+  private static final Log logger = LogFactory.getLog(ClassPathBeanDefinitionScanner.class);
 
   static final String DEFAULT_RESOURCE_PATTERN = "**/*.class";
 
@@ -39,7 +42,7 @@ public class ClassPathComponentScanner {
    */
   private String[] excludePackages;
 
-  public ClassPathComponentScanner(String basePackage, String[] excludePackages) {
+  public ClassPathBeanDefinitionScanner(String basePackage, String[] excludePackages) {
     this.basePackage = basePackage;
     this.excludePackages = excludePackages;
   }
@@ -153,7 +156,7 @@ public class ClassPathComponentScanner {
 
     String pageName = "slydm.geektimes.training";
 
-    ClassPathComponentScanner scanner = new ClassPathComponentScanner(pageName, new String[]{});
+    ClassPathBeanDefinitionScanner scanner = new ClassPathBeanDefinitionScanner(pageName, new String[]{});
 
     Set<Class> scan = scanner.scan();
 

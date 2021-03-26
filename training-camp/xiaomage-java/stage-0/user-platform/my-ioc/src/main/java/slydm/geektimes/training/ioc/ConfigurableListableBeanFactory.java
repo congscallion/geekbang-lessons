@@ -22,4 +22,14 @@ public interface ConfigurableListableBeanFactory extends BeanFactory {
   void preInstantiateSingletons() throws BeansException;
 
 
+  /**
+   * 根据类型获取所有bean名称
+   */
+  String[] getBeanNamesForType(Class<?> type);
+
+  /**
+   * 已注册的所有 bean 名称
+   */
+  String[] getBeanDefinitionNames();
+
 }

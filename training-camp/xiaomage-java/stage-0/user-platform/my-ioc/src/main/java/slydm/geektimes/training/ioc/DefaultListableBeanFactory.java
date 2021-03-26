@@ -1,5 +1,6 @@
 package slydm.geektimes.training.ioc;
 
+import io.github.classgraph.ClassInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ import javax.annotation.Resource;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.core.BeanDefinitionRegistry;
 import slydm.geektimes.training.exception.BeansException;
+import slydm.geektimes.training.exception.NoSuchBeanDefinitionException;
+import slydm.geektimes.training.util.StringUtils;
 
 /**
  * 默认的IOC容器实现
@@ -62,6 +65,39 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
     // process callback after dependency processed
     processPostConstruct();
 
+  }
+
+  @Override
+  public String[] getBeanNamesForType(Class<?> type) {
+
+    List<String> result = new ArrayList<>();
+    for (String beanDefinitionName : beanDefinitionNames) {
+
+      BeanDefinition beanDefinition = beanDefinitionMap.get(beanDefinitionName);
+
+      if (StringUtils.equals(beanDefinition.getBeanClass().toString(), type.getName())) {
+        result.add(beanDefinitionName);
+      }
+
+      for (ClassInfo supInter : beanDefinition.getAllInterfaces()) {
+        if (StringUtils.equals(supInter.getName(), type.getName())) {
+          result.add(beanDefinitionName);
+        }
+      }
+
+      for (ClassInfo supClass : beanDefinition.getAllSuperClasses()) {
+        if (StringUtils.equals(supClass.getName(), type.getName())) {
+          result.add(beanDefinitionName);
+        }
+      }
+    }
+
+    return StringUtils.toStringArray(result);
+  }
+
+  @Override
+  public String[] getBeanDefinitionNames() {
+    return StringUtils.toStringArray(this.beanDefinitionNames);
   }
 
 
@@ -217,5 +253,18 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
     }
     beanDefinitionMap.put(beanName, beanDefinition);
     beanDefinitionNames.add(beanName);
+  }
+
+  @Override
+  public BeanDefinition getBeanDefinition(String beanName) throws NoSuchBeanDefinitionException {
+
+    BeanDefinition bd = this.beanDefinitionMap.get(beanName);
+    if (bd == null) {
+//      if (logger.isTraceEnabled()) {
+//        logger.trace("No bean named '" + beanName + "' found in " + this);
+//      }
+      throw new NoSuchBeanDefinitionException(beanName);
+    }
+    return bd;
   }
 }

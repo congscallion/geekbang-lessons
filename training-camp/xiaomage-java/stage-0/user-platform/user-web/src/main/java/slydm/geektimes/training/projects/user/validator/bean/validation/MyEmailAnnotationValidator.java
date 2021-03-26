@@ -13,7 +13,7 @@ import javax.validation.ConstraintValidatorContext;
  * <p>
  * {@link MyEmail} 可配置，但是会被忽略，主要是方便以后改
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/13 11:08
+ * @author wangcymy@gmail.com(wangcong) 2021/3/13 11:08
  */
 public class MyEmailAnnotationValidator implements ConstraintValidator<MyEmail, String> {
 
