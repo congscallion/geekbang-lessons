@@ -38,7 +38,7 @@ public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor
     for (String beanDefinitionName : beanDefinitionNames) {
 
       BeanDefinition beanDefinition = registry.getBeanDefinition(beanDefinitionName);
-      Optional<AnnotationInfo> optAnn = hasComponentScanAnnotation(beanDefinition, ComponentScan.class);
+      Optional<AnnotationInfo> optAnn = hasSpecialAnnotation(beanDefinition, ComponentScan.class);
       if (optAnn.isPresent()) {
         componentScans.add(optAnn.get());
       }
@@ -58,7 +58,7 @@ public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor
   /**
    * 判断 BeanDefinition 类是否包含指定的注解
    */
-  private Optional<AnnotationInfo> hasComponentScanAnnotation(BeanDefinition beanDefinition, Class<?> annotationClass) {
+  private Optional<AnnotationInfo> hasSpecialAnnotation(BeanDefinition beanDefinition, Class<?> annotationClass) {
 
     List<AnnotationInfo> classAnnotationList = beanDefinition.getClassAnnotationList();
     Optional<AnnotationInfo> first = classAnnotationList.stream()

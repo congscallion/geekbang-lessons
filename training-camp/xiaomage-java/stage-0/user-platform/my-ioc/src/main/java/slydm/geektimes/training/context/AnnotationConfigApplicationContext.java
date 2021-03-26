@@ -2,7 +2,6 @@ package slydm.geektimes.training.context;
 
 import slydm.geektimes.training.beans.config.BeanFactoryPostProcessor;
 import slydm.geektimes.training.context.annotation.AnnotatedBeanDefinitionReader;
-import slydm.geektimes.training.context.annotation.ComponentScanAnnotationParser;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.exception.BeansException;
 import slydm.geektimes.training.exception.NoSuchBeanDefinitionException;
@@ -15,14 +14,11 @@ import slydm.geektimes.training.ioc.DefaultListableBeanFactory;
 public class AnnotationConfigApplicationContext implements ApplicationContext {
 
   private DefaultListableBeanFactory beanFactory;
-  private ComponentScanAnnotationParser parser;
 
   private final AnnotatedBeanDefinitionReader reader;
 
-
   public AnnotationConfigApplicationContext() {
     this.beanFactory = getBeanFactory();
-    this.parser = new ComponentScanAnnotationParser(beanFactory);
     this.reader = new AnnotatedBeanDefinitionReader(beanFactory);
 
     refresh();
