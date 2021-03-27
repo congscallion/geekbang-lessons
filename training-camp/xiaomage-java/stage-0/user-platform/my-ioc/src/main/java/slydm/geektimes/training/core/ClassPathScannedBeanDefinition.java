@@ -95,4 +95,9 @@ public class ClassPathScannedBeanDefinition implements BeanDefinition {
     return allSuperClasses;
   }
 
+  @Override
+  public boolean isSynthetic() {
+    return false;
+  }
+
 }

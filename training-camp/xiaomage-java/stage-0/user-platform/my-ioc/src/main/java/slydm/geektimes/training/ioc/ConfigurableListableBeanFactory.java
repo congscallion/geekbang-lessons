@@ -1,5 +1,6 @@
 package slydm.geektimes.training.ioc;
 
+import slydm.geektimes.training.beans.factory.BeanPostProcessor;
 import slydm.geektimes.training.exception.BeansException;
 
 /**
@@ -31,5 +32,11 @@ public interface ConfigurableListableBeanFactory extends BeanFactory {
    * 已注册的所有 bean 名称
    */
   String[] getBeanDefinitionNames();
+
+
+  /**
+   * 添加 BeanPostProcessor 实例
+   */
+  void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
 }

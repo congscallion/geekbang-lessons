@@ -9,6 +9,8 @@ import slydm.geektimes.training.ioc.ConfigurableListableBeanFactory;
 import slydm.geektimes.training.ioc.DefaultListableBeanFactory;
 
 /**
+ * 应用程序上下文
+ *
  * @author wangcymy@gmail.com(wangcong) 2021/3/24 16:27
  */
 public class AnnotationConfigApplicationContext implements ApplicationContext {
@@ -20,8 +22,6 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
   public AnnotationConfigApplicationContext() {
     this.beanFactory = getBeanFactory();
     this.reader = new AnnotatedBeanDefinitionReader(beanFactory);
-
-    refresh();
   }
 
   public void refresh() {
@@ -113,9 +113,6 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
   protected void invokeBeanFactoryPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 
     String[] beanNamesForType = beanFactory.getBeanNamesForType(BeanFactoryPostProcessor.class);
-
-    // 提前初始目前容器存在的bean
-    beanFactory.preInstantiateSingletons();
 
     for (String beanName : beanNamesForType) {
 

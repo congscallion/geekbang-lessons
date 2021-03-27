@@ -49,4 +49,6 @@ public interface BeanDefinition {
   public List<ClassInfo> getAllSuperClasses();
 
 
+  boolean isSynthetic();
+
 }

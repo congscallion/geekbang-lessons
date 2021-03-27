@@ -8,7 +8,7 @@ import slydm.geektimes.training.ioc.AnnotationBeanNameGenerator;
 import slydm.geektimes.training.ioc.BeanNameGenerator;
 
 /**
- * {@link ComponentScan} 组件扫描器解析类
+ * {@link ComponentScan} 组件扫描器解析类,q
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/19 17:01
  */
