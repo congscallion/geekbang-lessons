@@ -2,6 +2,7 @@ package slydm.geektimes.training.context;
 
 import slydm.geektimes.training.beans.config.BeanFactoryPostProcessor;
 import slydm.geektimes.training.context.annotation.AnnotatedBeanDefinitionReader;
+import slydm.geektimes.training.context.annotation.CommonAnnotationBeanPostProcessor;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.exception.BeansException;
 import slydm.geektimes.training.exception.NoSuchBeanDefinitionException;
@@ -106,6 +107,11 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
   protected void initMessageSource() {
   }
 
+  /**
+   * 向容器中注册内置的 BeanPostProcessor。比如 处理jsr-250注解的 {@link CommonAnnotationBeanPostProcessor}
+   *
+   * @param beanFactory
+   */
   protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
 
   }
