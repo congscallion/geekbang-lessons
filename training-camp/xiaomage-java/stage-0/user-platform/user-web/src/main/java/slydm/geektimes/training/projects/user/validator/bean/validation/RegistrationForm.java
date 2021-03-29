@@ -1,7 +1,8 @@
 package slydm.geektimes.training.projects.user.validator.bean.validation;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotEmpty;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  * 表单

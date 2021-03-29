@@ -8,12 +8,12 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 import javax.validation.Constraint;
 import javax.validation.Payload;
-import javax.validation.constraints.Email;
+import org.hibernate.validator.constraints.Email;
 
 /**
  * 自定义邮件校验注解
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/13 11:06
+ * @author wangcymy@gmail.com(wangcong) 2021/3/13 11:06
  * @see Email
  */
 @Documented

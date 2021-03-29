@@ -21,7 +21,6 @@ public class EntityManagerClearFilter implements Filter {
   @Override
   public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain)
       throws IOException, ServletException {
-    System.out.println("EntityManagerClearFilter...");
     filterChain.doFilter(servletRequest, servletResponse);
     EntityManagerHolder.clear();
   }

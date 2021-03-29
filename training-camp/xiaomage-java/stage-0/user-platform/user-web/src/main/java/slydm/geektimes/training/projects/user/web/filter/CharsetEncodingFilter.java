@@ -41,7 +41,7 @@ public class CharsetEncodingFilter implements Filter {
       HttpServletResponse httpResponse = (HttpServletResponse) response;
       httpRequest.setCharacterEncoding(encoding);
       httpResponse.setCharacterEncoding(encoding);
-      servletContext.log(((HttpServletRequest) request).getRequestURI() + ",当前编码已设置为：" + encoding);
+      //servletContext.log(((HttpServletRequest) request).getRequestURI() + ",当前编码已设置为：" + encoding);
     }
 
     chain.doFilter(request, response);

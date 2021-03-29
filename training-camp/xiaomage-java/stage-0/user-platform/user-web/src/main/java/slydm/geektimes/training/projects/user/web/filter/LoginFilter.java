@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
- * 字符编码 Filter
+ * 校验登录信息拦截器
  *
  * @author wangcymy@gmail.com(wangcong) 3/4/21 10:49 PM
  */
