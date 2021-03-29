@@ -49,6 +49,11 @@ public class A {
     System.out.println("A destroy ...");
   }
 
+  public void say() {
+    System.out.println("A.name=" + name);
+    System.out.println("A.email=" + email);
+  }
+
 
   public String getName() {
     return name;
@@ -74,7 +79,6 @@ public class A {
     this.age = age;
   }
 
-  @Resource
   public void setB(B b) {
     this.b = b;
   }

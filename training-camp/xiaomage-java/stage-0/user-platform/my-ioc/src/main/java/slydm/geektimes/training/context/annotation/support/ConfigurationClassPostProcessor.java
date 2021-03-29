@@ -22,7 +22,7 @@ import slydm.geektimes.training.util.StringUtils;
 public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor {
 
   /**
-   * 默认的解析注解配置的类
+   * 默认的解析注解配置的类 Bean名称
    */
   public static final String CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME =
       "slydm.geektimes.training.context.annotation.internalConfigurationAnnotationProcessor";

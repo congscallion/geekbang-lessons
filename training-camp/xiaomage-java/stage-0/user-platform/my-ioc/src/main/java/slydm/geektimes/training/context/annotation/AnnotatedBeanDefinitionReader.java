@@ -1,5 +1,6 @@
 package slydm.geektimes.training.context.annotation;
 
+import static slydm.geektimes.training.context.annotation.CommonAnnotationBeanPostProcessor.COMMON_ANNOTATION_PROCESSOR_BEAN_NAME;
 import static slydm.geektimes.training.context.annotation.support.ConfigurationClassPostProcessor.CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME;
 
 import io.github.classgraph.ClassGraph;
@@ -26,7 +27,7 @@ public class AnnotatedBeanDefinitionReader {
     this.beanDefinitionRegistry = beanDefinitionRegistry;
 
     /**
-     * 模仿 spring, 向容器中注册配置处理类
+     * 模仿 spring, 向容器中注册注解配置处理类
      */
     registerAnnotationConfigProcessors(beanDefinitionRegistry);
 
@@ -41,6 +42,12 @@ public class AnnotatedBeanDefinitionReader {
       BeanDefinition beanDefinition = convertClassToBeanDefinition(clz);
       registry.registerBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME, beanDefinition);
     }
+
+    if (!registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+      BeanDefinition def = convertClassToBeanDefinition(CommonAnnotationBeanPostProcessor.class);
+      registry.registerBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME, def);
+    }
+
   }
 
   /**

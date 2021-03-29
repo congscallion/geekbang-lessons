@@ -13,7 +13,6 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import slydm.geektimes.training.beans.factory.Aware;
 import slydm.geektimes.training.beans.factory.BeanFactoryAware;
@@ -21,6 +20,7 @@ import slydm.geektimes.training.beans.factory.BeanPostProcessor;
 import slydm.geektimes.training.beans.factory.InstantiationAwareBeanPostProcessor;
 import slydm.geektimes.training.beans.factory.ObjectFactory;
 import slydm.geektimes.training.beans.factory.SmartInstantiationAwareBeanPostProcessor;
+import slydm.geektimes.training.context.annotation.DestructionAwareBeanPostProcessor;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.core.BeanDefinitionRegistry;
 import slydm.geektimes.training.exception.BeanCreationException;
@@ -181,7 +181,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
   protected Object createBean(String beanName) {
 
     // 创建 Bean 实例
-    BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
+    BeanDefinition beanDefinition = getBeanDefinition(beanName);
     Object bean = createBeanInstance(beanName, beanDefinition);
 
     // 将 bean 放入 singletonFactories 用于循环依赖，当bean未完成初始化又存在被其它bean依赖时，从该集合中获取bean实例
@@ -195,8 +195,10 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
     } catch (Throwable ex) {
       if (ex instanceof BeanCreationException && beanName.equals(((BeanCreationException) ex).getBeanName())) {
         throw (BeanCreationException) ex;
+      } else if (ex instanceof BeansException) {
+        throw (BeansException) ex;
       } else {
-        throw new BeanCreationException(beanName + ": Initialization of bean failed", ex);
+        throw new BeanCreationException(beanName + " Initialization of bean failed", ex);
       }
     }
 
@@ -320,8 +322,15 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
       return;
     }
 
-    // TODO 静态属性注入待添加
-
+    // TODO 静态属性注入待添加, 目前只处理 @javax.annotation.Resource 注解
+    if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
+      for (BeanPostProcessor bp : getBeanPostProcessors()) {
+        if (bp instanceof InstantiationAwareBeanPostProcessor) {
+          InstantiationAwareBeanPostProcessor ibp = (InstantiationAwareBeanPostProcessor) bp;
+          ibp.postProcessProperties(bean, beanName);
+        }
+      }
+    }
   }
 
   protected Object initializeBean(final String beanName, final Object bean, BeanDefinition mbd) {
@@ -382,7 +391,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
     List<String> result = new ArrayList<>();
     for (String beanDefinitionName : beanDefinitionNames) {
 
-      BeanDefinition beanDefinition = beanDefinitionMap.get(beanDefinitionName);
+      BeanDefinition beanDefinition = getBeanDefinition(beanDefinitionName);
 
       if (StringUtils.equals(beanDefinition.getBeanClass().toString(), type.getName())) {
         result.add(beanDefinitionName);
@@ -409,35 +418,6 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
     return StringUtils.toStringArray(this.beanDefinitionNames);
   }
 
-
-  /**
-   * process {@link PostConstruct}
-   */
-  private void processPostConstruct() {
-    Iterator<Entry<String, Object>> iterator = singletonObjects.entrySet().iterator();
-
-    while (iterator.hasNext()) {
-
-      Entry<String, Object> entry = iterator.next();
-      String beanName = entry.getKey();
-      Object bean = entry.getValue();
-
-      BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-      beanDefinition.getAnnotationMethodList()
-          .stream()
-          .filter(methodInfo -> methodInfo.hasAnnotation(PostConstruct.class.getName()))
-          .forEach(methodInfo -> {
-            try {
-              Method method = bean.getClass().getMethod(methodInfo.getName());
-              method.invoke(bean);
-            } catch (Exception e) {
-              throw new BeansException(e.getMessage());
-            }
-          });
-    }
-
-  }
-
   /**
    * process {@link PreDestroy}
    */
@@ -450,7 +430,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
       String beanName = entry.getKey();
       Object bean = entry.getValue();
 
-      BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
+      BeanDefinition beanDefinition = getBeanDefinition(beanName);
       beanDefinition.getAnnotationMethodList()
           .stream()
           .filter(methodInfo -> methodInfo.hasAnnotation(PreDestroy.class.getName()))
@@ -494,46 +474,53 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
     this.beanPostProcessors.add(beanPostProcessor);
   }
 
+  @Override
+  public void destroySingletons() {
 
-//  /**
-//   * process {@link Resource}
-//   */
-//  private void processDependency() {
-//
-//    Iterator<Entry<String, Object>> iterator = infantObjects.entrySet().iterator();
-//    while (iterator.hasNext()) {
-//
-//      Entry<String, Object> entry = iterator.next();
-//      String beanName = entry.getKey();
-//      Object bean = entry.getValue();
-//
-//      BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-//      beanDefinition.getAnnotationFieldList().stream()
-//          .filter(fieldInfo -> fieldInfo.hasAnnotation(Resource.class.getName()))
-//          .forEach(field -> {
-//
-//            String dependencyBeanName = field.getAnnotationInfo().get(0).getParameterValues().getValue("name")
-//                .toString();
-//            Object dependencyBean = lookupBean(dependencyBeanName);
-//            try {
-//              Field dependencyField = bean.getClass().getDeclaredField(field.getName());
-//              dependencyField.setAccessible(true);
-//              dependencyField.set(bean, dependencyBean);
-//            } catch (Exception e) {
-//              throw new BeansException(e.getMessage());
-//            }
-//          });
-//
-//      singletonObjects.put(beanName, bean);
-//      iterator.remove();
-//    }
-//
-//  }
+    String[] singletonBeanNames;
+    synchronized (this.singletonObjects) {
+      singletonBeanNames = StringUtils.toStringArray(this.singletonObjects.keySet());
+    }
+    for (int i = singletonBeanNames.length - 1; i >= 0; i--) {
+      destroySingleton(singletonBeanNames[i]);
+    }
 
-  //  private Object lookupBean(String beanName) {
-//    Object o = infantObjects.get(beanName);
-//    return o == null ? singletonObjects.get(beanName) : o;
-//  }
+    clearSingletonCache();
+  }
+
+
+  public void destroySingleton(String beanName) {
+
+    destroyBean(beanName, singletonObjects.get(beanName));
+
+    // Remove a registered singleton of the given name, if any.
+    removeSingleton(beanName);
+  }
+
+  protected void destroyBean(String beanName, Object bean) {
+    for (BeanPostProcessor processor : getBeanPostProcessors()) {
+      if (processor instanceof DestructionAwareBeanPostProcessor) {
+        ((DestructionAwareBeanPostProcessor) processor).postProcessBeforeDestruction(bean, beanName);
+      }
+    }
+  }
+
+  protected void removeSingleton(String beanName) {
+    synchronized (this.singletonObjects) {
+      this.singletonObjects.remove(beanName);
+      this.singletonFactories.remove(beanName);
+      this.infantObjects.remove(beanName);
+    }
+  }
+
+
+  protected void clearSingletonCache() {
+    synchronized (this.singletonObjects) {
+      this.singletonObjects.clear();
+      this.singletonFactories.clear();
+      this.infantObjects.clear();
+    }
+  }
 
   /**
    * 判断 bean 是否处于实例化阶段
@@ -541,15 +528,6 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
   public boolean isSingletonCurrentlyInCreation(String beanName) {
     return this.singletonsCurrentlyInCreation.contains(beanName);
   }
-
-//  protected Object doGetBean(final String name) throws BeansException {
-//
-//    if (singletonObjects.containsKey(name)) {
-//      return singletonObjects.get(name);
-//    } else {
-//      throw new BeansException(name + " not found.");
-//    }
-//  }
 
   @Override
   public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {

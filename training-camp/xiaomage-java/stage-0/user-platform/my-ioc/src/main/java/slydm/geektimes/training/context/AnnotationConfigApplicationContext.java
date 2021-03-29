@@ -1,6 +1,7 @@
 package slydm.geektimes.training.context;
 
 import slydm.geektimes.training.beans.config.BeanFactoryPostProcessor;
+import slydm.geektimes.training.beans.factory.BeanPostProcessor;
 import slydm.geektimes.training.context.annotation.AnnotatedBeanDefinitionReader;
 import slydm.geektimes.training.context.annotation.CommonAnnotationBeanPostProcessor;
 import slydm.geektimes.training.core.BeanDefinition;
@@ -113,6 +114,12 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
    * @param beanFactory
    */
   protected void registerBeanPostProcessors(ConfigurableListableBeanFactory beanFactory) {
+
+    String[] postProcessorNames = beanFactory.getBeanNamesForType(BeanPostProcessor.class);
+    for (String ppName : postProcessorNames) {
+      BeanPostProcessor pp = beanFactory.getBean(ppName, BeanPostProcessor.class);
+      beanFactory.addBeanPostProcessor(pp);
+    }
 
   }
 

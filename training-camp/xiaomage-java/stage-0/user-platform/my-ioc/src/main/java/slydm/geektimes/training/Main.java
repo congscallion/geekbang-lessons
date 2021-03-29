@@ -3,6 +3,7 @@ package slydm.geektimes.training;
 import slydm.geektimes.training.context.AnnotationConfigApplicationContext;
 import slydm.geektimes.training.context.annotation.ComponentScan;
 import slydm.geektimes.training.test.A;
+import slydm.geektimes.training.test.C;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/24 18:37
@@ -24,6 +25,9 @@ public class Main {
     System.out.println(a);
 
     a.getB().say();
+
+    C c = applicationContext.getBean("c", C.class);
+    c.say();
 
     applicationContext.destroyBeans();
 

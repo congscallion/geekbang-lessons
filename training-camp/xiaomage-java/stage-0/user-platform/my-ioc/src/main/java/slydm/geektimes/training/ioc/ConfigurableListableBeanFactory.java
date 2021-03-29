@@ -39,4 +39,10 @@ public interface ConfigurableListableBeanFactory extends BeanFactory {
    */
   void addBeanPostProcessor(BeanPostProcessor beanPostProcessor);
 
+
+  /**
+   * 注销所有单例bean
+   */
+  void destroySingletons();
+
 }
