@@ -22,6 +22,10 @@ public class MyEmailAnnotationValidator implements ConstraintValidator<MyEmail, 
   private final static Pattern DEFAULT_PATTERN = Pattern.compile(DEFAULT_EMAIL_PATTERN);
 
   @Override
+  public void initialize(MyEmail constraintAnnotation) {
+  }
+
+  @Override
   public boolean isValid(String value, ConstraintValidatorContext context) {
 
     Matcher matcher = DEFAULT_PATTERN.matcher(value);
