@@ -1,19 +1,15 @@
 package slydm.geektimes.training.ioc;
 
 import io.github.classgraph.ClassInfo;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import javax.annotation.PreDestroy;
 import slydm.geektimes.training.beans.factory.Aware;
 import slydm.geektimes.training.beans.factory.BeanFactoryAware;
 import slydm.geektimes.training.beans.factory.BeanPostProcessor;
@@ -416,41 +412,6 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
   @Override
   public String[] getBeanDefinitionNames() {
     return StringUtils.toStringArray(this.beanDefinitionNames);
-  }
-
-  /**
-   * process {@link PreDestroy}
-   */
-  public void processPreDestroy() {
-    Iterator<Entry<String, Object>> iterator = singletonObjects.entrySet().iterator();
-
-    while (iterator.hasNext()) {
-
-      Entry<String, Object> entry = iterator.next();
-      String beanName = entry.getKey();
-      Object bean = entry.getValue();
-
-      BeanDefinition beanDefinition = getBeanDefinition(beanName);
-      beanDefinition.getAnnotationMethodList()
-          .stream()
-          .filter(methodInfo -> methodInfo.hasAnnotation(PreDestroy.class.getName()))
-          .forEach(methodInfo -> {
-            try {
-              Method method = bean.getClass().getMethod(methodInfo.getName());
-              method.invoke(bean);
-            } catch (Exception e) {
-              throw new BeansException(e.getMessage());
-            }
-          });
-      iterator.remove();
-      cleanBean(beanName);
-    }
-  }
-
-  private void cleanBean(String beanName) {
-
-    beanDefinitionMap.remove(beanName);
-    beanDefinitionNames.remove(beanName);
   }
 
   protected boolean hasInstantiationAwareBeanPostProcessors() {

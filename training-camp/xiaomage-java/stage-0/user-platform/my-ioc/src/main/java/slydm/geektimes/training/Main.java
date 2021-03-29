@@ -29,7 +29,9 @@ public class Main {
     C c = applicationContext.getBean("c", C.class);
     c.say();
 
-    applicationContext.destroyBeans();
+    applicationContext.stop();
+
+    applicationContext.close();
 
   }
 

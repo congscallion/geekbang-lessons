@@ -97,6 +97,9 @@ public class CommonAnnotationBeanPostProcessor implements InstantiationAwareBean
   }
 
 
+  /**
+   * 优化使用 {@link Resource} 注解指定的名称，未指定，使用字段类型首字母小写作为bean名称
+   */
   private String lookupBeanName(FieldInfo fieldInfo) {
 
     String dependencyBeanName = "";

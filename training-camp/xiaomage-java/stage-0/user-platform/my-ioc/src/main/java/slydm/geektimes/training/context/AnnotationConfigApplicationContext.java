@@ -152,8 +152,21 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
 
   }
 
-  public void destroyBeans() {
-    beanFactory.processPreDestroy();
+  public void stop() {
+
+  }
+
+  protected void destroyBeans() {
+    beanFactory.destroySingletons();
+  }
+
+  public void close() {
+    destroyBeans();
+    closeBeanFactory();
+  }
+
+  private void closeBeanFactory() {
+    this.beanFactory = null;
   }
 
   protected DefaultListableBeanFactory getBeanFactory() {
