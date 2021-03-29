@@ -4,7 +4,7 @@ import javax.annotation.Resource;
 import slydm.geektimes.training.context.annotation.Component;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/29 11:21
+ * @author wangcymy@gmail.com(wangcong) 2021/3/29 11:21
  */
 @Component
 public class C {
