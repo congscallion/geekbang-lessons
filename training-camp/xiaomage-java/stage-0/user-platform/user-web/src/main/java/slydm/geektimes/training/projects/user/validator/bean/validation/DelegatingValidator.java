@@ -8,12 +8,14 @@ import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
 import javax.validation.executable.ExecutableValidator;
 import javax.validation.metadata.BeanDescriptor;
+import slydm.geektimes.training.context.annotation.Component;
 
 /**
  * 静态代理 {@link Validator} 实现
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/12 11:48
  */
+@Component
 public class DelegatingValidator implements Validator {
 
   private Validator validator;

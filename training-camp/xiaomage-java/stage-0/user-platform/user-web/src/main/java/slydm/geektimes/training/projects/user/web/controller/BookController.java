@@ -9,7 +9,7 @@ import slydm.geektimes.training.projects.user.domin.Book;
 import slydm.geektimes.training.projects.user.repository.BookRepositoryImpl;
 import slydm.geektimes.training.projects.user.service.BookService;
 import slydm.geektimes.training.projects.user.service.BookServiceImpl;
-import slydm.geektimes.training.web.mvc.controller.PageController;
+import slydm.geektimes.training.web.annotation.Controller;
 
 
 /**
@@ -17,8 +17,9 @@ import slydm.geektimes.training.web.mvc.controller.PageController;
  *
  * @author wangcymy@gmail.com(wangcong) 3/4/21 10:12 PM
  */
+@Controller
 @Path("/books")
-public class BookController extends BaseController implements PageController {
+public class BookController extends BaseController {
 
   private final BookService bookService;
 

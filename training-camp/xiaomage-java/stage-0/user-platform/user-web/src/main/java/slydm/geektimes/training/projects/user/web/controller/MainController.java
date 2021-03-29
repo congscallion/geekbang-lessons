@@ -6,10 +6,12 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import slydm.geektimes.training.projects.context.ComponentContext;
 import slydm.geektimes.training.projects.jmx.ApplicationName;
+import slydm.geektimes.training.web.annotation.Controller;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/12 22:42
  */
+@Controller
 @Path("/main")
 public class MainController extends BaseController {
 

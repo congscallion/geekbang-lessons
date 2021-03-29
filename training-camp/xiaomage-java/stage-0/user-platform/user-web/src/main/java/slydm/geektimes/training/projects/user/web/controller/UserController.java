@@ -1,6 +1,7 @@
 package slydm.geektimes.training.projects.user.web.controller;
 
 import java.util.Set;
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.ConstraintViolation;
@@ -10,7 +11,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import slydm.geektimes.training.projects.context.ComponentContext;
 import slydm.geektimes.training.projects.user.domin.User;
 import slydm.geektimes.training.projects.user.exception.WebError;
 import slydm.geektimes.training.projects.user.service.UserService;
@@ -18,23 +18,22 @@ import slydm.geektimes.training.projects.user.web.Result;
 import slydm.geektimes.training.projects.user.web.controller.validator.groups.user.LoginGroup;
 import slydm.geektimes.training.projects.user.web.controller.validator.groups.user.RegisterGroup;
 import slydm.geektimes.training.projects.user.web.controller.validator.groups.user.UpdateGroup;
-import slydm.geektimes.training.web.mvc.controller.PageController;
+import slydm.geektimes.training.web.annotation.Controller;
 
 /**
  * 用户控制器
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/10 0:58
  */
+@Controller
 @Path("/users")
-public class UserController extends BaseController implements PageController {
+public class UserController extends BaseController {
 
-  private final UserService userService;
-  private final Validator validator;
+  @Resource
+  private UserService userService;
+  @Resource
+  private Validator validator;
 
-  public UserController() {
-    userService = ComponentContext.getInstance().getComponent("bean/UserService");
-    validator = ComponentContext.getInstance().getComponent("bean/Validator");
-  }
 
   @GET
   @Path("")
@@ -173,4 +172,11 @@ public class UserController extends BaseController implements PageController {
     return sb.toString();
   }
 
+  public void setUserService(UserService userService) {
+    this.userService = userService;
+  }
+
+  public void setValidator(Validator validator) {
+    this.validator = validator;
+  }
 }

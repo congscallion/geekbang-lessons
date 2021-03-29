@@ -296,7 +296,11 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
   }
 
   protected ClassLoader getClassloader() {
-    return ClassLoader.getSystemClassLoader();
+    ClassLoader contextClassLoader = Thread.currentThread().getContextClassLoader();
+    if (contextClassLoader == null) {
+      contextClassLoader = ClassLoader.getSystemClassLoader();
+    }
+    return contextClassLoader;
   }
 
   protected void populateBean(String beanName, BeanDefinition mbd, Object bean) {

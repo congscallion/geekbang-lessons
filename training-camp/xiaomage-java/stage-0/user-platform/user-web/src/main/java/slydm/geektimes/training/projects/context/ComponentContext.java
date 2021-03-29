@@ -141,7 +141,7 @@ public class ComponentContext {
    * 在 Context 中执行，通过指定 ThrowableFunction 返回计算结果
    *
    * @param function ThrowableFunction
-   * @param <R>      返回结果类型
+   * @param <R> 返回结果类型
    * @return 返回
    * @see ThrowableFunction#apply(Object)
    */
@@ -152,9 +152,9 @@ public class ComponentContext {
   /**
    * 在 Context 中执行，通过指定 ThrowableFunction 返回计算结果
    *
-   * @param function         ThrowableFunction
+   * @param function ThrowableFunction
    * @param ignoredException 是否忽略异常
-   * @param <R>              返回结果类型
+   * @param <R> 返回结果类型
    * @return 返回
    * @see ThrowableFunction#apply(Object)
    */

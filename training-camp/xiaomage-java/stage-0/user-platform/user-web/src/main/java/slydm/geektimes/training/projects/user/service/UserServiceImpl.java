@@ -1,15 +1,17 @@
 package slydm.geektimes.training.projects.user.service;
 
 import javax.annotation.Resource;
+import slydm.geektimes.training.context.annotation.Component;
 import slydm.geektimes.training.projects.user.domin.User;
 import slydm.geektimes.training.projects.user.repository.UserRepository;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/10 0:52
  */
+@Component
 public class UserServiceImpl implements UserService {
 
-  @Resource(name = "bean/UserRepository")
+  @Resource()
   private UserRepository userRepository;
 
   public void setUserRepository(UserRepository userRepository) {

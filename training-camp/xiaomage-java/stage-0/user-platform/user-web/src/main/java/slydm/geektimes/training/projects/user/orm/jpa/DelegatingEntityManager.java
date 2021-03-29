@@ -21,11 +21,13 @@ import javax.persistence.criteria.CriteriaDelete;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.metamodel.Metamodel;
+import slydm.geektimes.training.context.annotation.Component;
 import slydm.geektimes.training.projects.context.ComponentContext;
 
 /**
  * 委派实现（静态 AOP 实现）
  */
+@Component
 public class DelegatingEntityManager implements EntityManager {
 
   private String persistenceUnitName;

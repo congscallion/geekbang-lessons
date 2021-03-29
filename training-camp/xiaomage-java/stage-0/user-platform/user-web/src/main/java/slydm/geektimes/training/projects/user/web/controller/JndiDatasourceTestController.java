@@ -3,6 +3,7 @@ package slydm.geektimes.training.projects.user.web.controller;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
+import slydm.geektimes.training.web.annotation.Controller;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 
 /**
@@ -10,6 +11,7 @@ import slydm.geektimes.training.web.mvc.controller.PageController;
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/10 15:59
  */
+@Controller
 @Path("/jndi")
 public class JndiDatasourceTestController implements PageController {
 

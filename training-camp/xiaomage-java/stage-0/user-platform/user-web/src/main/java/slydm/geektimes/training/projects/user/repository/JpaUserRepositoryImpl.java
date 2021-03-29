@@ -8,6 +8,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import slydm.geektimes.training.context.annotation.Component;
 import slydm.geektimes.training.projects.user.domin.User;
 
 /**
@@ -18,11 +19,12 @@ import slydm.geektimes.training.projects.user.domin.User;
  * @author wangcymy@gmail.com(wangcong) 2021/3/9 23:52
  * @see
  */
+@Component(value = "userRepository")
 public class JpaUserRepositoryImpl implements UserRepository {
 
   private static Logger logger = LoggerFactory.getLogger(JpaUserRepositoryImpl.class);
 
-  @Resource(name = "bean/EntityManager")
+  @Resource()
   private EntityManager entityManager;
 
   public void setEntityManager(EntityManager entityManager) {

@@ -3,13 +3,15 @@ package slydm.geektimes.training.web.mvc.servlet;
 import static java.util.Arrays.asList;
 import static org.apache.commons.lang.StringUtils.substringAfter;
 
+import io.github.classgraph.AnnotationInfo;
+import io.github.classgraph.MethodInfo;
 import java.io.IOException;
-import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.ServiceLoader;
+import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -19,6 +21,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.HttpMethod;
 import javax.ws.rs.Path;
 import org.apache.commons.lang.StringUtils;
+import slydm.geektimes.training.context.ApplicationContext;
+import slydm.geektimes.training.core.BeanDefinition;
+import slydm.geektimes.training.core.BeanDefinitionRegistry;
+import slydm.geektimes.training.ioc.ConfigurableListableBeanFactory;
+import slydm.geektimes.training.web.context.ConfigurableWebApplicationContext;
 import slydm.geektimes.training.web.mvc.controller.Controller;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 import slydm.geektimes.training.web.mvc.controller.RestController;
@@ -37,12 +44,18 @@ public class MyDispatcherServlet extends BaseServlet {
   /**
    * 请求路径和 Controller 的映射关系缓存
    */
-  private Map<String, Controller> controllersMapping = new HashMap<>();
+  private Map<String, Object> controllersMapping = new HashMap<>();
 
   /**
    * 请求路径和 {@link HandlerMethodInfo} 映射关系缓存
    */
   private Map<String, HandlerMethodInfo> handleMethodInfoMapping = new HashMap<>();
+
+  private ApplicationContext applicationContext;
+
+  public MyDispatcherServlet(ApplicationContext servletAppContext) {
+    this.applicationContext = servletAppContext;
+  }
 
 
   @Override
@@ -50,48 +63,100 @@ public class MyDispatcherServlet extends BaseServlet {
     super.init();
     logger = Logger.getLogger(MyDispatcherServlet.class.getName());
     logger.setLevel(Level.FINEST);
+
+    initWebApplicationContext();
+
     initDispatcher();
   }
 
+  /**
+   * 初始化 web 应该上下文
+   */
+  private void initWebApplicationContext() {
+    ConfigurableWebApplicationContext cwa = (ConfigurableWebApplicationContext) applicationContext;
 
+    cwa.setServletContext(getServletContext());
+    cwa.setServletConfig(getServletConfig());
+
+    cwa.refresh();
+  }
+
+
+  /**
+   * 搜索所有 {@link Controller} 注解类
+   */
   private void initDispatcher() {
 
-    for (Controller controller : ServiceLoader.load(Controller.class)) {
+    ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory) applicationContext;
 
-      Class<?> controllerClass = controller.getClass();
-      Path pathFromClass = controllerClass.getAnnotation(Path.class);
-      String requestPath = pathFromClass.value();
-
-      Method[] publicMethods = controllerClass.getMethods();
-      // 处理支持的 HTTP 方法的方法集合
-      for (Method method : publicMethods) {
-
-        Set<String> supportedHttpMethods = findSupportedHttpMethods(method);
-        Path pathFromMethod = method.getAnnotation(Path.class);
-        if (pathFromMethod != null) {
-          String temPath = requestPath + ROOT + pathFromMethod.value();
-          temPath = temPath.replaceAll(ROOT2, ROOT);
-          if (temPath.endsWith(ROOT)) {
-            temPath = temPath.substring(0, temPath.length() - 1);
-          }
-
-          handleMethodInfoMapping.put(temPath,
-              new HandlerMethodInfo(temPath, method, supportedHttpMethods));
-          controllersMapping.put(temPath, controller);
-          logger.log(Level.INFO, "mapping " + temPath + " to " + controllerClass.getSimpleName());
-        }
-
+    String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
+    for (String beanDefinitionName : beanDefinitionNames) {
+      BeanDefinition beanDefinition = ((BeanDefinitionRegistry) beanFactory).getBeanDefinition(beanDefinitionName);
+      if (!isController(beanDefinition)) {
+        continue;
       }
+
+      String requestPath = getAnnotationValueOnClass(beanDefinition.getClassAnnotationList(), Path.class, "value");
+
+      beanDefinition.getAnnotationMethodList()
+          .stream()
+          .filter(methodInfo -> methodInfo.hasAnnotation(Path.class.getName()))
+          .forEach(methodInfo -> {
+            Set<String> supportedHttpMethods = findSupportedHttpMethods(methodInfo);
+
+            String pathValueFromMethod = getAnnotationValueOnClass(methodInfo.getAnnotationInfo(), Path.class, "value");
+            if (StringUtils.isNotBlank(pathValueFromMethod)) {
+              String temPath = requestPath + ROOT + pathValueFromMethod;
+              temPath = temPath.replaceAll(ROOT2, ROOT);
+              if (temPath.endsWith(ROOT)) {
+                temPath = temPath.substring(0, temPath.length() - 1);
+              }
+
+              Class beanClass = (Class) beanDefinition.getBeanClass();
+              Method method;
+              try {
+                method = beanClass.getMethod(methodInfo.getName());
+                handleMethodInfoMapping.put(temPath, new HandlerMethodInfo(temPath, method, supportedHttpMethods));
+                controllersMapping.put(temPath, applicationContext.getBean(beanDefinitionName));
+                logger.log(Level.INFO, "mapping " + temPath + " to " + method.getDeclaringClass());
+              } catch (NoSuchMethodException e) {
+                throw new IllegalStateException(e);
+              }
+
+            }
+
+          });
     }
   }
 
-  private Set<String> findSupportedHttpMethods(Method method) {
+
+  /**
+   * 获取指定注解的指定属性的值
+   */
+  private String getAnnotationValueOnClass(List<AnnotationInfo> annotationInfoList, Class<?> annotationClz,
+      String propName) {
+
+    return annotationInfoList
+        .stream()
+        .filter(annotationInfo -> annotationInfo.getName().equals(annotationClz))
+        .findFirst()
+        .map(annotationInfo -> annotationInfo.getParameterValues().getValue(propName).toString()).orElse("");
+  }
+
+  private boolean isController(BeanDefinition beanDefinition) {
+
+    Optional<AnnotationInfo> first = beanDefinition.getClassAnnotationList().stream()
+        .filter(annotationInfo -> annotationInfo.getName().equals(Controller.class.getName()))
+        .findFirst();
+    return first.map(annotation -> true).orElse(false);
+  }
+
+  private Set<String> findSupportedHttpMethods(MethodInfo methodInfo) {
     Set<String> supportedHttpMethods = new LinkedHashSet<>();
-    for (Annotation annotationFromMethod : method.getAnnotations()) {
-      HttpMethod httpMethod = annotationFromMethod.annotationType().getAnnotation(HttpMethod.class);
-      if (httpMethod != null) {
-        supportedHttpMethods.add(httpMethod.value());
-      }
+
+    if (methodInfo.hasAnnotation(HttpMethod.class.getName())) {
+      String value = getAnnotationValueOnClass(methodInfo.getAnnotationInfo(), HttpMethod.class, "value");
+      supportedHttpMethods.add(value);
     }
 
     if (supportedHttpMethods.isEmpty()) {
@@ -119,7 +184,7 @@ public class MyDispatcherServlet extends BaseServlet {
     String requestMappingPath = substringAfter(requestURI,
         StringUtils.replace(prefixPath, ROOT2, ROOT));
     // 映射到 Controller
-    Controller controller = controllersMapping.get(requestMappingPath);
+    Object controller = controllersMapping.get(requestMappingPath);
 
     if (controller != null) {
 
@@ -182,4 +247,5 @@ public class MyDispatcherServlet extends BaseServlet {
       renderFromRoot(request, response, viewPath);
     }
   }
+
 }
