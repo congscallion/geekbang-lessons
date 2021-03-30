@@ -44,7 +44,7 @@ public class MyServletContainerInitializer implements ServletContainerInitialize
       return;
     }
 
-    servletContext.log(initializers.size() + " Spring WebApplicationInitializers detected on classpath");
+    servletContext.log(initializers.size() + " My WebApplicationInitializers detected on classpath");
     for (WebApplicationInitializer initializer : initializers) {
       initializer.onStartup(servletContext);
     }
