@@ -10,12 +10,15 @@ import slydm.geektimes.training.projects.user.web.filter.LoginFilter;
 import slydm.geektimes.training.web.servlet.support.AbstractDispatcherServletInitializer;
 
 /**
- * spring
+ * my-web-mvc 容器初始化扩展类，用于加载默认分发器url映射地址，配置类，以及扩展注册Filter.
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/29 16:49
  */
 public class MyWebApplicationInitializer extends AbstractDispatcherServletInitializer {
 
+  /**
+   * 返回一个{@link javax.servlet.Filter} 列表用于在容器启动时注册，以此代替 web.xml文件。
+   */
   @Override
   protected FilterMapping[] getServletFilters() {
     List<FilterMapping> filterList = new ArrayList<>();
@@ -49,11 +52,17 @@ public class MyWebApplicationInitializer extends AbstractDispatcherServletInitia
     return filterList.toArray(new FilterMapping[0]);
   }
 
+  /**
+   * 默认分发器 url 映射地址
+   */
   @Override
   protected String getServletMappings() {
     return "/";
   }
 
+  /**
+   * web mvc 配置类
+   */
   @Override
   protected Class<?> getServletConfigClasses() {
     return UserWebConfig.class;
