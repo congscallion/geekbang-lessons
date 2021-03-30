@@ -13,7 +13,6 @@ import java.util.Map;
 import java.util.function.Consumer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slydm.geektimes.training.projects.context.ComponentContext;
 import slydm.geektimes.training.projects.user.function.ThrowableFunction;
 
 /**
@@ -38,8 +37,10 @@ public class DbUtil {
   }
 
 
+  // TODO sql 使用jpa替换
   public static Connection getConnection() {
-    return ComponentContext.getInstance().getConnection();
+    // return ComponentContext.getInstance().getConnection();
+    return null;
   }
 
 

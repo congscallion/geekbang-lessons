@@ -31,9 +31,9 @@ public class UserController extends BaseController {
 
   @Resource
   private UserService userService;
+
   @Resource
   private Validator validator;
-
 
   @GET
   @Path("")

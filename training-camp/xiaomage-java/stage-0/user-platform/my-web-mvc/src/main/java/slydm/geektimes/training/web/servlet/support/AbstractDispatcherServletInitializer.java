@@ -2,6 +2,7 @@ package slydm.geektimes.training.web.servlet.support;
 
 import java.beans.Introspector;
 import java.util.EnumSet;
+import java.util.Map;
 import javax.servlet.DispatcherType;
 import javax.servlet.Filter;
 import javax.servlet.FilterRegistration;
@@ -11,6 +12,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import slydm.geektimes.training.context.ApplicationContext;
 import slydm.geektimes.training.util.Assert;
+import slydm.geektimes.training.util.StringUtils;
 import slydm.geektimes.training.web.WebApplicationInitializer;
 import slydm.geektimes.training.web.context.AnnotationConfigWebApplicationContext;
 import slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet;
@@ -56,20 +58,26 @@ public abstract class AbstractDispatcherServletInitializer implements WebApplica
     registration.addMapping(getServletMappings());
     registration.setAsyncSupported(isAsyncSupported());
 
-    Filter[] filters = getServletFilters();
+    FilterMapping[] filters = getServletFilters();
     if (null != filters && filters.length != 0) {
-      for (Filter filter : filters) {
+      for (FilterMapping filter : filters) {
         registerServletFilter(servletContext, filter);
       }
     }
+
   }
 
   /**
    * 向 Servlet 容器中添加 Filter
    */
-  protected FilterRegistration.Dynamic registerServletFilter(ServletContext servletContext, Filter filter) {
-    String filterName = Introspector.decapitalize(filter.getClass().getSimpleName());
-    Dynamic registration = servletContext.addFilter(filterName, filter);
+  protected FilterRegistration.Dynamic registerServletFilter(ServletContext servletContext, FilterMapping filter) {
+
+    String filterName = filter.getName();
+    if (!StringUtils.hasText(filter.getName())) {
+      filterName = Introspector.decapitalize(filter.getClass().getSimpleName());
+    }
+
+    Dynamic registration = servletContext.addFilter(filterName, filter.getFilter());
 
     if (registration == null) {
       int counter = 0;
@@ -78,13 +86,22 @@ public abstract class AbstractDispatcherServletInitializer implements WebApplica
           throw new IllegalStateException("Failed to register filter with name '" + filterName + "'. " +
               "Check if there is another filter registered under the same name.");
         }
-        registration = servletContext.addFilter(filterName + "#" + counter, filter);
+        registration = servletContext.addFilter(filterName + "#" + counter, filter.getFilter());
         counter++;
       }
     }
 
     registration.setAsyncSupported(isAsyncSupported());
-    registration.addMappingForServletNames(getDispatcherTypes(), false, getServletName());
+
+    if (filter.getInitParameters() != null && !filter.getInitParameters().isEmpty()) {
+      Map<String, String> initParameters = registration.getInitParameters();
+      filter.getInitParameters().putAll(initParameters);
+      registration.setInitParameters(filter.getInitParameters());
+    }
+    registration.addMappingForUrlPatterns(null == filter.getDispatcherTypes() ?
+            getDispatcherTypes() : filter.getDispatcherTypes(),
+        false, filter.getUrlPatterns()
+    );
     return registration;
   }
 
@@ -94,7 +111,7 @@ public abstract class AbstractDispatcherServletInitializer implements WebApplica
         EnumSet.of(DispatcherType.REQUEST, DispatcherType.FORWARD, DispatcherType.INCLUDE));
   }
 
-  protected abstract Filter[] getServletFilters();
+  protected abstract FilterMapping[] getServletFilters();
 
   protected abstract String getServletMappings();
 
@@ -126,5 +143,59 @@ public abstract class AbstractDispatcherServletInitializer implements WebApplica
 
   protected String getServletName() {
     return DEFAULT_SERVLET_NAME;
+  }
+
+
+  protected static class FilterMapping {
+
+    public FilterMapping() {
+
+    }
+
+    private Filter filter;
+    private String name;
+    private String[] urlPatterns;
+    private EnumSet<DispatcherType> dispatcherTypes;
+    private Map<String, String> initParameters;
+
+    public Filter getFilter() {
+      return filter;
+    }
+
+    public void setFilter(Filter filter) {
+      this.filter = filter;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    public String[] getUrlPatterns() {
+      return urlPatterns;
+    }
+
+    public void setUrlPatterns(String... urlPatterns) {
+      this.urlPatterns = urlPatterns;
+    }
+
+    public EnumSet<DispatcherType> getDispatcherTypes() {
+      return dispatcherTypes;
+    }
+
+    public void setDispatcherTypes(EnumSet<DispatcherType> dispatcherTypes) {
+      this.dispatcherTypes = dispatcherTypes;
+    }
+
+    public Map<String, String> getInitParameters() {
+      return initParameters;
+    }
+
+    public void setInitParameters(Map<String, String> initParameters) {
+      this.initParameters = initParameters;
+    }
   }
 }

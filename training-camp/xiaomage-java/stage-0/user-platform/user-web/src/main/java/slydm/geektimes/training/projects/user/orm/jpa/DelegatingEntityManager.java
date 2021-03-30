@@ -1,18 +1,14 @@
 package slydm.geektimes.training.projects.user.orm.jpa;
 
-import java.io.IOException;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-import javax.annotation.PostConstruct;
+import javax.annotation.Resource;
 import javax.persistence.EntityGraph;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
-import javax.persistence.Persistence;
 import javax.persistence.Query;
 import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
@@ -22,25 +18,15 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.CriteriaUpdate;
 import javax.persistence.metamodel.Metamodel;
 import slydm.geektimes.training.context.annotation.Component;
-import slydm.geektimes.training.projects.context.ComponentContext;
 
 /**
  * 委派实现（静态 AOP 实现）
  */
-@Component
+@Component("entityManager")
 public class DelegatingEntityManager implements EntityManager {
 
-  private String persistenceUnitName;
-
-  private String propertiesLocation;
-
+  @Resource
   private EntityManagerFactory entityManagerFactory;
-
-  @PostConstruct
-  public void init() {
-    this.entityManagerFactory =
-        Persistence.createEntityManagerFactory(persistenceUnitName, loadProperties(propertiesLocation));
-  }
 
   public EntityManager getEntityManager() {
 
@@ -52,43 +38,6 @@ public class DelegatingEntityManager implements EntityManager {
     }
 
     return entityManager;
-  }
-
-  private Map loadProperties(String propertiesLocation) {
-    ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-    URL propertiesFileURL = classLoader.getResource(propertiesLocation);
-    Properties properties = new Properties();
-    try {
-      properties.load(propertiesFileURL.openStream());
-    } catch (IOException e) {
-      throw new RuntimeException(e);
-    }
-    // 增加 JNDI 引用处理
-    ComponentContext componentContext = ComponentContext.getInstance();
-
-    for (String propertyName : properties.stringPropertyNames()) {
-      String propertyValue = properties.getProperty(propertyName);
-      if (propertyValue.startsWith("@")) {
-        String componentName = propertyValue.substring(1);
-        Object component = componentContext.getComponent(componentName);
-        properties.put(propertyName, component);
-      }
-    }
-
-    return properties;
-  }
-
-  // Setter 方法会被 Tomcat JNDI 实现调用
-
-  /**
-   * @param persistenceUnitName
-   */
-  public void setPersistenceUnitName(String persistenceUnitName) {
-    this.persistenceUnitName = persistenceUnitName;
-  }
-
-  public void setPropertiesLocation(String propertiesLocation) {
-    this.propertiesLocation = propertiesLocation;
   }
 
   @Override

@@ -25,8 +25,8 @@ import slydm.geektimes.training.context.ApplicationContext;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.core.BeanDefinitionRegistry;
 import slydm.geektimes.training.ioc.ConfigurableListableBeanFactory;
+import slydm.geektimes.training.web.annotation.Controller;
 import slydm.geektimes.training.web.context.ConfigurableWebApplicationContext;
-import slydm.geektimes.training.web.mvc.controller.Controller;
 import slydm.geektimes.training.web.mvc.controller.PageController;
 import slydm.geektimes.training.web.mvc.controller.RestController;
 import slydm.geektimes.training.web.mvc.servlet.helper.HandlerMethodInfo;
@@ -87,7 +87,7 @@ public class MyDispatcherServlet extends BaseServlet {
    */
   private void initDispatcher() {
 
-    ConfigurableListableBeanFactory beanFactory = (ConfigurableListableBeanFactory) applicationContext;
+    ConfigurableListableBeanFactory beanFactory = applicationContext.getBeanFactory();
 
     String[] beanDefinitionNames = beanFactory.getBeanDefinitionNames();
     for (String beanDefinitionName : beanDefinitionNames) {
@@ -96,7 +96,7 @@ public class MyDispatcherServlet extends BaseServlet {
         continue;
       }
 
-      String requestPath = getAnnotationValueOnClass(beanDefinition.getClassAnnotationList(), Path.class, "value");
+      String requestPath = getAnnotationValue(beanDefinition.getClassAnnotationList(), Path.class, "value");
 
       beanDefinition.getAnnotationMethodList()
           .stream()
@@ -104,27 +104,17 @@ public class MyDispatcherServlet extends BaseServlet {
           .forEach(methodInfo -> {
             Set<String> supportedHttpMethods = findSupportedHttpMethods(methodInfo);
 
-            String pathValueFromMethod = getAnnotationValueOnClass(methodInfo.getAnnotationInfo(), Path.class, "value");
-            if (StringUtils.isNotBlank(pathValueFromMethod)) {
-              String temPath = requestPath + ROOT + pathValueFromMethod;
-              temPath = temPath.replaceAll(ROOT2, ROOT);
-              if (temPath.endsWith(ROOT)) {
-                temPath = temPath.substring(0, temPath.length() - 1);
-              }
-
-              Class beanClass = (Class) beanDefinition.getBeanClass();
-              Method method;
-              try {
-                method = beanClass.getMethod(methodInfo.getName());
-                handleMethodInfoMapping.put(temPath, new HandlerMethodInfo(temPath, method, supportedHttpMethods));
-                controllersMapping.put(temPath, applicationContext.getBean(beanDefinitionName));
-                logger.log(Level.INFO, "mapping " + temPath + " to " + method.getDeclaringClass());
-              } catch (NoSuchMethodException e) {
-                throw new IllegalStateException(e);
-              }
-
+            String pathValueFromMethod = getAnnotationValue(methodInfo.getAnnotationInfo(), Path.class, "value");
+            String temPath = requestPath + ROOT + pathValueFromMethod;
+            temPath = temPath.replaceAll(ROOT2, ROOT);
+            if (temPath.endsWith(ROOT)) {
+              temPath = temPath.substring(0, temPath.length() - 1);
             }
 
+            Method method = beanDefinition.getMethodByMethodInfo(methodInfo);
+            handleMethodInfoMapping.put(temPath, new HandlerMethodInfo(temPath, method, supportedHttpMethods));
+            controllersMapping.put(temPath, applicationContext.getBean(beanDefinitionName));
+            logger.log(Level.INFO, "mapping " + temPath + " to " + method.getDeclaringClass());
           });
     }
   }
@@ -133,12 +123,12 @@ public class MyDispatcherServlet extends BaseServlet {
   /**
    * 获取指定注解的指定属性的值
    */
-  private String getAnnotationValueOnClass(List<AnnotationInfo> annotationInfoList, Class<?> annotationClz,
+  private String getAnnotationValue(List<AnnotationInfo> annotationInfoList, Class<?> annotationClz,
       String propName) {
 
     return annotationInfoList
         .stream()
-        .filter(annotationInfo -> annotationInfo.getName().equals(annotationClz))
+        .filter(annotationInfo -> annotationInfo.getName().equals(annotationClz.getName()))
         .findFirst()
         .map(annotationInfo -> annotationInfo.getParameterValues().getValue(propName).toString()).orElse("");
   }
@@ -155,7 +145,7 @@ public class MyDispatcherServlet extends BaseServlet {
     Set<String> supportedHttpMethods = new LinkedHashSet<>();
 
     if (methodInfo.hasAnnotation(HttpMethod.class.getName())) {
-      String value = getAnnotationValueOnClass(methodInfo.getAnnotationInfo(), HttpMethod.class, "value");
+      String value = getAnnotationValue(methodInfo.getAnnotationInfo(), HttpMethod.class, "value");
       supportedHttpMethods.add(value);
     }
 

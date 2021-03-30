@@ -2,27 +2,15 @@ package slydm.geektimes.training.projects.user.orm.jpa;
 
 import java.util.HashMap;
 import java.util.Map;
-import javax.annotation.Resource;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
-import javax.persistence.PersistenceContext;
 import javax.sql.DataSource;
 import org.apache.derby.jdbc.EmbeddedDataSource;
 import slydm.geektimes.training.projects.user.domin.User;
 
 public class JpaDemo {
-
-//    @Resource
-//    private EntityManager entityManager;
-
-  @PersistenceContext(name = "emf")
-  private EntityManager entityManager;
-
-  @Resource(name = "primaryDataSource")
-  private DataSource dataSource;
-
 
   public static void main(String[] args) {
     EntityManagerFactory entityManagerFactory =

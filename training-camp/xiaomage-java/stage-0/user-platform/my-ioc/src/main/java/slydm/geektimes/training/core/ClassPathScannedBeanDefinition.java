@@ -4,8 +4,11 @@ import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import io.github.classgraph.MethodInfo;
+import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -15,45 +18,54 @@ import java.util.stream.Collectors;
  */
 public class ClassPathScannedBeanDefinition implements BeanDefinition {
 
-  private Object beanClass;
+  private final Class beanClass;
 
   /**
    * 类注解列表
    */
-  private List<AnnotationInfo> classAnnotationList;
+  private final List<AnnotationInfo> classAnnotationList;
 
   /**
    * 带有注解的字段列表
    */
-  private List<FieldInfo> annotationFieldList;
+  private final List<FieldInfo> annotationFieldList;
 
   /**
    * 带有注解的方法列表
    */
-  private List<MethodInfo> annotationMethodList;
+  private final Set<MethodInfo> annotationMethodList;
 
   /**
    * 所有实现的接口
    */
-  private List<ClassInfo> allInterfaces;
+  private final List<ClassInfo> allInterfaces;
 
   /**
    * 直接或间接父类
    */
-  List<ClassInfo> allSuperClasses;
+  private final List<ClassInfo> allSuperClasses;
+
+  /**
+   * 方法与方法元信息映射
+   */
+  private final Map<MethodInfo, Method> methodInfoMethodMap;
 
   public ClassPathScannedBeanDefinition(ClassInfo classInfo) {
-    this.beanClass = classInfo.getName();
+    this.beanClass = classInfo.loadClass();
 
     List<FieldInfo> annotationFieldList = classInfo.getDeclaredFieldInfo()
         .filter(fieldInfo -> notEmpty(fieldInfo.getAnnotationInfo()))
         .stream().collect(Collectors.toList());
     this.annotationFieldList = annotationFieldList;
 
-    List<MethodInfo> annotationMethodList = classInfo.getMethodInfo()
+    Map<MethodInfo, Method> methodInfoMethodMap = classInfo.getMethodInfo()
         .filter(methodInfo -> notEmpty(methodInfo.getAnnotationInfo()))
-        .stream().collect(Collectors.toList());
-    this.annotationMethodList = annotationMethodList;
+        .stream()
+        .collect(Collectors.toMap(m -> m, m -> m.loadClassAndGetMethod()));
+
+    this.methodInfoMethodMap = methodInfoMethodMap;
+
+    this.annotationMethodList = methodInfoMethodMap.keySet();
 
     this.classAnnotationList = classInfo.getAnnotationInfo().stream().collect(Collectors.toList());
 
@@ -76,15 +88,19 @@ public class ClassPathScannedBeanDefinition implements BeanDefinition {
     return annotationFieldList;
   }
 
-  public List<MethodInfo> getAnnotationMethodList() {
+  @Override
+  public Method getMethodByMethodInfo(MethodInfo methodInfo) {
+    return this.methodInfoMethodMap.get(methodInfo);
+  }
+
+  public Set<MethodInfo> getAnnotationMethodList() {
     return annotationMethodList;
   }
 
   @Override
-  public Object getBeanClass() {
+  public Class getBeanClass() {
     return beanClass;
   }
-
 
   @Override
   public List<ClassInfo> getAllInterfaces() {

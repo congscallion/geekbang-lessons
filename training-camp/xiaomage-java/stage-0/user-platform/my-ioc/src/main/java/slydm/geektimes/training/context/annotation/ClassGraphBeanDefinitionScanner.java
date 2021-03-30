@@ -48,6 +48,7 @@ public class ClassGraphBeanDefinitionScanner {
       Set<BeanDefinition> beanDefinitionSet = result
           .getClassesWithAnnotation(Component.class.getName())
           .stream()
+          .filter(classInfo -> !classInfo.isAbstract() && !classInfo.isInterface() && !classInfo.isAnnotation())
           .map(ci -> {
 
             ClassPathScannedBeanDefinition beanDefinition = new ClassPathScannedBeanDefinition(ci);
@@ -57,7 +58,9 @@ public class ClassGraphBeanDefinitionScanner {
 
       return beanDefinitionSet;
     }
+
   }
+
 
   /**
    * 以下为测试类， 主要是想看下，{@link ClassGraph} 扫描的类是否会被加载到 JVM 中。 结论是:否

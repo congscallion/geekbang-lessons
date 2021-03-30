@@ -4,7 +4,9 @@ import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import io.github.classgraph.MethodInfo;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Set;
 
 /**
  * IOC 容器中Bean的描述信息
@@ -15,11 +17,8 @@ public interface BeanDefinition {
 
   /**
    * 获取 bean class full name
-   *
-   * @return
    */
-  Object getBeanClass();
-
+  Class getBeanClass();
 
   /**
    * 类注解列表
@@ -28,15 +27,18 @@ public interface BeanDefinition {
 
   /**
    * 带有注解的字段列表
-   *
-   * @return
    */
   List<FieldInfo> getAnnotationFieldList();
 
   /**
+   * 根据方法元信息获取方法
+   */
+  Method getMethodByMethodInfo(MethodInfo methodInfo);
+
+  /**
    * 带有注解的方法列表
    */
-  List<MethodInfo> getAnnotationMethodList();
+  Set<MethodInfo> getAnnotationMethodList();
 
   /**
    * 获取 bean 实现的接口列表
@@ -46,7 +48,7 @@ public interface BeanDefinition {
   /**
    * 获取 bean 直接或间接父类列表
    */
-  public List<ClassInfo> getAllSuperClasses();
+  List<ClassInfo> getAllSuperClasses();
 
 
   boolean isSynthetic();

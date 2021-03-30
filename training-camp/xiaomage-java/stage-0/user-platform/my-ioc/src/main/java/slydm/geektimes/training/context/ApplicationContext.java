@@ -2,6 +2,7 @@ package slydm.geektimes.training.context;
 
 import slydm.geektimes.training.core.BeanDefinitionRegistry;
 import slydm.geektimes.training.ioc.BeanFactory;
+import slydm.geektimes.training.ioc.ConfigurableListableBeanFactory;
 
 /**
  * 应用上下文接口
@@ -9,5 +10,7 @@ import slydm.geektimes.training.ioc.BeanFactory;
  * @author wangcymy@gmail.com(wangcong) 2021/3/24 16:05
  */
 public interface ApplicationContext extends BeanFactory, BeanDefinitionRegistry {
+
+  public ConfigurableListableBeanFactory getBeanFactory();
 
 }

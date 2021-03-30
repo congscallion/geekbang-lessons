@@ -6,15 +6,15 @@
   metadata-complete="true" version="2.5">
 
 
-  <listener>
-    <listener-class>slydm.geektimes.training.projects.user.web.listener.ComponentContextInitializerListener
-    </listener-class>
-  </listener>
+  <!--  <listener>-->
+  <!--    <listener-class>slydm.geektimes.training.projects.user.web.listener.ComponentContextInitializerListener-->
+  <!--    </listener-class>-->
+  <!--  </listener>-->
 
   <servlet>
     <servlet-name>jolokia-agent</servlet-name>
     <servlet-class>slydm.geektimes.training.projects.user.web.controller.JolokiaAgentServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
+    <load-on-startup>2</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>jolokia-agent</servlet-name>
@@ -46,65 +46,65 @@
     <url-pattern>*.js</url-pattern>
   </servlet-mapping>
 
-  <servlet>
-    <servlet-name>MyDispatcherServlet</servlet-name>
-    <servlet-class>slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet</servlet-class>
-    <load-on-startup>1</load-on-startup>
-  </servlet>
+  <!--  <servlet>-->
+  <!--    <servlet-name>MyDispatcherServlet</servlet-name>-->
+  <!--    <servlet-class>slydm.geektimes.training.web.mvc.servlet.MyDispatcherServlet</servlet-class>-->
+  <!--    <load-on-startup>1</load-on-startup>-->
+  <!--  </servlet>-->
 
-  <servlet-mapping>
-    <servlet-name>MyDispatcherServlet</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
+  <!--  <servlet-mapping>-->
+  <!--    <servlet-name>MyDispatcherServlet</servlet-name>-->
+  <!--    <url-pattern>/</url-pattern>-->
+  <!--  </servlet-mapping>-->
 
-  <filter>
-    <filter-name>CharsetEncodingFilter</filter-name>
-    <filter-class>slydm.geektimes.training.projects.user.web.filter.CharsetEncodingFilter</filter-class>
-    <init-param>
-      <!-- Filter ÅäÖÃ = FilterConfig -->
-      <param-name>encoding</param-name>
-      <param-value>UTF-8</param-value>
-    </init-param>
-  </filter>
+  <!--  <filter>-->
+  <!--    <filter-name>CharsetEncodingFilter</filter-name>-->
+  <!--    <filter-class>slydm.geektimes.training.projects.user.web.filter.CharsetEncodingFilter</filter-class>-->
+  <!--    <init-param>-->
+  <!--      &lt;!&ndash; Filter ÅäÖÃ = FilterConfig &ndash;&gt;-->
+  <!--      <param-name>encoding</param-name>-->
+  <!--      <param-value>UTF-8</param-value>-->
+  <!--    </init-param>-->
+  <!--  </filter>-->
 
-  <filter-mapping>
-    <filter-name>CharsetEncodingFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-    <dispatcher>FORWARD</dispatcher>
-    <dispatcher>INCLUDE</dispatcher>
-    <dispatcher>ERROR</dispatcher>
-  </filter-mapping>
+  <!--  <filter-mapping>-->
+  <!--    <filter-name>CharsetEncodingFilter</filter-name>-->
+  <!--    <url-pattern>/*</url-pattern>-->
+  <!--    <dispatcher>REQUEST</dispatcher>-->
+  <!--    <dispatcher>FORWARD</dispatcher>-->
+  <!--    <dispatcher>INCLUDE</dispatcher>-->
+  <!--    <dispatcher>ERROR</dispatcher>-->
+  <!--  </filter-mapping>-->
 
-  <filter>
-    <filter-name>LoginFilter</filter-name>
-    <filter-class>slydm.geektimes.training.projects.user.web.filter.LoginFilter</filter-class>
-    <init-param>
-      <!-- Filter ÅäÖÃ = FilterConfig -->
-      <param-name>excludes</param-name>
-      <param-value>/,/users/register,/users/login</param-value>
-    </init-param>
-  </filter>
+  <!--  <filter>-->
+  <!--    <filter-name>LoginFilter</filter-name>-->
+  <!--    <filter-class>slydm.geektimes.training.projects.user.web.filter.LoginFilter</filter-class>-->
+  <!--    <init-param>-->
+  <!--      &lt;!&ndash; Filter ÅäÖÃ = FilterConfig &ndash;&gt;-->
+  <!--      <param-name>excludes</param-name>-->
+  <!--      <param-value>/,/users/register,/users/login</param-value>-->
+  <!--    </init-param>-->
+  <!--  </filter>-->
 
-  <filter-mapping>
-    <filter-name>LoginFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-    <dispatcher>REQUEST</dispatcher>
-    <dispatcher>FORWARD</dispatcher>
-    <dispatcher>INCLUDE</dispatcher>
-    <dispatcher>ERROR</dispatcher>
-  </filter-mapping>
+  <!--  <filter-mapping>-->
+  <!--    <filter-name>LoginFilter</filter-name>-->
+  <!--    <url-pattern>/*</url-pattern>-->
+  <!--    <dispatcher>REQUEST</dispatcher>-->
+  <!--    <dispatcher>FORWARD</dispatcher>-->
+  <!--    <dispatcher>INCLUDE</dispatcher>-->
+  <!--    <dispatcher>ERROR</dispatcher>-->
+  <!--  </filter-mapping>-->
 
 
-  <filter>
-    <filter-name>EntityManagerClearFilter</filter-name>
-    <filter-class>slydm.geektimes.training.projects.user.web.filter.EntityManagerClearFilter</filter-class>
-  </filter>
+  <!--  <filter>-->
+  <!--    <filter-name>EntityManagerClearFilter</filter-name>-->
+  <!--    <filter-class>slydm.geektimes.training.projects.user.web.filter.EntityManagerClearFilter</filter-class>-->
+  <!--  </filter>-->
 
-  <filter-mapping>
-    <filter-name>EntityManagerClearFilter</filter-name>
-    <url-pattern>/*</url-pattern>
-  </filter-mapping>
+  <!--  <filter-mapping>-->
+  <!--    <filter-name>EntityManagerClearFilter</filter-name>-->
+  <!--    <url-pattern>/*</url-pattern>-->
+  <!--  </filter-mapping>-->
 
 
   <welcome-file-list>

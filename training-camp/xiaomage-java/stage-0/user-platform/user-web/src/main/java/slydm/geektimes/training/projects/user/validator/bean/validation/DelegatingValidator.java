@@ -15,7 +15,7 @@ import slydm.geektimes.training.context.annotation.Component;
  *
  * @author wangcymy@gmail.com(wangcong) 2021/3/12 11:48
  */
-@Component
+@Component("validator")
 public class DelegatingValidator implements Validator {
 
   private Validator validator;

@@ -8,10 +8,10 @@ import slydm.geektimes.training.projects.user.repository.UserRepository;
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/10 0:52
  */
-@Component
+@Component("userService")
 public class UserServiceImpl implements UserService {
 
-  @Resource()
+  @Resource(name = "userRepository")
   private UserRepository userRepository;
 
   public void setUserRepository(UserRepository userRepository) {

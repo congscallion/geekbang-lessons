@@ -1,6 +1,8 @@
 package slydm.geektimes.training.ioc;
 
 import io.github.classgraph.ClassInfo;
+import java.beans.Introspector;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,11 +21,13 @@ import slydm.geektimes.training.beans.factory.SmartInstantiationAwareBeanPostPro
 import slydm.geektimes.training.context.annotation.DestructionAwareBeanPostProcessor;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.core.BeanDefinitionRegistry;
+import slydm.geektimes.training.core.MethodBeanDefinition;
 import slydm.geektimes.training.exception.BeanCreationException;
 import slydm.geektimes.training.exception.BeanCurrentlyInCreationException;
 import slydm.geektimes.training.exception.BeansException;
 import slydm.geektimes.training.exception.NoSuchBeanDefinitionException;
 import slydm.geektimes.training.util.Assert;
+import slydm.geektimes.training.util.ClassUtils;
 import slydm.geektimes.training.util.StringUtils;
 
 /**
@@ -227,13 +231,7 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
    */
   protected Object createBeanInstance(String beanName, BeanDefinition mbd) {
 
-    Class<?> clz;
-    try {
-      clz = getClassloader().loadClass(mbd.getBeanClass().toString());
-    } catch (ClassNotFoundException e) {
-      throw new BeansException(e.getMessage());
-    }
-
+    Class<?> clz = mbd.getBeanClass();
     Object bean = null;
     if (!mbd.isSynthetic() && hasInstantiationAwareBeanPostProcessors()) {
 
@@ -245,6 +243,32 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
 
     if (null != bean) {
       return bean;
+    }
+
+    //TODO 暂时未根据方法名+参数类型获取 @Bean 标注的方法，只能根据方法名获取，后续再完善
+    if (mbd instanceof MethodBeanDefinition) {
+      MethodBeanDefinition bd = MethodBeanDefinition.class.cast(mbd);
+      String methodName = bd.getMethodName();
+      Class ownerClass = bd.getOwnerClass();
+      String shortName = ClassUtils.getShortName(ownerClass.getName());
+      String ownerBeanName = Introspector.decapitalize(shortName);
+      Object ownerBean = getBean(ownerBeanName);
+      try {
+        Method method = bd.getMethod();
+        Object resultBean = method.invoke(ownerBean);
+        Class resultClass = resultBean.getClass();
+        Class<?> declareClass = (Class) bd.getBeanClass();
+
+        if (declareClass.isAssignableFrom(resultClass)) {
+          return resultBean;
+        }
+
+        throw new BeansException(ownerClass + "#" + methodName + "返回类型:" + resultClass.getName() + ""
+            + ",但是声明的类型为:" + declareClass.getName());
+
+      } catch (Exception e) {
+        throw new BeansException(e.getMessage());
+      }
     }
 
     try {
@@ -497,10 +521,13 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
   @Override
   public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition) {
     if (containsBeanDefinition(beanName)) {
-      throw new BeansException(beanName + ", has existed!");
+//      throw new BeansException(beanName + ", has existed!");
+
+      beanDefinitionMap.put(beanName, beanDefinition);
+    } else {
+      beanDefinitionMap.put(beanName, beanDefinition);
+      beanDefinitionNames.add(beanName);
     }
-    beanDefinitionMap.put(beanName, beanDefinition);
-    beanDefinitionNames.add(beanName);
   }
 
   @Override

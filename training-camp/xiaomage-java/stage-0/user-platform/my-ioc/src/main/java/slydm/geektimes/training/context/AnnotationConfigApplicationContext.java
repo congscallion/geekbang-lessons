@@ -4,6 +4,8 @@ import slydm.geektimes.training.beans.config.BeanFactoryPostProcessor;
 import slydm.geektimes.training.beans.factory.BeanPostProcessor;
 import slydm.geektimes.training.context.annotation.AnnotatedBeanDefinitionReader;
 import slydm.geektimes.training.context.annotation.CommonAnnotationBeanPostProcessor;
+import slydm.geektimes.training.context.event.ApplicationEventMulticaster;
+import slydm.geektimes.training.context.event.SimpleApplicationEventMulticaster;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.exception.BeansException;
 import slydm.geektimes.training.exception.NoSuchBeanDefinitionException;
@@ -22,7 +24,7 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
   private final AnnotatedBeanDefinitionReader reader;
 
   public AnnotationConfigApplicationContext() {
-    this.beanFactory = getBeanFactory();
+    this.beanFactory = new DefaultListableBeanFactory();
     this.reader = new AnnotatedBeanDefinitionReader(beanFactory);
   }
 
@@ -102,7 +104,22 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
   protected void onRefresh() {
   }
 
+  /**
+   * Helper class used in event publishing.
+   */
+  private ApplicationEventMulticaster applicationEventMulticaster;
+
   protected void initApplicationEventMulticaster() {
+
+    this.applicationEventMulticaster = new SimpleApplicationEventMulticaster();
+
+    ConfigurableListableBeanFactory beanFactory = getBeanFactory();
+    String[] beanNamesForType = getBeanFactory().getBeanNamesForType(ApplicationListener.class);
+    for (String beanName : beanNamesForType) {
+      ApplicationListener listener = beanFactory.getBean(beanName, ApplicationListener.class);
+      applicationEventMulticaster.addApplicationListener(listener);
+    }
+
   }
 
   protected void initMessageSource() {
@@ -169,8 +186,8 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
     this.beanFactory = null;
   }
 
-  protected DefaultListableBeanFactory getBeanFactory() {
-    return new DefaultListableBeanFactory();
+  public ConfigurableListableBeanFactory getBeanFactory() {
+    return this.beanFactory;
   }
 
   private void initializationALlSingletonBean(DefaultListableBeanFactory beanFactory) {

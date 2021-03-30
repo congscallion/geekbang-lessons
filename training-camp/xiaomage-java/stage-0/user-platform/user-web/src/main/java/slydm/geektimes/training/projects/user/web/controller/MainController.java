@@ -1,10 +1,10 @@
 package slydm.geektimes.training.projects.user.web.controller;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import slydm.geektimes.training.projects.context.ComponentContext;
 import slydm.geektimes.training.projects.jmx.ApplicationName;
 import slydm.geektimes.training.web.annotation.Controller;
 
@@ -15,10 +15,13 @@ import slydm.geektimes.training.web.annotation.Controller;
 @Path("/main")
 public class MainController extends BaseController {
 
+  @Resource
+  private ApplicationName applicationName;
+
   /**
    * go to main page
    *
-   * @param request  request
+   * @param request request
    * @param response response
    * @return /WEB-INF/index.jsp
    */
@@ -31,7 +34,6 @@ public class MainController extends BaseController {
   @GET
   @Path("/application/name")
   public void applicationName(HttpServletRequest request, HttpServletResponse response) throws Exception {
-    ApplicationName applicationName = ComponentContext.getInstance().getComponent("bean/ApplicationName");
     responseJson(request, response, applicationName);
   }
 

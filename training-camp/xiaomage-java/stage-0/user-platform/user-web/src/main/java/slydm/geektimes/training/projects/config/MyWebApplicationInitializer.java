@@ -1,6 +1,12 @@
 package slydm.geektimes.training.projects.config;
 
-import javax.servlet.Filter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import slydm.geektimes.training.projects.user.web.filter.CharsetEncodingFilter;
+import slydm.geektimes.training.projects.user.web.filter.EntityManagerClearFilter;
+import slydm.geektimes.training.projects.user.web.filter.LoginFilter;
 import slydm.geektimes.training.web.servlet.support.AbstractDispatcherServletInitializer;
 
 /**
@@ -11,8 +17,36 @@ import slydm.geektimes.training.web.servlet.support.AbstractDispatcherServletIni
 public class MyWebApplicationInitializer extends AbstractDispatcherServletInitializer {
 
   @Override
-  protected Filter[] getServletFilters() {
-    return new Filter[0];
+  protected FilterMapping[] getServletFilters() {
+    List<FilterMapping> filterList = new ArrayList<>();
+
+    // add CharsetEncodingFilter
+    FilterMapping encodingFilter = new FilterMapping();
+    encodingFilter.setFilter(new CharsetEncodingFilter());
+    encodingFilter.setName("encodingFilter");
+    encodingFilter.setUrlPatterns("/*");
+    Map<String, String> initP = new HashMap<>();
+    initP.put("encoding", "utf-8");
+    encodingFilter.setInitParameters(initP);
+    filterList.add(encodingFilter);
+
+    // add LoginFilter
+    FilterMapping loginFilter = new FilterMapping();
+    loginFilter.setFilter(new LoginFilter());
+    loginFilter.setName("LoginFilter");
+    initP = new HashMap<>();
+    initP.put("excludes", "/,/users/register,/users/login");
+    loginFilter.setInitParameters(initP);
+    filterList.add(loginFilter);
+
+    // add EntityManagerClearFilter
+    FilterMapping entityManagerClearFilter = new FilterMapping();
+    entityManagerClearFilter.setFilter(new EntityManagerClearFilter());
+    entityManagerClearFilter.setName("EntityManagerClearFilter");
+    entityManagerClearFilter.setUrlPatterns("/*");
+    filterList.add(entityManagerClearFilter);
+
+    return filterList.toArray(new FilterMapping[0]);
   }
 
   @Override

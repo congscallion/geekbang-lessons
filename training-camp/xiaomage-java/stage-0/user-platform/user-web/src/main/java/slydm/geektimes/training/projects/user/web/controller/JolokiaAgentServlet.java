@@ -12,8 +12,8 @@ import javax.servlet.ServletException;
 import org.jolokia.http.AgentServlet;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import slydm.geektimes.training.projects.context.ComponentContext;
 import slydm.geektimes.training.projects.jmx.ApplicationName;
+import slydm.geektimes.training.projects.user.helper.BeanFactoryUtils;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/18 0:09
@@ -25,7 +25,7 @@ public class JolokiaAgentServlet extends AgentServlet {
   @Override
   public void init(ServletConfig pServletConfig) throws ServletException {
     try {
-      ApplicationName applicationName = ComponentContext.getInstance().getComponent("bean/ApplicationName");
+      ApplicationName applicationName = BeanFactoryUtils.getBean("applicationName", ApplicationName.class);
 
       ObjectName objectName = new ObjectName("slydm.geektimes.training.projects.jmx.ApplicationName:a=b");
       MBeanServer server = ManagementFactory.getPlatformMBeanServer();
