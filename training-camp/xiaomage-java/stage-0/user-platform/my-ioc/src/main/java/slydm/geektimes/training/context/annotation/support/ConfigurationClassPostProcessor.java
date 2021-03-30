@@ -107,6 +107,9 @@ public class ConfigurationClassPostProcessor implements BeanFactoryPostProcessor
 
   }
 
+  /**
+   * 优先使用 {@link Bean} 注解指定的名称，其次使用方法名
+   */
   private String deterBeanName(MethodBeanDefinition beanDefinition) {
     AnnotationInfo annotationInfo = beanDefinition.getAnnotationInfo()
         .filter(an -> an.getName().equals(Bean.class.getName()))
