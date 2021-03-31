@@ -8,7 +8,7 @@ import org.springframework.aop.framework.ProxyFactory;
 /**
  * {@link ProxyFactory} 示例
  *
- * @author 72089101@vivo.com(wangcong) 2021/3/1 16:38
+ * @author wangcymy@gmail.com(wangcong) 2021/3/1 16:38
  */
 public class ProxyFactoryDemo {
 
