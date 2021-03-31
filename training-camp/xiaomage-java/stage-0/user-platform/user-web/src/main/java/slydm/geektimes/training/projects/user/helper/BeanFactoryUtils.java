@@ -6,7 +6,7 @@ import slydm.geektimes.training.exception.BeansException;
 import slydm.geektimes.training.ioc.BeanFactory;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/3/30 15:44
+ * @author wangcymy@gmail.com(wangcong) 2021/3/30 15:44
  */
 @Component
 public class BeanFactoryUtils implements BeanFactoryAware {

@@ -15,6 +15,7 @@
     <module>user-web</module>
     <module>my-ioc</module>
     <module>my-agaent</module>
+    <module>my-configuration</module>
   </modules>
 
   <properties>
