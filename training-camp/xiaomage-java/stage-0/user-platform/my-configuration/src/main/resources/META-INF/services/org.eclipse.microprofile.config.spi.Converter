@@ -1,0 +1,9 @@
+slydm.geektimes.training.configuration.microprofile.config.converter.BooleanConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.ByteConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.CharacterConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.DoubleConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.FloatConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.IntegerConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.LongConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.ShortConverter
+slydm.geektimes.training.configuration.microprofile.config.converter.StringConverter

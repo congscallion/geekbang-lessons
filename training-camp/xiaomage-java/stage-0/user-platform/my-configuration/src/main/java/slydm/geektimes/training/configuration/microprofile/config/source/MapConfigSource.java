@@ -18,25 +18,41 @@ public class MapConfigSource implements ConfigSource {
   private final Map<String, String> configData;
 
   protected MapConfigSource(String name, int ordinal) {
+    this(name, ordinal, new HashMap<>());
+  }
+
+  protected MapConfigSource(String name, int ordinal, Map<String, String> sourceData) {
     this.name = name;
     this.ordinal = ordinal;
-    this.configData = new HashMap<>();
+    if (sourceData == null) {
+      throw new IllegalArgumentException("sourceData can not null");
+    }
+    this.configData = sourceData;
+    populateConfigSource();
   }
 
   @Override
   public Map<String, String> getProperties() {
+    return Collections.unmodifiableMap(configData);
+  }
+
+  private void populateConfigSource() {
     try {
-      prepareConfigData(configData);
+      Map map = prepareConfigData();
+      if (null != map) {
+        this.configData.putAll(map);
+      }
     } catch (Throwable cause) {
       throw new IllegalStateException("准备配置数据发生错误", cause);
     }
-    return Collections.unmodifiableMap(configData);
+
   }
 
   /**
    * 默认什么也不做，提供 给子类扩展。
    */
-  protected void prepareConfigData(Map<String, String> configData) {
+  protected Map<String, String> prepareConfigData() {
+    return new HashMap();
   }
 
   @Override

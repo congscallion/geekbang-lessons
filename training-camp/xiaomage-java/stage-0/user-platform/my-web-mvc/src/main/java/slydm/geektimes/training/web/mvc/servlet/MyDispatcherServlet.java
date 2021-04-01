@@ -27,8 +27,6 @@ import slydm.geektimes.training.core.BeanDefinitionRegistry;
 import slydm.geektimes.training.ioc.ConfigurableListableBeanFactory;
 import slydm.geektimes.training.web.annotation.Controller;
 import slydm.geektimes.training.web.context.ConfigurableWebApplicationContext;
-import slydm.geektimes.training.web.mvc.controller.PageController;
-import slydm.geektimes.training.web.mvc.controller.RestController;
 import slydm.geektimes.training.web.mvc.servlet.helper.HandlerMethodInfo;
 
 /**
@@ -189,19 +187,13 @@ public class MyDispatcherServlet extends BaseServlet {
           return;
         }
 
-        if (controller instanceof PageController) {
-          PageController pageController = PageController.class.cast(controller);
-
           Object viewPath = handlerMethodInfo.getHandlerMethod()
-              .invoke(pageController, new Object[]{request, response});
+              .invoke(controller, new Object[]{request, response});
 
           if (null != viewPath && !viewPath.toString().isEmpty()) {
             goToNext(viewPath.toString(), request, response);
           }
 
-        } else if (controller instanceof RestController) {
-          // TODO
-        }
 
       } catch (Throwable throwable) {
         if (throwable.getCause() instanceof IOException) {
