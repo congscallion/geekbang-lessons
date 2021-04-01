@@ -28,14 +28,14 @@ public class SystemEnvironmentConfigSourceTest {
 
   @Test
   public void testGetValue() {
-    assertEquals("72089101", configSource.getValue("USERNAME"));
-    assertEquals("\\Users\\72089101", configSource.getValue("HOMEPATH"));
+    assertEquals("C:\\ProgramData", configSource.getValue("ProgramData"));
+    assertEquals("Windows_NT", configSource.getValue("OS"));
   }
 
 
   @Test
   public void testGetPropertyNames() {
-    assertThat(configSource.getPropertyNames(), hasItems("USERNAME", "HOMEPATH"));
+    assertThat(configSource.getPropertyNames(), hasItems("NVM_HOME", "JAVA_HOME"));
   }
 
   @Test
@@ -44,7 +44,7 @@ public class SystemEnvironmentConfigSourceTest {
     assertThat(properties.keySet().size(), is(55));
     assertThat(properties.keySet(), hasItems("COMPUTERNAME", "windir"));
     assertThat(properties.values().size(), is(55));
-    assertThat(properties.values(), hasItems("\\Users\\72089101", "Windows_NT"));
+    assertThat(properties.values(), hasItems("C:\\ProgramData", "Windows_NT"));
   }
 
   @Test(expected = UnsupportedOperationException.class)

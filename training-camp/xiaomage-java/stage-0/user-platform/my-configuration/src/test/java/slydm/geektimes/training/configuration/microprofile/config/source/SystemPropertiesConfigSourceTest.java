@@ -28,14 +28,14 @@ public class SystemPropertiesConfigSourceTest {
 
   @Test
   public void testGetValue() {
-    assertEquals("72089101", configSource.getValue("user.name"));
-    assertEquals("C:\\Users\\72089101", configSource.getValue("user.home"));
+    assertEquals("windows", configSource.getValue("sun.desktop"));
+    assertEquals("1.8.0_201-b09", configSource.getValue("java.runtime.version"));
   }
 
 
   @Test
   public void testGetPropertyNames() {
-    assertThat(configSource.getPropertyNames(), hasItems("user.name", "user.home"));
+    assertThat(configSource.getPropertyNames(), hasItems("os.version", "file.encoding"));
   }
 
   @Test
