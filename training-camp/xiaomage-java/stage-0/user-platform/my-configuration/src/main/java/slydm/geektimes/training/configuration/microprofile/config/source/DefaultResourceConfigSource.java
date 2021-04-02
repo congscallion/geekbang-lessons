@@ -12,7 +12,7 @@ import java.util.logging.Logger;
 public class DefaultResourceConfigSource extends PropertiesConfigSource {
 
   private static final String configFileLocation = "META-INF/microprofile-config.properties";
-  private final Logger logger = Logger.getLogger(this.getClass().getName());
+  private static final Logger logger = Logger.getLogger(DefaultResourceConfigSource.class.getName());
 
   public DefaultResourceConfigSource() {
     super("Default Config File", 100, configFileLocation);

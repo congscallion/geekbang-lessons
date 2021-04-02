@@ -10,7 +10,7 @@ import slydm.geektimes.training.configuration.microprofile.config.source.ConfigS
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/4/1 11:30
  */
-public class DefaultConfigBuilder implements ConfigBuilder {
+class DefaultConfigBuilder implements ConfigBuilder {
 
   private final ConfigSources configSources;
   private final Converters converters;

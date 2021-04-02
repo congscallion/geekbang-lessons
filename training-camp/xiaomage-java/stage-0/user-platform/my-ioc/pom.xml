@@ -17,6 +17,12 @@
   <dependencies>
 
     <dependency>
+      <groupId>slydm.geekbang.training</groupId>
+      <artifactId>my-configuration</artifactId>
+      <version>${revision}</version>
+    </dependency>
+
+    <dependency>
       <groupId>commons-logging</groupId>
       <artifactId>commons-logging</artifactId>
       <version>1.2</version>
@@ -38,6 +44,12 @@
       <groupId>slydm.geekbang.training</groupId>
       <artifactId>my-agaent</artifactId>
       <version>${revision}</version>
+    </dependency>
+
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <scope>test</scope>
     </dependency>
 
   </dependencies>
