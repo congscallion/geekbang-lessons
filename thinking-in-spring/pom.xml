@@ -29,6 +29,7 @@
     <module>helper-class-example</module>
     <module>aop-overview</module>
     <module>aop-features</module>
+    <module>java-reflect</module>
   </modules>
 
   <properties>
