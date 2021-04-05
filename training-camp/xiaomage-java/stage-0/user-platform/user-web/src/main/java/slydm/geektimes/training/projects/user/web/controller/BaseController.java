@@ -5,12 +5,11 @@ import java.io.PrintWriter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import slydm.geektimes.training.projects.user.web.Result;
-import slydm.geektimes.training.web.mvc.controller.PageController;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/3/11 10:36
  */
-public class BaseController implements PageController {
+public class BaseController {
 
   protected void responseJson(HttpServletRequest request, HttpServletResponse response, Object data) throws Exception {
 

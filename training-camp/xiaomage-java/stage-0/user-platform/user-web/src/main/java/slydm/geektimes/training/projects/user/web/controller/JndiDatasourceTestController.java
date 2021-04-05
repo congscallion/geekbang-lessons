@@ -4,7 +4,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Path;
 import slydm.geektimes.training.web.annotation.Controller;
-import slydm.geektimes.training.web.mvc.controller.PageController;
 
 /**
  * 测试 jndi 数据源
@@ -13,7 +12,7 @@ import slydm.geektimes.training.web.mvc.controller.PageController;
  */
 @Controller
 @Path("/jndi")
-public class JndiDatasourceTestController implements PageController {
+public class JndiDatasourceTestController {
 
 
   @Path("")
