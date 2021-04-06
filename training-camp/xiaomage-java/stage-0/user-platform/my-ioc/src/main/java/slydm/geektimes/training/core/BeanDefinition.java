@@ -4,6 +4,7 @@ import io.github.classgraph.AnnotationInfo;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import io.github.classgraph.MethodInfo;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Set;
@@ -28,7 +29,13 @@ public interface BeanDefinition {
   /**
    * 带有注解的字段列表
    */
-  List<FieldInfo> getAnnotationFieldList();
+  Set<FieldInfo> getAnnotationFieldList();
+
+  /**
+   * 根据字段元信息 获取字段实例
+   */
+  Field getFieldByFiledInfo(FieldInfo fieldInfo);
+
 
   /**
    * 根据方法元信息获取方法

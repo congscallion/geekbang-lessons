@@ -9,7 +9,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/4/2 16:41
+ * @author wangcymy@gmail.com(wangcong) 2021/4/2 16:41
  */
 public class ConfigSourcesPropertyResolverTest {
 

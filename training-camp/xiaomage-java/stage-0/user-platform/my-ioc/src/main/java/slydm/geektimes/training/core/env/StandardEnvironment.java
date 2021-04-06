@@ -1,7 +1,6 @@
 package slydm.geektimes.training.core.env;
 
 import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.spi.ConfigBuilder;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 
 /**
@@ -9,9 +8,9 @@ import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
  *
  * TODO 后续根据需要实现激活配置等需求
  *
- * @author 72089101@vivo.com(wangcong) 2021/4/2 15:46
+ * @author wangcymy@gmail.com(wangcong) 2021/4/2 15:46
  */
-public class StandardEnvironment implements PropertyResolver {
+public class StandardEnvironment implements ConfigurableEnvironment, PropertyResolver {
 
   private final PropertyResolver propertyResolver;
 
@@ -20,20 +19,19 @@ public class StandardEnvironment implements PropertyResolver {
 
   public StandardEnvironment() {
 
-    ConfigProviderResolver providerResolver = ConfigProviderResolver.instance();
-    ConfigBuilder builder = providerResolver.getBuilder();
-    config = builder.addDefaultSources()
-        .addDiscoveredSources()
-        .addDiscoveredConverters()
-        .build();
-    this.propertyResolver = createPropertyResolver(getConfig());
+    config = getConfig();
+    this.propertyResolver = createPropertyResolver(config);
   }
 
   /**
    * 以后扩展，根据环境激活配置等信息，创建匹配的配置信息
    */
   private Config getConfig() {
-    return this.config;
+    return ConfigProviderResolver.instance().getBuilder()
+        .addDefaultSources()
+        .addDiscoveredSources()
+        .addDiscoveredConverters()
+        .build();
   }
 
 

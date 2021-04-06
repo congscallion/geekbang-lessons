@@ -3,7 +3,7 @@ package slydm.geektimes.training.core.env;
 /**
  * 模拟 spring 同名接口，但本接口只声明一个可解析占位符的方法，用于从一个或多个配置源中解析值。
  *
- * @author 72089101@vivo.com(wangcong) 2021/4/2 15:34
+ * @author wangcymy@gmail.com(wangcong) 2021/4/2 15:34
  */
 public interface PropertyResolver {
 

@@ -7,19 +7,26 @@ import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.spi.ConfigBuilder;
 import org.eclipse.microprofile.config.spi.ConfigProviderResolver;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/4/1 11:37
+ * @see org.eclipse.microprofile.config.ConfigProvider
  */
 public class DefaultConfigProviderResolver extends ConfigProviderResolver {
 
   private ConcurrentMap<ClassLoader, Config> configsRepository = new ConcurrentHashMap<>();
 
+  /**
+   * 获取应用的当前配置
+   *
+   * @see ConfigProvider#getConfig()
+   */
   @Override
   public Config getConfig() {
-    return getConfig(null);
+    return getConfig(resolveClassLoader(null));
   }
 
   @Override
@@ -49,7 +56,11 @@ public class DefaultConfigProviderResolver extends ConfigProviderResolver {
   }
 
   protected Config newConfig(ClassLoader classLoader) {
-    return newConfigBuilder(classLoader).build();
+    return newConfigBuilder(classLoader)
+        .addDefaultSources()
+        .addDiscoveredSources()
+        .addDiscoveredConverters()
+        .build();
   }
 
   protected ConfigBuilder newConfigBuilder(ClassLoader classLoader) {
@@ -57,6 +68,6 @@ public class DefaultConfigProviderResolver extends ConfigProviderResolver {
   }
 
   private ClassLoader resolveClassLoader(ClassLoader classLoader) {
-    return classLoader == null ? this.getClass().getClassLoader() : classLoader;
+    return classLoader == null ? Thread.currentThread().getContextClassLoader() : classLoader;
   }
 }

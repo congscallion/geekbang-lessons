@@ -41,9 +41,7 @@ public class SystemPropertiesConfigSourceTest {
   @Test
   public void testGetProperties() {
     Map<String, String> properties = configSource.getProperties();
-    assertThat(properties.keySet().size(), is(55));
     assertThat(properties.keySet(), hasItems("os.version", "java.home"));
-    assertThat(properties.values().size(), is(55));
     assertThat(properties.values(), hasItems("Windows 10", "CN"));
   }
 

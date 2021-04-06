@@ -1,5 +1,6 @@
 package slydm.geektimes.training.context.annotation;
 
+import static slydm.geektimes.training.context.annotation.AutowiredAnnotationBeanPostProcessor.AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME;
 import static slydm.geektimes.training.context.annotation.CommonAnnotationBeanPostProcessor.COMMON_ANNOTATION_PROCESSOR_BEAN_NAME;
 import static slydm.geektimes.training.context.annotation.support.ConfigurationClassPostProcessor.CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME;
 
@@ -41,6 +42,11 @@ public class AnnotatedBeanDefinitionReader {
       Class clz = ConfigurationClassPostProcessor.class;
       BeanDefinition beanDefinition = convertClassToBeanDefinition(clz);
       registry.registerBeanDefinition(CONFIGURATION_ANNOTATION_PROCESSOR_BEAN_NAME, beanDefinition);
+    }
+
+    if (!registry.containsBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME)) {
+      BeanDefinition def = convertClassToBeanDefinition(AutowiredAnnotationBeanPostProcessor.class);
+      registry.registerBeanDefinition(AUTOWIRED_ANNOTATION_PROCESSOR_BEAN_NAME, def);
     }
 
     if (!registry.containsBeanDefinition(COMMON_ANNOTATION_PROCESSOR_BEAN_NAME)) {

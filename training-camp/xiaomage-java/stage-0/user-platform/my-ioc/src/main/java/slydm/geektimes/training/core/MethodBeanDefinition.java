@@ -5,6 +5,7 @@ import io.github.classgraph.AnnotationInfoList;
 import io.github.classgraph.ClassInfo;
 import io.github.classgraph.FieldInfo;
 import io.github.classgraph.MethodInfo;
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.List;
@@ -35,8 +36,13 @@ public class MethodBeanDefinition implements BeanDefinition {
   }
 
   @Override
-  public List<FieldInfo> getAnnotationFieldList() {
-    return Collections.EMPTY_LIST;
+  public Set<FieldInfo> getAnnotationFieldList() {
+    return Collections.EMPTY_SET;
+  }
+
+  @Override
+  public Field getFieldByFiledInfo(FieldInfo fieldInfo) {
+    return null;
   }
 
   @Override

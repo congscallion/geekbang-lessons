@@ -6,7 +6,7 @@ import org.eclipse.microprofile.config.ConfigValue;
 import slydm.geektimes.training.util.PropertyPlaceholderHelper;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/4/2 16:16
+ * @author wangcymy@gmail.com(wangcong) 2021/4/2 16:16
  */
 public class ConfigSourcesPropertyResolver implements PropertyResolver {
 

@@ -41,6 +41,11 @@
     </dependency>
 
     <dependency>
+      <groupId>javax.inject</groupId>
+      <artifactId>javax.inject</artifactId>
+    </dependency>
+
+    <dependency>
       <groupId>slydm.geekbang.training</groupId>
       <artifactId>my-agaent</artifactId>
       <version>${revision}</version>
@@ -51,6 +56,7 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
+
 
   </dependencies>
 

@@ -83,7 +83,7 @@ public class CommonAnnotationBeanPostProcessor implements InstantiationAwareBean
           String dependencyBeanName = lookupBeanName(field);
           try {
             Object dependencyBean = beanFactory.getBean(dependencyBeanName);
-            Field dependencyField = bean.getClass().getDeclaredField(field.getName());
+            Field dependencyField = beanDefinition.getFieldByFiledInfo(field);
             dependencyField.setAccessible(true);
             dependencyField.set(bean, dependencyBean);
           } catch (Exception e) {
@@ -126,7 +126,7 @@ public class CommonAnnotationBeanPostProcessor implements InstantiationAwareBean
         .filter(methodInfo -> methodInfo.hasAnnotation(annotationName))
         .forEach(methodInfo -> {
           try {
-            Method method = bean.getClass().getMethod(methodInfo.getName());
+            Method method = beanDefinition.getMethodByMethodInfo(methodInfo);
             method.invoke(bean);
           } catch (Exception e) {
             throw new BeansException(e.getMessage());

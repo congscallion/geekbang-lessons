@@ -1,7 +1,6 @@
 package slydm.geektimes.training.configuration.microprofile.config.source;
 
 import static org.hamcrest.CoreMatchers.hasItems;
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -41,9 +40,7 @@ public class SystemEnvironmentConfigSourceTest {
   @Test
   public void testGetProperties() {
     Map<String, String> properties = configSource.getProperties();
-    assertThat(properties.keySet().size(), is(55));
     assertThat(properties.keySet(), hasItems("COMPUTERNAME", "windir"));
-    assertThat(properties.values().size(), is(55));
     assertThat(properties.values(), hasItems("C:\\ProgramData", "Windows_NT"));
   }
 

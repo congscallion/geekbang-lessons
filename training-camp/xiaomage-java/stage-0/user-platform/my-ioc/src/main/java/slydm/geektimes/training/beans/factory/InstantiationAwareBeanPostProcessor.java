@@ -26,7 +26,7 @@ public interface InstantiationAwareBeanPostProcessor extends BeanPostProcessor {
   /**
    * bean 属性处理回调，此回调时机发生在 bean 实例化阶段完成。
    *
-   * // TODO 需要注入静态属性特性等接入 microprofile后再实现，方法签名也等到接入时再调整
+   * // TODO 需要注入静态属性特性等接入 ，microprofile后再实现方法签名也等到接入时再调整
    */
   default Object postProcessProperties(Object bean, String beanName)
       throws BeansException {
