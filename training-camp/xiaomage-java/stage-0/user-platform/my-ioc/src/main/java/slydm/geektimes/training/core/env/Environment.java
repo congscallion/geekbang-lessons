@@ -5,6 +5,6 @@ package slydm.geektimes.training.core.env;
  *
  * @author wangcymy@gmail.com(wangcong) 2021/4/6 8:55
  */
-public interface Environment {
+public interface Environment extends PropertyResolver {
 
 }

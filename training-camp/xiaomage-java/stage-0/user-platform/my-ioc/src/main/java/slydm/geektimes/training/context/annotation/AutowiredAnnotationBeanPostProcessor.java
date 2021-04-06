@@ -8,14 +8,11 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.logging.Logger;
+import javax.inject.Inject;
 import javax.inject.Named;
-import org.eclipse.microprofile.config.Config;
-import org.eclipse.microprofile.config.ConfigProvider;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
-import org.eclipse.microprofile.config.spi.Converter;
 import slydm.geektimes.training.beans.factory.BeanFactoryAware;
 import slydm.geektimes.training.beans.factory.InstantiationAwareBeanPostProcessor;
 import slydm.geektimes.training.core.BeanDefinition;
@@ -53,18 +50,10 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
 
   private ConfigurableListableBeanFactory beanFactory;
 
-  private Config config;
-
   public AutowiredAnnotationBeanPostProcessor() {
-    try {
-      this.autowiredAnnotationTypes.add((Class<? extends Annotation>)
-          ClassUtils.forName("javax.inject.Inject", AutowiredAnnotationBeanPostProcessor.class.getClassLoader()));
-      logger.config("JSR-330 'javax.inject.Inject' annotation found and supported for autowiring");
-      this.autowiredAnnotationTypes.add(ConfigProperty.class);
-      config = ConfigProvider.getConfig();
-    } catch (ClassNotFoundException ex) {
-      // JSR-330 API not available - simply skip.
-    }
+
+    this.autowiredAnnotationTypes.add(Inject.class);
+    this.autowiredAnnotationTypes.add(ConfigProperty.class);
   }
 
 
@@ -153,7 +142,8 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
       try {
         Field needInjectField = beanDefinition.getFieldByFiledInfo(fieldInfo);
         Class<?> typeClass = needInjectField.getType();
-        Object value = config.getValue(propertyName, typeClass);
+
+        Object value = beanFactory.resolveEmbeddedValue(propertyName, typeClass);
 
         if (value == null) {
 
@@ -162,11 +152,7 @@ public class AutowiredAnnotationBeanPostProcessor implements InstantiationAwareB
             throw new BeanCreationException("not found config property: " + propertyName);
           }
 
-          Optional<? extends Converter<?>> converterOptional = config.getConverter(typeClass);
-          if (converterOptional.isPresent()) {
-            Converter<?> converter = converterOptional.get();
-            value = converter.convert(defaultVal);
-          }
+          value = beanFactory.resolveEmbeddedValue(defaultVal, typeClass, false);
         }
 
         needInjectField.setAccessible(true);

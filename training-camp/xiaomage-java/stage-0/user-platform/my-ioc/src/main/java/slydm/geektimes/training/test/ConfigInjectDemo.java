@@ -20,6 +20,7 @@ public class ConfigInjectDemo {
     ConfigInjectDemo configInjectDemo = applicationContext.getBean("configInjectDemo", ConfigInjectDemo.class);
     System.out.println(configInjectDemo);
     System.out.println(configInjectDemo.osName);
+    System.out.println(configInjectDemo.javaVersion);
 
     applicationContext.close();
 
@@ -27,8 +28,11 @@ public class ConfigInjectDemo {
 
 
   @Inject
-  @ConfigProperty(name = "os.name.li")
+  @ConfigProperty(name = "os.name")
   private String osName;
 
 
+  @Inject
+  @ConfigProperty(name = "${java.version}")
+  private String javaVersion;
 }

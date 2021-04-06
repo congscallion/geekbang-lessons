@@ -7,6 +7,8 @@ import slydm.geektimes.training.context.annotation.CommonAnnotationBeanPostProce
 import slydm.geektimes.training.context.event.ApplicationEventMulticaster;
 import slydm.geektimes.training.context.event.SimpleApplicationEventMulticaster;
 import slydm.geektimes.training.core.BeanDefinition;
+import slydm.geektimes.training.core.env.ConfigurableEnvironment;
+import slydm.geektimes.training.core.env.StandardEnvironment;
 import slydm.geektimes.training.exception.BeansException;
 import slydm.geektimes.training.exception.NoSuchBeanDefinitionException;
 import slydm.geektimes.training.ioc.ConfigurableListableBeanFactory;
@@ -20,6 +22,11 @@ import slydm.geektimes.training.ioc.DefaultListableBeanFactory;
 public class AnnotationConfigApplicationContext implements ApplicationContext {
 
   private DefaultListableBeanFactory beanFactory;
+
+  /**
+   * Environment used by this context.
+   */
+  private ConfigurableEnvironment environment;
 
   private final AnnotatedBeanDefinitionReader reader;
 
@@ -191,7 +198,24 @@ public class AnnotationConfigApplicationContext implements ApplicationContext {
   }
 
   private void initializationALlSingletonBean(DefaultListableBeanFactory beanFactory) {
+
+    if (!beanFactory.hasEmbeddedValueResolver()) {
+      beanFactory.addEmbeddedValueResolver(getEnvironment()::resolvePlaceholders);
+      beanFactory.addEmbeddedValueResolver(strVal -> getEnvironment().getProperty(strVal, strVal));
+    }
+
     beanFactory.preInstantiateSingletons();
+  }
+
+  public ConfigurableEnvironment getEnvironment() {
+    if (this.environment == null) {
+      this.environment = createEnvironment();
+    }
+    return this.environment;
+  }
+
+  protected ConfigurableEnvironment createEnvironment() {
+    return new StandardEnvironment();
   }
 
   @Override

@@ -12,16 +12,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import org.eclipse.microprofile.config.spi.Converter;
 import slydm.geektimes.training.beans.factory.Aware;
 import slydm.geektimes.training.beans.factory.BeanFactoryAware;
 import slydm.geektimes.training.beans.factory.BeanPostProcessor;
 import slydm.geektimes.training.beans.factory.InstantiationAwareBeanPostProcessor;
 import slydm.geektimes.training.beans.factory.ObjectFactory;
 import slydm.geektimes.training.beans.factory.SmartInstantiationAwareBeanPostProcessor;
+import slydm.geektimes.training.configuration.microprofile.config.converter.Converters;
 import slydm.geektimes.training.context.annotation.DestructionAwareBeanPostProcessor;
 import slydm.geektimes.training.core.BeanDefinition;
 import slydm.geektimes.training.core.BeanDefinitionRegistry;
 import slydm.geektimes.training.core.MethodBeanDefinition;
+import slydm.geektimes.training.core.StringValueResolver;
 import slydm.geektimes.training.exception.BeanCreationException;
 import slydm.geektimes.training.exception.BeanCurrentlyInCreationException;
 import slydm.geektimes.training.exception.BeansException;
@@ -71,6 +74,16 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
    * BeanPostProcessors to apply in createBean.
    */
   private final List<BeanPostProcessor> beanPostProcessors = new CopyOnWriteArrayList<>();
+
+  /**
+   * String resolvers to apply e.g. to annotation attribute values.
+   */
+  private final List<StringValueResolver> embeddedValueResolvers = new CopyOnWriteArrayList<>();
+
+  /**
+   * 类型转换
+   */
+  private Converters converters;
 
   /**
    * Indicates whether any InstantiationAwareBeanPostProcessors have been registered.
@@ -477,6 +490,79 @@ public class DefaultListableBeanFactory implements ConfigurableListableBeanFacto
     clearSingletonCache();
   }
 
+
+  /**
+   * 从 {@link #embeddedValueResolvers} 列表中依次解析，使用最一个非空数据
+   */
+  protected String resolveEmbeddedValue(String value) {
+    if (value == null) {
+      return null;
+    }
+    String result = null;
+    String temp = value;
+    for (StringValueResolver resolver : this.embeddedValueResolvers) {
+      temp = resolver.resolveStringValue(temp);
+
+      // 当前解析的前面的值都是null,直接返回
+      if (temp == null && result == null) {
+        return null;
+      }
+      // 当前解析的前面的值存在非null,则忽略当前null值，继续下一次解析
+      if (temp == null && result != null) {
+        continue;
+      }
+
+      if (!temp.equals(result)) {
+        result = temp;
+      }
+
+    }
+    return result;
+  }
+
+  public <T> T resolveEmbeddedValue(String value, Class<T> propertyType, boolean parseProperty) {
+    if (value == null) {
+      return null;
+    }
+    if (parseProperty) {
+      value = resolveEmbeddedValue(value);
+    }
+
+    // 直接转换属性值(这场景一般用于默认值)
+    T result = null;
+    for (Converter<T> converter : getConverters().getConverters(propertyType)) {
+      result = converter.convert(value);
+      if (result != null) {
+        break;
+      }
+    }
+
+    return result;
+  }
+
+
+  public Converters getConverters() {
+    if (this.converters == null) {
+      this.converters = new Converters();
+      this.converters.addDiscoveredConverters();
+    }
+    return this.converters;
+  }
+
+
+  public <T> T resolveEmbeddedValue(String value, Class<T> propertyType) {
+    return resolveEmbeddedValue(value, propertyType, true);
+  }
+
+  @Override
+  public void addEmbeddedValueResolver(StringValueResolver valueResolver) {
+    this.embeddedValueResolvers.add(valueResolver);
+  }
+
+  @Override
+  public boolean hasEmbeddedValueResolver() {
+    return !this.embeddedValueResolvers.isEmpty();
+  }
 
   public void destroySingleton(String beanName) {
 
