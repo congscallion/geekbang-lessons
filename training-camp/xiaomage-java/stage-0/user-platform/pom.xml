@@ -16,6 +16,7 @@
     <module>my-ioc</module>
     <module>my-agaent</module>
     <module>my-configuration</module>
+    <module>my-rest-client</module>
   </modules>
 
   <properties>
