@@ -6,7 +6,7 @@
 
 ### 一、单体项目阶段，作业汇总
 
-![功能大图](http://qiniu.5ysa.com/%E7%AC%AC%E4%B8%80%E9%98%B6%E6%AE%B5%E5%8D%95%E4%BD%93%E6%9E%B6%E6%9E%84%20%E5%B7%B2%E5%AE%9E%E7%8E%B0%E5%8A%9F%E8%83%BD%E5%9C%B0%E5%9B%BE-v2.png)
+![功能大图](http://qiniu.5ysa.com/Firset-Monolith.png)
 
 
 
