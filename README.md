@@ -6,7 +6,7 @@
 
 ### 一、单体项目阶段，作业汇总
 
-![功能大图](/docs/static/第一阶段单体架构 已实现功能地图.png)
+![功能大图](/docs/static/Firset-Monolith.png)
 
 
 
