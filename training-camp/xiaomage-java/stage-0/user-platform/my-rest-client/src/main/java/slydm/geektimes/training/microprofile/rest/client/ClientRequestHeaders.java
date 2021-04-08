@@ -1,9 +1,7 @@
 package slydm.geektimes.training.microprofile.rest.client;
 
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -17,11 +15,6 @@ import javax.ws.rs.core.MultivaluedMap;
 public class ClientRequestHeaders {
 
   private MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
-  private Set<MediaType> mediaTypes = new LinkedHashSet<>();
-  private Set<Locale> locales = new LinkedHashSet<>();
-  private Set<String> encodings = new LinkedHashSet<>();
-  private Set<Cookie> cookies = new LinkedHashSet<>();
-  private CacheControl cacheControl;
 
   public void accept(MediaType... mediaTypes) {
 
