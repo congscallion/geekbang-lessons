@@ -1,5 +1,8 @@
 package slydm.geektimes.training.microprofile.rest.client;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -36,11 +39,6 @@ public class ClientInvocation implements Invocation {
 
   protected Annotation[] entityAnnotations;
 
-
-  public ClientInvocation(Client client, URI uri) {
-    this(client, uri, null);
-  }
-
   public ClientInvocation(Client client, URI uri, ClientRequestHeaders headers) {
     this.uri = uri;
     this.client = client;
@@ -48,6 +46,15 @@ public class ClientInvocation implements Invocation {
   }
 
   protected ClientInvocation(final ClientInvocation clientInvocation) {
+    this.client = clientInvocation.client;
+    this.headers = new ClientRequestHeaders();
+    this.headers.headers.putAll(clientInvocation.headers.headers);
+    this.method = clientInvocation.method;
+    this.entity = clientInvocation.entity;
+    this.entityGenericType = clientInvocation.entityGenericType;
+    this.entityClass = clientInvocation.entityClass;
+    this.entityAnnotations = clientInvocation.entityAnnotations;
+    this.uri = clientInvocation.uri;
   }
 
   @Override
@@ -58,7 +65,8 @@ public class ClientInvocation implements Invocation {
 
   @Override
   public Response invoke() {
-    return null;
+    ClientResponse response = (ClientResponse) ((MyClientImpl) client).httpEngine().invoke(this);
+    return response;
   }
 
   @Override
@@ -131,4 +139,42 @@ public class ClientInvocation implements Invocation {
       }
     }
   }
+
+
+  public URI getUri() {
+    return uri;
+  }
+
+  public String getMethod() {
+    return method;
+  }
+
+  public Object getEntity() {
+    return entity;
+  }
+
+  public ClientRequestHeaders getHeaders() {
+    return this.headers;
+  }
+
+  /**
+   * 把 http body 写入 OutputStream
+   */
+  public void writeRequestBody(OutputStream outputStream) {
+
+    try {
+
+      if (this.getEntity() instanceof String) {
+        String stringEntity = (String) getEntity();
+        outputStream.write(stringEntity.getBytes());
+        return;
+      }
+
+      ObjectOutputStream oos = new ObjectOutputStream(outputStream);
+      oos.writeObject(getEntity());
+    } catch (IOException e) {
+      throw new IllegalStateException("serialized fail.");
+    }
+  }
+
 }

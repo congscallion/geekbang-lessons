@@ -1,4 +1,4 @@
-package slydm.geektimes.training.microprofile.rest.client;
+package slydm.geektimes.training.microprofile.rest.engines;
 
 import java.net.HttpURLConnection;
 import javax.ws.rs.client.Invocation;
@@ -9,7 +9,7 @@ import javax.ws.rs.core.Response;
  *
  * // TODO  暂不实现 https
  *
- * @author 72089101@vivo.com(wangcong) 2021/4/8 17:23
+ * @author wangcymy@gmail.com(wangcong) 2021/4/8 17:23
  */
 public interface ClientHttpEngine {
 
@@ -17,5 +17,10 @@ public interface ClientHttpEngine {
    * 执行 http请求并得到响应
    */
   Response invoke(Invocation request);
+
+  /**
+   * 关闭资源
+   */
+  void close();
 
 }

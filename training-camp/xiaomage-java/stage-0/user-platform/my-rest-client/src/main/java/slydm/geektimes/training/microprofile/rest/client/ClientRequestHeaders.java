@@ -2,6 +2,7 @@ package slydm.geektimes.training.microprofile.rest.client;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.ws.rs.core.CacheControl;
 import javax.ws.rs.core.Cookie;
 import javax.ws.rs.core.HttpHeaders;
@@ -14,7 +15,7 @@ import javax.ws.rs.core.MultivaluedMap;
  */
 public class ClientRequestHeaders {
 
-  private MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
+  protected MultivaluedMap<String, Object> headers = new MultivaluedHashMap<>();
 
   public void accept(MediaType... mediaTypes) {
 
@@ -133,4 +134,15 @@ public class ClientRequestHeaders {
     headers.putAll(newHeaders);
   }
 
+
+  public MultivaluedMap<String, String> asMap() {
+
+    MultivaluedMap<String, String> map = new MultivaluedHashMap<>();
+    for (Map.Entry<String, List<Object>> entry : headers.entrySet()) {
+      for (Object obj : entry.getValue()) {
+        map.add(entry.getKey(), toHeaderString(obj));
+      }
+    }
+    return map;
+  }
 }

@@ -7,6 +7,8 @@ import javax.net.ssl.SSLContext;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.Configuration;
+import slydm.geektimes.training.microprofile.rest.engines.ClientHttpEngine;
+import slydm.geektimes.training.microprofile.rest.engines.URLConnectionEngine;
 
 /**
  * {@link ClientBuilder} 实现
@@ -14,6 +16,8 @@ import javax.ws.rs.core.Configuration;
  * @author wangcymy@gmail.com(wangcong) 2021/4/7 16:55
  */
 public class MyClientBuilderImpl extends ClientBuilder {
+
+  private ClientHttpEngine httpEngine;
 
   @Override
   public ClientBuilder withConfig(Configuration config) {
@@ -47,8 +51,20 @@ public class MyClientBuilderImpl extends ClientBuilder {
 
 
   protected Client createClient() {
-    return new MyClientImpl();
+    return new MyClientImpl(getHttpEngine());
   }
+
+  /**
+   * get and config {@link ClientHttpEngine}
+   */
+  protected ClientHttpEngine getHttpEngine() {
+    if (this.httpEngine == null) {
+      // default
+      this.httpEngine = new URLConnectionEngine();
+    }
+    return this.httpEngine;
+  }
+
 
   @Override
   public Configuration getConfiguration() {
@@ -98,5 +114,10 @@ public class MyClientBuilderImpl extends ClientBuilder {
   @Override
   public ClientBuilder register(Object component, Map<Class<?>, Integer> contracts) {
     return null;
+  }
+
+  public ClientBuilder httpEngine(ClientHttpEngine httpEngine) {
+    this.httpEngine = httpEngine;
+    return this;
   }
 }

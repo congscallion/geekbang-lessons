@@ -10,6 +10,7 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Configuration;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.UriBuilder;
+import slydm.geektimes.training.microprofile.rest.engines.ClientHttpEngine;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/4/7 16:53
@@ -17,6 +18,17 @@ import javax.ws.rs.core.UriBuilder;
 public class MyClientImpl implements Client {
 
   protected boolean closed;
+  private ClientHttpEngine httpEngine;
+
+  public MyClientImpl(ClientHttpEngine httpEngine) {
+    this.httpEngine = httpEngine;
+  }
+
+  public ClientHttpEngine httpEngine() {
+    abortIfClosed();
+    return httpEngine;
+  }
+
 
   @Override
   public void close() {

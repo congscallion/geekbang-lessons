@@ -1,12 +1,17 @@
 package slydm.geektimes.training.microprofile.rest.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Type;
+import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
+import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.Link;
@@ -16,26 +21,30 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import org.apache.commons.io.IOUtils;
 import slydm.geektimes.training.microprofile.rest.spi.HttpResponseCodes;
 
 /**
- * @author 72089101@vivo.com(wangcong) 2021/4/8 17:27
+ * @author wangcymy@gmail.com(wangcong) 2021/4/8 17:27
  */
 public class ClientResponse extends Response {
+
+  protected HttpURLConnection connection;
 
   protected Object entity;
   protected byte[] bufferedEntity;
   protected int status = HttpResponseCodes.SC_OK;
   protected volatile boolean isClosed;
   protected String reason = "Unknown Code";
-  protected MultivaluedMap<String, Object> metadata = new MultivaluedHashMap<>();
+  protected MultivaluedMap<String, String> metadata = new MultivaluedHashMap<>();
   private MediaType mediaType;
   private Locale locale;
+  private String encoding = "UTF-8";
 
 
   @Override
   public int getStatus() {
-    return 0;
+    return status;
   }
 
   @Override
@@ -70,29 +79,39 @@ public class ClientResponse extends Response {
 
   @Override
   public <T> T readEntity(Class<T> entityType) {
-    return readEntity(entityType, null, null);
+
+    T entity = null;
+    try {
+      InputStream inputStream = connection.getInputStream();
+      // 参考 HttpMessageConverter 实现，实现运行时动态判断
+      if (String.class.equals(entityType)) {
+        Object value = IOUtils.toString(inputStream, encoding);
+        entity = (T) value;
+      } else {
+        ObjectMapper objectMapper = new ObjectMapper();
+        entity = objectMapper.readValue(new InputStreamReader(inputStream, encoding), entityType);
+      }
+    } catch (IOException e) {
+      throw new RuntimeException(e);
+    } finally {
+      connection.disconnect();
+    }
+    return entity;
   }
 
   @Override
   public <T> T readEntity(GenericType<T> entityType) {
-    return readEntity((Class<T>) entityType.getRawType(), entityType.getType(), null);
+    return readEntity((Class<T>) entityType.getRawType());
   }
 
   @Override
   public <T> T readEntity(Class<T> entityType, Annotation[] annotations) {
-    return readEntity(entityType, null, annotations);
+    throw new NotSupportedException();
   }
 
   @Override
   public <T> T readEntity(GenericType<T> entityType, Annotation[] annotations) {
-    return readEntity((Class<T>) entityType.getRawType(), entityType.getType(), annotations);
-  }
-
-  protected <T> T readEntity(Class<T> type, Type genericType, Annotation[] annotations) {
-
-    // TODO 待实现
-
-    return (T) entity;
+    throw new NotSupportedException();
   }
 
   @Override
@@ -203,5 +222,17 @@ public class ClientResponse extends Response {
   @Override
   public String getHeaderString(String name) {
     return null;
+  }
+
+  public void setStatus(int status) {
+    this.status = status;
+  }
+
+  public void setHeaders(MultivaluedMap<String, String> headers) {
+    this.metadata.putAll(headers);
+  }
+
+  public void setConnection(HttpURLConnection connection) {
+    this.connection = connection;
   }
 }

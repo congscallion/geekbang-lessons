@@ -5,7 +5,7 @@ package slydm.geektimes.training.microprofile.rest.spi;
  *
  * <a href="https://github.com/resteasy/Resteasy/blob/master/resteasy-core-spi/src/main/java/org/jboss/resteasy/spi/HttpResponseCodes.java"> github</a>
  *
- * @author 72089101@vivo.com(wangcong) 2021/4/8 17:28
+ * @author wangcymy@gmail.com(wangcong) 2021/4/8 17:28
  */
 public interface HttpResponseCodes {
 
