@@ -160,7 +160,7 @@ public class ClientInvocation implements Invocation {
   /**
    * 把 http body 写入 OutputStream
    *
-   * TODO 如何支持文件与表单?
+   * TODO 如何支持文件与表单? 应该根据  http header Content-Type 选择性格式化数据
    */
   public void writeRequestBody(OutputStream outputStream) {
 
@@ -172,6 +172,7 @@ public class ClientInvocation implements Invocation {
         return;
       }
 
+      // TODO 表单和文件暂时不搞，严重跟不上小马哥节奏了
       ObjectMapper objectMapper = new ObjectMapper();
       byte[] entityArr = objectMapper.writeValueAsBytes(this.entity);
       outputStream.write(entityArr);
