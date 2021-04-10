@@ -1,7 +1,7 @@
 package slydm.geektimes.training.microprofile.rest.client;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
@@ -159,6 +159,8 @@ public class ClientInvocation implements Invocation {
 
   /**
    * 把 http body 写入 OutputStream
+   *
+   * TODO 如何支持文件与表单?
    */
   public void writeRequestBody(OutputStream outputStream) {
 
@@ -170,8 +172,9 @@ public class ClientInvocation implements Invocation {
         return;
       }
 
-      ObjectOutputStream oos = new ObjectOutputStream(outputStream);
-      oos.writeObject(getEntity());
+      ObjectMapper objectMapper = new ObjectMapper();
+      byte[] entityArr = objectMapper.writeValueAsBytes(this.entity);
+      outputStream.write(entityArr);
     } catch (IOException e) {
       throw new IllegalStateException("serialized fail.");
     }

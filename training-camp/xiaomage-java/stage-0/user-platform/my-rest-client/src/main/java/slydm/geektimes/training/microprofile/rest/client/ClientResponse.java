@@ -8,12 +8,15 @@ import java.lang.annotation.Annotation;
 import java.net.HttpURLConnection;
 import java.net.URI;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import javax.ws.rs.NotSupportedException;
 import javax.ws.rs.core.EntityTag;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.Link;
 import javax.ws.rs.core.Link.Builder;
 import javax.ws.rs.core.MediaType;
@@ -21,6 +24,8 @@ import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.NewCookie;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.ext.RuntimeDelegate;
+import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 import org.apache.commons.io.IOUtils;
 import slydm.geektimes.training.microprofile.rest.spi.HttpResponseCodes;
 
@@ -70,6 +75,7 @@ public class ClientResponse extends Response {
     }
     return statusType;
   }
+
 
   @Override
   public Object getEntity() {
@@ -166,7 +172,36 @@ public class ClientResponse extends Response {
 
   @Override
   public Map<String, NewCookie> getCookies() {
-    return null;
+    Map<String, NewCookie> cookies = new HashMap<String, NewCookie>();
+    List list = metadata.get(HttpHeaders.SET_COOKIE);
+    if (list == null) {
+      return cookies;
+    }
+    for (Object obj : list) {
+      if (obj instanceof NewCookie) {
+        NewCookie cookie = (NewCookie) obj;
+        cookies.put(cookie.getName(), cookie);
+      } else {
+        String str = toHeaderString(obj);
+        NewCookie cookie = NewCookie.valueOf(str);
+        cookies.put(cookie.getName(), cookie);
+      }
+    }
+    return cookies;
+  }
+
+  private String toHeaderString(Object obj) {
+
+    if (obj instanceof String) {
+      return (String) obj;
+    }
+
+    HeaderDelegate delegate = RuntimeDelegate.getInstance().createHeaderDelegate(obj.getClass());
+    if (delegate != null) {
+      return delegate.toString(obj);
+    } else {
+      return obj.toString();
+    }
   }
 
   @Override

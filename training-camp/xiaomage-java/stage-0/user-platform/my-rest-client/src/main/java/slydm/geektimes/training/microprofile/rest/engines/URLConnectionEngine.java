@@ -52,6 +52,7 @@ public class URLConnectionEngine implements ClientHttpEngine {
 
     //Setting attributes
     response.setStatus(status);
+    // 将响应头保持起来，这样可以保证在调用获取响应的内容的方法之后可以访问该内容。 比如：cookie
     response.setHeaders(getHeaders(connection));
     response.setConnection(connection);
 

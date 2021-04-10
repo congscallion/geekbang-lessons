@@ -9,6 +9,8 @@ import javax.ws.rs.core.HttpHeaders;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.ext.RuntimeDelegate;
+import javax.ws.rs.ext.RuntimeDelegate.HeaderDelegate;
 
 /**
  * @author wangcymy@gmail.com(wangcong) 2021/4/7 19:37
@@ -102,8 +104,17 @@ public class ClientRequestHeaders {
     return builder;
   }
 
-  private String toHeaderString(Object val) {
-    return val.toString();
+  private String toHeaderString(Object obj) {
+    if (obj instanceof String) {
+      return (String) obj;
+    }
+
+    HeaderDelegate delegate = RuntimeDelegate.getInstance().createHeaderDelegate(obj.getClass());
+    if (delegate != null) {
+      return delegate.toString(obj);
+    } else {
+      return obj.toString();
+    }
   }
 
   public void cacheControl(CacheControl cacheControl) {
