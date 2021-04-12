@@ -1,11 +1,14 @@
 package slydm.geektimes.training.microprofile.rest.client;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import org.junit.Test;
 import slydm.geektimes.training.microprofile.rest.engines.URLConnectionEngine;
@@ -38,12 +41,34 @@ public class ClientTest {
         .httpEngine(new URLConnectionEngine())
         .build();
 
-    String p2 = "{\"name\":\"Li\",\"age\":20}";
+    String p2 = "{\"name\":\"Li\",\"email\":\"li@myEmail.xyz\",\"phoneNumber\":\"11111111111\",\"password\":\"li\"}";
 
     Response response = client
-        .target("http://127.0.0.1:8080/users/add")
+        .target("http://127.0.0.1:8080/users/register")
         .request()
+
         .post(Entity.entity(p2, MediaType.APPLICATION_JSON_TYPE));
+    System.out.println(response.readEntity(String.class));
+  }
+
+  @Test
+  public void test2_form_submit() {
+
+    MyClientBuilderImpl clientBuilder = (MyClientBuilderImpl) ClientBuilder.newBuilder();
+    Client client = clientBuilder
+        .httpEngine(new URLConnectionEngine())
+        .build();
+
+    MultivaluedMap<String, String> p2 = new MultivaluedHashMap<>();
+    p2.put("name", Arrays.asList("Li"));
+    p2.put("email", Arrays.asList("li@myEmail.xyz"));
+    p2.put("phoneNumber", Arrays.asList("11111111111"));
+    p2.put("password", Arrays.asList("li"));
+
+    Response response = client
+        .target("http://127.0.0.1:8080/users/register")
+        .request()
+        .post(Entity.entity(p2, MediaType.APPLICATION_FORM_URLENCODED));
     System.out.println(response.readEntity(String.class));
   }
 

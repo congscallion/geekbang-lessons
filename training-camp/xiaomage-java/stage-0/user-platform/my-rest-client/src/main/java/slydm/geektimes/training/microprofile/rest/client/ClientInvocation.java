@@ -1,12 +1,17 @@
 package slydm.geektimes.training.microprofile.rest.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
 import java.net.URI;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.Future;
 import javax.ws.rs.client.Client;
@@ -15,6 +20,8 @@ import javax.ws.rs.client.Invocation;
 import javax.ws.rs.client.InvocationCallback;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.GenericType;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Variant;
 
@@ -160,24 +167,78 @@ public class ClientInvocation implements Invocation {
   /**
    * 把 http body 写入 OutputStream
    *
-   * TODO 如何支持文件与表单? 应该根据  http header Content-Type 选择性格式化数据
    */
   public void writeRequestBody(OutputStream outputStream) {
 
+    byte[] contents;
     try {
 
       if (this.getEntity() instanceof String) {
         String stringEntity = (String) getEntity();
-        outputStream.write(stringEntity.getBytes());
-        return;
+        contents = stringEntity.getBytes();
       }
 
-      // TODO 表单和文件暂时不搞，严重跟不上小马哥节奏了
-      ObjectMapper objectMapper = new ObjectMapper();
-      byte[] entityArr = objectMapper.writeValueAsBytes(this.entity);
-      outputStream.write(entityArr);
+      MediaType mediaType = headers.getMediaType();
+      if (mediaType.equals(MediaType.APPLICATION_FORM_URLENCODED)
+          || mediaType.equals(MediaType.MULTIPART_FORM_DATA)
+          || mediaType.equals(MediaType.APPLICATION_FORM_URLENCODED_TYPE)
+          || mediaType.equals(MediaType.MULTIPART_FORM_DATA_TYPE)
+      ) {
+
+        // submit form， TODO 不支持 文件
+        contents = submitFrom();
+      } else {
+        ObjectMapper objectMapper = new ObjectMapper();
+        contents = objectMapper.writeValueAsBytes(this.entity);
+      }
+
+      outputStream.write(contents);
+      outputStream.flush();
     } catch (IOException e) {
       throw new IllegalStateException("serialized fail.");
+    }
+  }
+
+  /**
+   * 将数据写成 name=value&name2=value2 的格式
+   */
+  private byte[] submitFrom() {
+
+    if (!MultivaluedMap.class.isAssignableFrom(entityClass)) {
+      throw new IllegalArgumentException("提交表单，entity 只支持 javax.ws.rs.core.MultivaluedMap 类型");
+    }
+
+    MultivaluedMap<String, String> formData = (MultivaluedMap<String, String>) this.entity;
+    String charset = headers.getMediaType().getParameters().get(MediaType.CHARSET_PARAMETER);
+    if (charset == null) {
+      charset = StandardCharsets.UTF_8.name();
+    }
+
+    try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        OutputStreamWriter writer = new OutputStreamWriter(baos, charset)) {
+
+      boolean first = true;
+      for (Map.Entry<String, List<String>> entry : formData.entrySet()) {
+        String encodedName = URLEncoder.encode(entry.getKey(), charset);
+
+        for (String value : entry.getValue()) {
+          if (first) {
+            first = false;
+          } else {
+            writer.write("&");
+          }
+          value = URLEncoder.encode(value, charset);
+
+          writer.write(encodedName);
+          writer.write("=");
+          writer.write(value);
+        }
+        writer.flush();
+      }
+
+      return baos.toByteArray();
+    } catch (IOException ex) {
+      throw new IllegalStateException(ex);
     }
   }
 

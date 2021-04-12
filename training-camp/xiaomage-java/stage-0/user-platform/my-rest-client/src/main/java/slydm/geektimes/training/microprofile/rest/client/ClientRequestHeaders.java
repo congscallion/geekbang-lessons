@@ -34,6 +34,17 @@ public class ClientRequestHeaders {
     headers.putSingle(HttpHeaders.CONTENT_TYPE, mediaType);
   }
 
+  public MediaType getMediaType() {
+    Object obj = headers.getFirst(HttpHeaders.CONTENT_TYPE);
+    if (obj == null) {
+      return null;
+    }
+    if (obj instanceof MediaType) {
+      return (MediaType) obj;
+    }
+    return MediaType.valueOf(toHeaderString(obj));
+  }
+
   public void acceptLanguage(Locale... locales) {
 
     String accept = (String) headers.getFirst(HttpHeaders.ACCEPT_LANGUAGE);
