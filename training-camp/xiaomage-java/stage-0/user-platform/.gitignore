@@ -25,6 +25,8 @@ tomcat.*
 
 .extract
 
+.activemq-data
+
 ### NetBeans ###
 nbproject/private/
 build/
