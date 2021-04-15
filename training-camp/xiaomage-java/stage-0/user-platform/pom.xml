@@ -17,6 +17,7 @@
     <module>my-agaent</module>
     <module>my-configuration</module>
     <module>my-rest-client</module>
+    <module>my-reactive-messaging</module>
   </modules>
 
   <properties>
