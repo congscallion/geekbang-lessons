@@ -1,4 +1,4 @@
-package slydm.geektimes.training.microprofile.reactive.streams;
+package slydm.geektimes.training.microprofile.reactive.streams.api;
 
 import javax.jms.Connection;
 import javax.jms.DeliveryMode;
